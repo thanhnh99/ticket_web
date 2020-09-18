@@ -1,7 +1,10 @@
 package uet.japit.k62.models.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
@@ -9,6 +12,9 @@ import java.util.UUID;
 
 @MappedSuperclass
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public abstract class BaseEntity {
     @Id
     private String id = UUID.randomUUID().toString();

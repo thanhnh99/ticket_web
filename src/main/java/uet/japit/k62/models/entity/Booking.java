@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
