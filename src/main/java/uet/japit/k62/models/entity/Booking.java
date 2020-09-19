@@ -14,6 +14,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
 public class Booking extends BaseEntity{
     private Integer totalTicket;
 

@@ -3,6 +3,7 @@ package uet.japit.k62.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,11 +12,15 @@ import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.IRoleDAO;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.filters.JwtTokenProvider;
+import uet.japit.k62.models.auth.CustomUserDetail;
+import uet.japit.k62.models.entity.User;
+import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.response.data_response.ResLogin;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -33,10 +38,10 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public ResLogin authenticateUser(ReqLogin request)
+    public ResLogin authenticate(ReqLogin request)
     {
         ResLogin response = new ResLogin();
-        CustomUserDetail customUserDetail = loadUserByUserName(request.getUsername());
+        CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
         if(customUserDetail == null ||
                 !passwordEncoder.matches(request.getPassword(), customUserDetail.getPassword()))
         {
@@ -44,16 +49,17 @@ public class UserService implements UserDetailsService {
         }
         else
         {
-            if(customUserDetail.getUser().getEnable())
+            if(customUserDetail.getUser().getIsActive())
             {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getEmail(),
                         request.getPassword()
                 ));
 
                 String token = jwtTokenProvider.generateJwt(customUserDetail);
                 response.setToken(token);
-                response.setRoles(customUserDetail.getAuthorities());
+                response.setRoleList(customUserDetail.getRoles());
+                response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
             }
             else
             {
@@ -63,10 +69,10 @@ public class UserService implements UserDetailsService {
         return response;
     }
 
-    public Boolean checkUserExisted(String username)
+    public Boolean checkUserExisted(String email)
     {
         try {
-            Users user = userRepository.findByUsername(username);
+            User user = userDAO.findByEmail(email);
             if(user == null)
             {
                 return false;
@@ -78,140 +84,20 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Users createManager(HttpServletRequest httpRequest, ReqCreateAdmin requestData)
-    {
-        String token = httpRequest.getHeader("Authorization");
-        try {
-            String userRequestName = AttributeTokenService.getUsernameFromToken(token);
-            Users requestUser = userRepository.findByUsername(userRequestName);
-            boolean checkPermission = AttributeTokenService.checkAccess(token,RoleConstant.ADMIN) || AttributeTokenService.checkAccess(token,RoleConstant.ROOT);
-            boolean checkUserExist = this.checkUserExisted(requestData.getUserName());
-            if(checkPermission && !checkUserExist)
-            {
-                Roles role = roleRepository.findByCode(RoleConstant.MANAGER);
-                Users manager = new Users(requestData.getUserName(),
-                        passwordEncoder.encode(requestData.getPassword()),
-                        requestData.getEmail(),
-                        true);
-                manager.setCreatedBy(requestUser.getId());
-                manager.addRole(role);
-                userRepository.save(manager);
-                return manager;
-            }
-            else
-            {
-                return null;
-            }
-        }catch (Exception e)
-        {
-            System.out.println("Err in UserService.createManager: "+ e.getMessage());
-            return null;
-        }
-    }
-
-    public Users createAdmin(HttpServletRequest httpRequest, ReqCreateAdmin requestData)
-    {
-        String token = httpRequest.getHeader("Authorization");
-        try {
-            String userRequestName = AttributeTokenService.getUsernameFromToken(token);
-            Users requestUser = userRepository.findByUsername(userRequestName);
-            if(AttributeTokenService.checkAccess(token,RoleConstant.ROOT)&&
-                    userRepository.findByUsername(requestData.getUserName()) == null)
-            {
-                Roles role = roleRepository.findByCode(RoleConstant.ADMIN);
-                Users admin = new Users(requestData.getUserName(),
-                        requestData.getPassword(),
-                        requestData.getEmail(),
-                        true);
-                admin.setCreatedBy(requestUser.getId());
-                admin.addRole(role);
-                userRepository.save(admin);
-                return admin;
-            }
-            else
-            {
-                return null;
-            }
-        }catch (Exception e)
-        {
-            System.out.println("Err in UserService.createManager: "+ e.getMessage());
-            return null;
-        }
-    }
-
-    public Boolean loginEnable(HttpServletRequest httpRequest, String userId)
-    {
-        String token = httpRequest.getHeader("Authorization");
-        try{
-
-            Users loginEnableUser = userRepository.getOne(userId);
-            Users userRequest = userRepository.findByUsername(AttributeTokenService.getUsernameFromToken(token));
-            boolean checkAcess = false;
-
-            if(AttributeTokenService.checkAccess(token, RoleConstant.ROOT))
-            {
-                checkAcess = true;
-            }
-            else if(AttributeTokenService.checkAccess(token, RoleConstant.ADMIN))
-            {
-                if(loginEnableUser.getCreatedBy().equals(userRequest.getId()));
-                {
-                    checkAcess = true;
-                }
-            }
-
-            if(checkAcess == true)
-            {
-                loginEnableUser.setUpdatedBy(userRequest.getId());
-                loginEnableUser.setEnable(!loginEnableUser.getEnable());
-                loginEnableUser.setUpdatedAt(new Date());
-                userRepository.save(loginEnableUser);
-            }
-            return checkAcess;
-        } catch (Exception e)
-        {
-            System.out.println("Err in UserService.loginEnable");
-            return false;
-        }
-
-    }
-
-    public List<ResUser> getUsers(HttpServletRequest httpRequest)
-    {
-        try {
-            String token = httpRequest.getHeader("Authorization");
-            List<ResUser> resUsers = new ArrayList<>();
-            if(AttributeTokenService.checkAccess(token, RoleConstant.ROOT))
-            {
-                List<Users> users = userRepository.findAll();
-                for (Users user : users)
-                {
-                    ResUser resUser = new ResUser(user);
-                    resUsers.add(resUser);
-                }
-                return resUsers;
-            }
-            return null;
-        }catch (Exception e)
-        {
-            System.out.println("Err in UserService.getUsers: " + e.getMessage());
-            return null;
-        }
-    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //Kiểm tra user có tồn tại không
-        Users user = userRepository.findByUsername(username);
+        User user = userDAO.findByEmail(email);
         if(user == null)
         {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
         return  new CustomUserDetail(user);
     }
 
-    public CustomUserDetail loadUserByUserName(String userName){
-        Users user = userRepository.findByUsername(userName);
+    public CustomUserDetail loadUserByEmail(String email){
+        User user = userDAO.findByEmail(email);
         if(user == null) {
             return null;
         }

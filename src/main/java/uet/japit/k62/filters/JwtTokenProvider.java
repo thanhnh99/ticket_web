@@ -13,12 +13,6 @@ public class JwtTokenProvider {
     static final long EXPIRATIONTIME = 86_400_000; // 1 day
     public static final String SECRET = "SecretKey";
     public static final String TOKEN_PREFIX = "Bearer";
-    static final String HEADER_STRING = "Authorization";
-    static final String LOGIN_URI = "/login";
-    static final String LOGOUT_URI = "/logout";
-    static final String SHOP_URI = "/shop";
-    static final String CATEGORY_URI = "/category";
-    static final String ITEM_URI = "/item";
 
     public String generateJwt(CustomUserDetail userDetail) {
         Date now = new Date();

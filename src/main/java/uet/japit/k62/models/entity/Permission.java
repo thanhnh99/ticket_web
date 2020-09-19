@@ -11,10 +11,10 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity
 public class Permission extends BaseEntity{
     private String displayName;
     private String code;

@@ -14,7 +14,6 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public abstract class BaseEntity {
     @Id
     private String id = UUID.randomUUID().toString();

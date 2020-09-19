@@ -8,20 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
-public class BookingDetail extends BaseEntity{
-    private Integer quantity;
+public class Comment extends BaseEntity{
+    private String content;
 
     @ManyToOne
-    @JoinColumn(name = "ticket_class_id")
-    private TicketClass ticketClass;
-
-    @ManyToOne
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
-
-
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

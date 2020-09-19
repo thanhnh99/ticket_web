@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
+import uet.japit.k62.models.auth.GranAuthorityImpl;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class User extends BaseEntity{
     @Email
     @UniqueElements
@@ -46,20 +48,31 @@ public class User extends BaseEntity{
         this.roleList.add(role);
     }
 
-    public List<GranAuthorityImpl> getRolesAuthority(){
-        return this.roles.stream().map(role -> {
-            return new GranAuthorityImpl(role.getName());
+    public List<GranAuthorityImpl> getPermissionAuthority(){
+        return this.permissionList.stream().map(permission -> {
+            return new GranAuthorityImpl(permission.getCode());
         }).collect(Collectors.toList());
     }
 
     public List<String> getRoles()
     {
-        List<Roles> roles = (List<Roles>) this.roles;
+        List<Role> roles = (List<Role>) this.roleList;
         List<String> listRole = new ArrayList<>();
-        for (Roles role : roles)
+        for (Role role : roles)
         {
             listRole.add(role.getCode());
         }
         return listRole;
+    }
+
+    public List<String> getPermissionStringList()
+    {
+        List<Permission> permissionList = (List<Permission>) this.permissionList;
+        List<String> permissionStringList = new ArrayList<String>();
+        for (Permission permission : permissionList)
+        {
+            permissionStringList.add(permission.getCode());
+        }
+        return permissionStringList;
     }
 }

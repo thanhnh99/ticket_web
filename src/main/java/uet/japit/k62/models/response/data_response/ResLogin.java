@@ -3,6 +3,7 @@ package uet.japit.k62.models.response.data_response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ResLogin {
     String token;
-    List<String> permissionList;
+    List<GrantedAuthority> permissionList;
     List<String> roleList;
 }

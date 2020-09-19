@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Voucher extends BaseEntity{
     private String code;
     private String organizerId;

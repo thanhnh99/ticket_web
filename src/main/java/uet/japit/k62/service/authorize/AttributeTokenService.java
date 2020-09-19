@@ -1,8 +1,8 @@
 package uet.japit.k62.service.authorize;
 
-import com.multiple_language_menu.filters.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import uet.japit.k62.filters.JwtTokenProvider;
 
 import java.util.ArrayList;
 import java.util.Date;

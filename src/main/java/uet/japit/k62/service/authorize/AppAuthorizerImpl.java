@@ -40,11 +40,11 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
             User userEntity = userDAO.findByEmail(email);
             if(userEntity != null && userEntity.getIsActive())
             {
-                for(String permission : userEntity.getPermissionList())
+                for(String permission : userEntity.getPermissionStringList())
                 {
-                    for (String role : roles)
+                    for (String permissionInput : permissions)
                     {
-                        if(roleEntity.equals(role))
+                        if(permission.equals(permissionInput))
                         {
                             isAllow = true;
                             break;

@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
 public class TicketClass extends BaseEntity{
     private String name;
     private BigDecimal price;

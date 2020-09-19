@@ -10,10 +10,10 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Role extends BaseEntity{
     private String name;
     private String code;
