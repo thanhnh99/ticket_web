@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uet.japit.k62.constant.AccountTypeConstant;
+import uet.japit.k62.constant.ErrorConstant;
 import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.dao.IRoleDAO;
 import uet.japit.k62.dao.IUserDAO;
@@ -17,7 +19,9 @@ import uet.japit.k62.filters.JwtTokenProvider;
 import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.ReqLogin;
+import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.data_response.ResLogin;
+import uet.japit.k62.models.response.service_response.ServiceResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,13 +44,15 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public ResLogin authenticateUser(ReqLogin request)
+    public ServiceResponse<ResLogin> authenticateUser(ReqLogin request)
     {
+        ServiceResponse serviceResponse = new ServiceResponse();
         ResLogin response = new ResLogin();
         CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
         if(customUserDetail == null ||
                 !passwordEncoder.matches(request.getPassword(), customUserDetail.getPassword()))
         {
+            serviceResponse.setMessage(ErrorConstant.AUTHENTICATE_FAIL);
             response = null;
         }
         else
@@ -62,16 +68,22 @@ public class UserService implements UserDetailsService {
                 response.setToken(token);
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
                 response.setRole(customUserDetail.getRole());
+
+                serviceResponse.setMessage(ErrorConstant.SUCCESS);
+                serviceResponse.setStatus(true);
             }
             else
             {
                 response = null;
+                serviceResponse.setMessage(ErrorConstant.ACCOUNT_IS_LOCKED);
+
             }
         }
-        return response;
+        serviceResponse.setData(response);
+        return serviceResponse;
     }
 
-    public Boolean checkUserExisted(String email)
+    public Boolean userExisted(String email)
     {
         try {
             User user = userDAO.findByEmail(email);
@@ -110,6 +122,30 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+    public ServiceResponse register(ReqRegister requestData)
+    {
+        ServiceResponse serviceResponse = new ServiceResponse();
+        try {
+            if(!this.userExisted(requestData.getEmail()))
+            {
+                User newUser = new User();
+                newUser.setRole(roleDAO.findByCode(AccountTypeConstant.USER));
+                newUser.setPassword(passwordEncoder.encode(requestData.getPassword()));
+                newUser.setEmail(requestData.getEmail());
+                userDAO.save(newUser);
+                serviceResponse.setStatus(true);
+                serviceResponse.setMessage(ErrorConstant.SUCCESS);
+            }
+            serviceResponse.setMessage(ErrorConstant.USER_EXISTED);
+        }catch (Exception e)
+        {
+            System.out.println("Err in UserService.register: " + e.getMessage());
+            serviceResponse.setMessage(ErrorConstant.HAS_EXCEPTION);
+        }
+        return serviceResponse;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //Kiểm tra user có tồn tại không

@@ -25,7 +25,7 @@ public class JwtTokenProvider {
                 .setExpiration(expirationDate)
                 .claim("password", userDetail.getPassword())
                 .claim("username",userDetail.getUsername())
-                .claim("permission", userDetail.getAuthorities())
+                .claim("permissions", userDetail.getAuthorities())
                 .claim("roles", userDetail.getRole())
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();

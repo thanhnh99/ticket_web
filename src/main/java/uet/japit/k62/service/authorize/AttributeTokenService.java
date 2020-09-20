@@ -39,7 +39,7 @@ public  class AttributeTokenService {
 
     public static List<String> getPermissionFromToken(String token)
     {
-        Object o = getAllClaimsFromToken(token).get("permission");
+        Object o = getAllClaimsFromToken(token).get("permissions");
         if ( o instanceof List) {
             List<String> data = (ArrayList<String>) getAllClaimsFromToken(token).get("permission");
             return data;

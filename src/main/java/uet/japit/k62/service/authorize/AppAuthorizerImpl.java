@@ -29,11 +29,11 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
         try {
             UsernamePasswordAuthenticationToken user = (UsernamePasswordAuthenticationToken) authentication;
             if (user==null){
-                return isAllow;
+                return false;
             }
             String email = (String)user.getPrincipal();
             if (email==null || "".equals(email.trim())) {
-                return isAllow;
+                return false;
             }
             //Truy vấn vào CSDL theo userId + menuCode + action
             //Nếu có quyền thì
@@ -62,17 +62,4 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
         }
         return isAllow;
     }
-
-//    // Lay ra securedPath duoc Annotate RequestMapping trong Controller
-//    private String extractSecuredPath(Object callerObj) {
-//        Class<?> clazz = ResolvableType.forClass(callerObj.getClass()).getRawClass();
-//        Optional<Annotation> annotation = Arrays.asList(clazz.getAnnotations()).stream().filter((ann) -> {
-//            return ann instanceof RequestMapping;
-//        }).findFirst();
-//        logger.debug("FOUND CALLER CLASS: {}", ResolvableType.forClass(callerObj.getClass()).getType().getTypeName());
-//        if (annotation.isPresent()) {
-//            return ((RequestMapping) annotation.get()).value()[0];
-//        }
-//        return null;
-//    }
 }
