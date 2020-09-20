@@ -1,5 +1,6 @@
 package uet.japit.k62.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.dao.IRoleDAO;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.filters.JwtTokenProvider;
@@ -16,9 +18,9 @@ import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.response.data_response.ResLogin;
+import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public ResLogin authenticate(ReqLogin request)
+    public ResLogin authenticateUser(ReqLogin request)
     {
         ResLogin response = new ResLogin();
         CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
@@ -58,8 +60,8 @@ public class UserService implements UserDetailsService {
 
                 String token = jwtTokenProvider.generateJwt(customUserDetail);
                 response.setToken(token);
-                response.setRoleList(customUserDetail.getRoles());
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
+                response.setRole(customUserDetail.getRole());
             }
             else
             {
@@ -84,7 +86,30 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public Boolean loginEnable(HttpServletRequest httpRequest, String userId)
+    {
+        String token = httpRequest.getHeader("Authorization");
+        try{
 
+            User loginEnableUser = userDAO.getOne(userId);
+            User userRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
+
+            if(AttributeTokenService.checkAccess(token, PermissionConstant.DISABLE_USER))
+            {
+                loginEnableUser.setUpdatedBy(userRequest.getId());
+                loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
+                loginEnableUser.setUpdatedAt(new Date());
+                userDAO.save(loginEnableUser);
+                return true;
+            }
+            return false;
+        } catch (Exception e)
+        {
+            System.out.println("Err in UserService.loginEnable");
+            return false;
+        }
+
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //Kiểm tra user có tồn tại không
@@ -106,4 +131,3 @@ public class UserService implements UserDetailsService {
 
 
 }
-

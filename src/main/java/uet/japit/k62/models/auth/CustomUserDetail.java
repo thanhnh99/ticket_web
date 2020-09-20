@@ -55,8 +55,8 @@ public class CustomUserDetail implements UserDetails {
         return user.getEmail();
     }
 
-    public List<String> getRoles()
+    public String getRole()
     {
-        return user.getRoles();
+        return user.getRole().getCode();
     }
 }

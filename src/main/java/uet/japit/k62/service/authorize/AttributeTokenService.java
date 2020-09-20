@@ -14,7 +14,7 @@ public  class AttributeTokenService {
     private static final String TOKEN_PREFIX = JwtTokenProvider.TOKEN_PREFIX;
 
     //retrieve username from jwt token
-    public static String getUsernameFromToken(String token) {
+    public static String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -37,24 +37,24 @@ public  class AttributeTokenService {
     }
 
 
-    public static List<String> getRolesFromToken(String token)
+    public static List<String> getPermissionFromToken(String token)
     {
-        Object o = getAllClaimsFromToken(token).get("roles");
+        Object o = getAllClaimsFromToken(token).get("permission");
         if ( o instanceof List) {
-            List<String> data = (ArrayList<String>) getAllClaimsFromToken(token).get("roles");
+            List<String> data = (ArrayList<String>) getAllClaimsFromToken(token).get("permission");
             return data;
         }
         return null;
     }
 
-    public static boolean checkAccess(String token, String roleCheck)
+    public static boolean checkAccess(String token, String permissionCheck)
     {
-        List<String> roleFromTokens = getRolesFromToken(token);
-        if(roleFromTokens != null)
+        List<String> permissionFromToken = getPermissionFromToken(token);
+        if(permissionFromToken != null)
         {
-            for(String role : roleFromTokens)
+            for(String role : permissionFromToken)
             {
-                if(roleCheck.equals(role))
+                if(permissionCheck.equals(role))
                 {
                     return true;
                 }
