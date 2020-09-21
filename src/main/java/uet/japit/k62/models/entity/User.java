@@ -7,10 +7,7 @@ import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.models.auth.GranAuthorityImpl;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +33,7 @@ public class User extends BaseEntity{
     @JoinColumn(name = "account_type_id")
     private AccountType accountType;
 
-    @ManyToMany(mappedBy = "userList")
+    @ManyToMany(mappedBy = "userList", fetch = FetchType.EAGER)
     private Collection<Permission> permissionList = new ArrayList<Permission>();
 
     public User(String displayName, String password, String email, Boolean isActive)

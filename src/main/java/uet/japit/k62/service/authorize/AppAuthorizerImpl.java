@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.IUserDAO;
+import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.User;
 
 import java.util.List;
@@ -31,7 +32,8 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
             if (user==null){
                 return false;
             }
-            String email = (String)user.getPrincipal();
+            CustomUserDetail customUserDetail = (CustomUserDetail) user.getPrincipal();
+            String email = customUserDetail.getEmail();
             if (email==null || "".equals(email.trim())) {
                 return false;
             }

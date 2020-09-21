@@ -85,7 +85,7 @@ public class DbSeed {
             user.setEmail("thanhnh99.amc@gmail.com");
             user.setPassword(passwordEncoder.encode("12345"));
             user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.ROOT));
-            List<Permission> permissionList= permissionDAO.findAll();
+            List<Permission> permissionList = permissionDAO.findAll();
             user.setPermissionList(permissionList);
             userDAO.save(user);
         }

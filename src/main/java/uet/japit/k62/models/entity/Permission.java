@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,7 +17,7 @@ public class Permission extends BaseEntity{
     private String code;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_permission",
             joinColumns = @JoinColumn(name = "permission_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
