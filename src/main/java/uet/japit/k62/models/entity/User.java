@@ -3,14 +3,15 @@ package uet.japit.k62.models.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
+import uet.japit.k62.constant.AccountTypeConstant;
+import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.models.auth.GranAuthorityImpl;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Email;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,8 +33,8 @@ public class User extends BaseEntity{
 //    private Collection<Role> roleList = new ArrayList<Role>();
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "account_type_id")
+    private AccountType accountType;
 
     @ManyToMany(mappedBy = "userList")
     private Collection<Permission> permissionList = new ArrayList<Permission>();

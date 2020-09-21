@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.ErrorConstant;
 import uet.japit.k62.constant.PermissionConstant;
-import uet.japit.k62.dao.IRoleDAO;
+import uet.japit.k62.dao.IAccountTypeDAO;
+import uet.japit.k62.dao.IPermissionDAO;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.filters.JwtTokenProvider;
 import uet.japit.k62.models.auth.CustomUserDetail;
+import uet.japit.k62.models.entity.AccountType;
+import uet.japit.k62.models.entity.Permission;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
@@ -25,6 +28,8 @@ import uet.japit.k62.models.response.service_response.ServiceResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +38,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     IUserDAO userDAO;
     @Autowired
-    IRoleDAO roleDAO;
+    IAccountTypeDAO accountTypeDAO;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -43,6 +48,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    IPermissionDAO permissionDAO;
 
     public ServiceResponse<ResLogin> authenticateUser(ReqLogin request)
     {
@@ -67,7 +75,7 @@ public class UserService implements UserDetailsService {
                 String token = jwtTokenProvider.generateJwt(customUserDetail);
                 response.setToken(token);
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
-                response.setRole(customUserDetail.getRole());
+                response.setAccountType(customUserDetail.getAccountType());
 
                 serviceResponse.setMessage(ErrorConstant.SUCCESS);
                 serviceResponse.setStatus(true);
@@ -130,9 +138,10 @@ public class UserService implements UserDetailsService {
             if(!this.userExisted(requestData.getEmail()))
             {
                 User newUser = new User();
-                newUser.setRole(roleDAO.findByCode(AccountTypeConstant.USER));
+                newUser.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.USER));
                 newUser.setPassword(passwordEncoder.encode(requestData.getPassword()));
                 newUser.setEmail(requestData.getEmail());
+                newUser.setDisplayName(requestData.getDisplayName());
                 userDAO.save(newUser);
                 serviceResponse.setStatus(true);
                 serviceResponse.setMessage(ErrorConstant.SUCCESS);
@@ -165,5 +174,42 @@ public class UserService implements UserDetailsService {
         return new CustomUserDetail(user);
     }
 
+    //TODO: CHECK THIS FUNCTION
+    public void changeAccountType(User user, String accountType)
+    {
+        try {
+            AccountType accountTypeEntity = accountTypeDAO.findByCode(accountType);
+            user.setPermissionList(new ArrayList<Permission>());
+            //update accountType
+            //update permission
+            if(accountType.equals(AccountTypeConstant.ADMIN))
+            {
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.CHANGE_ACCOUNT_TYPE));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_CATEGORY));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_EVENT));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_CATEGORY));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_CATEGORY));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.EDIT_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.GET_VOUCHER));
+
+            }else if(accountType.equals(AccountTypeConstant.ORGANIZER))
+            {
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_EVENT));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.EDIT_EVENT));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_EVENT));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.EDIT_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_VOUCHER));
+                user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.GET_VOUCHER));
+            }
+            user.setAccountType(accountTypeEntity);
+            userDAO.save(user);
+        }catch (Exception e)
+        {
+            System.out.println("Err in " + this.getClass().getName() + ".changeAccountType: " + e.getMessage());
+        }
+    }
 
 }

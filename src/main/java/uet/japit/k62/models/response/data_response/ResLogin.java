@@ -13,5 +13,5 @@ import java.util.List;
 public class ResLogin {
     String token;
     List<GrantedAuthority> permissionList;
-    String role;
+    String accountType;
 }

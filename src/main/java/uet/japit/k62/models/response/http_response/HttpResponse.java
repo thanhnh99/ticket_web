@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HttpResponse<T>{
-    private String statusCode;
+    private Integer statusCode;
     private String message;
     private T data;
 }

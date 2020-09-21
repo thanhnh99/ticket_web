@@ -26,7 +26,7 @@ public class JwtTokenProvider {
                 .claim("password", userDetail.getPassword())
                 .claim("username",userDetail.getUsername())
                 .claim("permissions", userDetail.getAuthorities())
-                .claim("roles", userDetail.getRole())
+                .claim("roles", userDetail.getAccountType())
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
     }

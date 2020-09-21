@@ -15,4 +15,6 @@ public class PermissionConstant {
     public final static String ADD_VOUCHER = "ADD_VOUCHER";
     public final static String GET_VOUCHER = "GET_VOUCHER";
     public final static String EDIT_VOUCHER = "EDIT_VOUCHER";
+    public final static String DELETE_VOUCHER = "DELETE_VOUCHER";
+    public final static String CHANGE_ACCOUNT_TYPE = "CHANGE_ACCOUNT_TYPE";
 }

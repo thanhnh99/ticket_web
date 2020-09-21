@@ -6,10 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.dao.IPermissionDAO;
-import uet.japit.k62.dao.IRoleDAO;
+import uet.japit.k62.dao.IAccountTypeDAO;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.models.entity.Permission;
-import uet.japit.k62.models.entity.Role;
+import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.User;
 
 import java.lang.reflect.Field;
@@ -20,14 +20,14 @@ public class DbSeed {
     private final PasswordEncoder passwordEncoder;
     private final IUserDAO userDAO;
     private final IPermissionDAO permissionDAO;
-    private final IRoleDAO roleDAO;
+    private final IAccountTypeDAO accountTypeDAO;
 
-    public DbSeed(PasswordEncoder passwordEncoder, IUserDAO userDao, IPermissionDAO permissionDAO, IRoleDAO roleDAO)
+    public DbSeed(PasswordEncoder passwordEncoder, IUserDAO userDao, IPermissionDAO permissionDAO, IAccountTypeDAO accountTypeDAO)
     {
         this.passwordEncoder = passwordEncoder;
         this.userDAO = userDao;
         this.permissionDAO = permissionDAO;
-        this.roleDAO = roleDAO;
+        this.accountTypeDAO = accountTypeDAO;
     }
 
     @Bean
@@ -47,17 +47,17 @@ public class DbSeed {
     }
     
     @Bean
-    public void addRole()
+    public void addAccountType()
     {
-        AccountTypeConstant roleList = new AccountTypeConstant();
-        for (Field role :
-                roleList.getClass().getDeclaredFields()) {
-            if(roleDAO.findByCode(role.getName()) == null)
+        AccountTypeConstant accountTypeDefaultList = new AccountTypeConstant();
+        for (Field accountType :
+                accountTypeDefaultList.getClass().getDeclaredFields()) {
+            if(accountTypeDAO.findByCode(accountType.getName()) == null)
             {
-                Role newRole = new Role();
-                newRole.setCode(role.getName());
-                newRole.setName(role.getName());
-                roleDAO.save(newRole);
+                AccountType newAccountType = new AccountType();
+                newAccountType.setCode(accountType.getName());
+                newAccountType.setName(accountType.getName());
+                accountTypeDAO.save(newAccountType);
             }
         }
     }
@@ -70,7 +70,23 @@ public class DbSeed {
             user.setDisplayName("Huu Thanh");
             user.setEmail("huuthanh99hn@gmail.com");
             user.setPassword(passwordEncoder.encode("12345"));
-            user.setRole(roleDAO.findByCode(AccountTypeConstant.USER));
+            user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.USER));
+            userDAO.save(user);
+        }
+    }
+
+    @Bean
+    public void addRoot()
+    {
+        if(userDAO.findByEmail("thanhnh99.amc@gmail.com") == null)
+        {
+            User user = new User();
+            user.setDisplayName("Huu Thanh");
+            user.setEmail("thanhnh99.amc@gmail.com");
+            user.setPassword(passwordEncoder.encode("12345"));
+            user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.ROOT));
+            List<Permission> permissionList= permissionDAO.findAll();
+            user.setPermissionList(permissionList);
             userDAO.save(user);
         }
     }

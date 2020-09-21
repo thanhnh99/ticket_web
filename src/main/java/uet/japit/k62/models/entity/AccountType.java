@@ -12,11 +12,11 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Role extends BaseEntity{
+public class AccountType extends BaseEntity{
     private String name;
     private String code;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "accountType")
     private Collection<User> ticketClasses = new ArrayList<User>();
 //
 //    @ManyToMany
