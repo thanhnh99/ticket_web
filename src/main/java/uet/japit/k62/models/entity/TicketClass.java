@@ -1,8 +1,6 @@
 package uet.japit.k62.models.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -26,9 +24,13 @@ public class TicketClass extends BaseEntity{
     private Integer maxPerPerson;
 
     @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinColumn(name = "event_id")
     private Event event;
 
     @OneToMany(mappedBy = "ticketClass")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Collection<BookingDetail> bookingDetailList = new ArrayList<BookingDetail>();
 }

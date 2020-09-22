@@ -1,8 +1,6 @@
 package uet.japit.k62.models.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.models.auth.GranAuthorityImpl;
@@ -31,9 +29,13 @@ public class User extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "account_type_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private AccountType accountType;
 
-    @ManyToMany(mappedBy = "userList", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "userList", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Collection<Permission> permissionList = new ArrayList<Permission>();
 
     public User(String displayName, String password, String email, Boolean isActive)
@@ -60,5 +62,14 @@ public class User extends BaseEntity{
             permissionStringList.add(permission.getCode());
         }
         return permissionStringList;
+    }
+
+    public void setPermissionList(List<Permission> permissionList)
+    {
+        this.permissionList = new ArrayList<Permission>();
+        for(Permission permission : permissionList)
+        {
+            this.permissionList.add(permission);
+        }
     }
 }

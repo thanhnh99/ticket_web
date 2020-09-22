@@ -1,8 +1,6 @@
 package uet.japit.k62.models.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +15,8 @@ public class AccountType extends BaseEntity{
     private String code;
 
     @OneToMany(mappedBy = "accountType")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Collection<User> ticketClasses = new ArrayList<User>();
 //
 //    @ManyToMany
