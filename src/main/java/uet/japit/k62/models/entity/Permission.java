@@ -14,11 +14,7 @@ public class Permission extends BaseEntity{
     private String displayName;
     private String code;
 
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_permission",
-            joinColumns = @JoinColumn(name = "permission_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "permissionList", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<User> userList = new ArrayList<User>();}

@@ -87,7 +87,7 @@ public class DbSeed {
             user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.ROOT));
             List<Permission> permissionList = permissionDAO.findAll();
             user.setPermissionList(permissionList);
-            userDAO.save(user);
+            userDAO.saveAndFlush(user);
         }
     }
 }

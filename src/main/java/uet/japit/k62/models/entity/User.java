@@ -33,7 +33,10 @@ public class User extends BaseEntity{
     @ToString.Exclude
     private AccountType accountType;
 
-    @ManyToMany(mappedBy = "userList", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_permission",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Permission> permissionList = new ArrayList<Permission>();
