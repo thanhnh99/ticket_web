@@ -8,4 +8,9 @@ public class ServiceResponse<T> {
     public String message;
     public T data;
 
+    public boolean isSuccess()
+    {
+        return this.status;
+    }
+
 }

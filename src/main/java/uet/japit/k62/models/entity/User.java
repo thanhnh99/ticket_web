@@ -72,4 +72,9 @@ public class User extends BaseEntity{
             this.permissionList.add(permission);
         }
     }
+
+    public void addPermission(Permission permission)
+    {
+        this.permissionList.add(permission);
+    }
 }

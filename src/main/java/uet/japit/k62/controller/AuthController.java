@@ -27,7 +27,7 @@ public class AuthController {
     public ResponseEntity login(@RequestBody ReqLogin request)
     {
         HttpResponse response = new HttpResponse();
-        if(userService.authenticateUser(request) != null)
+        if(userService.authenticateUser(request).isSuccess())
         {
             response.setMessage(ErrorConstant.SUCCESS);
             response.setStatusCode(StatusCode.OK);
@@ -44,7 +44,7 @@ public class AuthController {
     public ResponseEntity register(@RequestBody ReqRegister requestData)
     {
         HttpResponse response = new HttpResponse();
-        if(userService.register(requestData).getStatus())
+        if(userService.register(requestData).isSuccess())
         {
             response.setMessage(ErrorConstant.SUCCESS);
             response.setStatusCode(StatusCode.OK);

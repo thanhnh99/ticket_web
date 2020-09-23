@@ -21,6 +21,7 @@ import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.Permission;
 import uet.japit.k62.models.entity.User;
+import uet.japit.k62.models.request.ReqAddPermission;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.data_response.ResLogin;
@@ -60,6 +61,7 @@ public class UserService implements UserDetailsService {
         if(customUserDetail == null ||
                 !passwordEncoder.matches(request.getPassword(), customUserDetail.getPassword()))
         {
+            serviceResponse.setStatus(false);
             serviceResponse.setMessage(ErrorConstant.AUTHENTICATE_FAIL);
             response = null;
         }
@@ -84,6 +86,7 @@ public class UserService implements UserDetailsService {
             {
                 response = null;
                 serviceResponse.setMessage(ErrorConstant.ACCOUNT_IS_LOCKED);
+                serviceResponse.setStatus(false);
 
             }
         }
@@ -212,4 +215,9 @@ public class UserService implements UserDetailsService {
         }
     }
 
+
+    public ServiceResponse addPermission(HttpServletRequest httpRequest, ReqAddPermission permissionCode)
+    {
+        return null;
+    }
 }
