@@ -21,7 +21,8 @@ import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.Permission;
 import uet.japit.k62.models.entity.User;
-import uet.japit.k62.models.request.ReqAddPermission;
+import uet.japit.k62.models.request.ReqChangeAccountType;
+import uet.japit.k62.models.request.ReqChangePermission;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.data_response.ResLogin;
@@ -29,7 +30,6 @@ import uet.japit.k62.models.response.service_response.ServiceResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,29 +109,25 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Boolean loginEnable(HttpServletRequest httpRequest, String userId)
+    public ServiceResponse loginDisable(HttpServletRequest httpRequest, String userId)
     {
-        String token = httpRequest.getHeader("Authorization");
+        ServiceResponse serviceResponse = new ServiceResponse();
         try{
-
+            String token = httpRequest.getHeader("Authorization");
             User loginEnableUser = userDAO.getOne(userId);
-            User userRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
-
-            if(AttributeTokenService.checkAccess(token, PermissionConstant.DISABLE_USER))
-            {
-                loginEnableUser.setUpdatedBy(userRequest.getId());
-                loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
-                loginEnableUser.setUpdatedAt(new Date());
-                userDAO.save(loginEnableUser);
-                return true;
-            }
-            return false;
+            User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
+            loginEnableUser.setUpdatedBy(userSendRequest.getId());
+            loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
+            loginEnableUser.setUpdatedAt(new Date());
+            userDAO.save(loginEnableUser);
+            serviceResponse.setStatus(true);
+            serviceResponse.setMessage(ErrorConstant.SUCCESS);
         } catch (Exception e)
         {
             System.out.println("Err in UserService.loginEnable");
-            return false;
+            serviceResponse.setMessage(ErrorConstant.HAS_EXCEPTION);
         }
-
+        return serviceResponse;
     }
 
     public ServiceResponse register(ReqRegister requestData)
@@ -149,7 +145,11 @@ public class UserService implements UserDetailsService {
                 serviceResponse.setStatus(true);
                 serviceResponse.setMessage(ErrorConstant.SUCCESS);
             }
-            serviceResponse.setMessage(ErrorConstant.USER_EXISTED);
+            else
+            {
+                serviceResponse.setMessage(ErrorConstant.USER_EXISTED);
+
+            }
         }catch (Exception e)
         {
             System.out.println("Err in UserService.register: " + e.getMessage());
@@ -177,15 +177,20 @@ public class UserService implements UserDetailsService {
         return new CustomUserDetail(user);
     }
 
-    //TODO: CHECK THIS FUNCTION
-    public void changeAccountType(User user, String accountType)
+    public ServiceResponse changeAccountType(HttpServletRequest httpRequest, ReqChangeAccountType requestData)
     {
+        ServiceResponse response = new ServiceResponse();
         try {
-            AccountType accountTypeEntity = accountTypeDAO.findByCode(accountType);
-            user.setPermissionList(new ArrayList<Permission>());
-            //update accountType
-            //update permission
-            if(accountType.equals(AccountTypeConstant.ADMIN))
+            String token = httpRequest.getHeader("Authorization");
+            String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+            AccountType accountTypeEntity = accountTypeDAO.findByCode(requestData.getAccountType());
+            User user = userDAO.findById(requestData.getUserId()).get();
+            if(!requestData.getAccountType().equals(AccountTypeConstant.ROOT))
+            {
+                user.setPermissionList(new ArrayList<Permission>());
+            }
+            if(requestData.getAccountType().equals(AccountTypeConstant.ADMIN) &&
+                !user.getAccountType().equals(AccountTypeConstant.ADMIN))
             {
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.CHANGE_ACCOUNT_TYPE));
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_CATEGORY));
@@ -197,7 +202,8 @@ public class UserService implements UserDetailsService {
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.DELETE_VOUCHER));
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.GET_VOUCHER));
 
-            }else if(accountType.equals(AccountTypeConstant.ORGANIZER))
+            }else if(requestData.getAccountType().equals(AccountTypeConstant.ORGANIZER) &&
+                    !user.getAccountType().equals(AccountTypeConstant.ORGANIZER))
             {
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.ADD_EVENT));
                 user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.EDIT_EVENT));
@@ -209,15 +215,51 @@ public class UserService implements UserDetailsService {
             }
             user.setAccountType(accountTypeEntity);
             userDAO.save(user);
+            response.setStatus(true);
+            response.setMessage(ErrorConstant.SUCCESS);
         }catch (Exception e)
         {
             System.out.println("Err in " + this.getClass().getName() + ".changeAccountType: " + e.getMessage());
+            response.setStatus(false);
+            response.setMessage(ErrorConstant.HAS_EXCEPTION);
         }
+        return response;
     }
 
 
-    public ServiceResponse addPermission(HttpServletRequest httpRequest, ReqAddPermission permissionCode)
+    public ServiceResponse changePermission(HttpServletRequest httpRequest, ReqChangePermission requestData)
     {
-        return null;
+        ServiceResponse response = new ServiceResponse();
+        try {
+            String token = httpRequest.getHeader("Authorization");
+            String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+            User user = userDAO.findById(requestData.getUserId()).get();
+            User userSendRequest = userDAO.findByEmail(emailSendRequest);
+            if(!emailSendRequest.equals(user.getEmail()))
+            {
+                user.setPermissionList(new ArrayList<Permission>());
+                for (String permissionCode : requestData.getPermissionCodeList())
+                {
+                    Permission permissionEntity = permissionDAO.findByCode(permissionCode);
+                    user.getPermissionList().add(permissionEntity);
+                }
+                user.setUpdatedAt(new Date());
+                user.setUpdatedBy(userSendRequest.getId());
+                userDAO.save(user);
+                response.setStatus(true);
+                response.setMessage(ErrorConstant.SUCCESS);
+            } else
+            {
+                response.setStatus(false);
+                response.setMessage(ErrorConstant.CANT_SELF_UPDATE_PERMISSION);
+            }
+        }catch (Exception e)
+        {
+            System.out.println("Err in UserService.changePermission: " + e.getMessage());
+            response.setStatus(false);
+            response.setMessage(ErrorConstant.HAS_EXCEPTION);
+            response.setData(null);
+        }
+        return response;
     }
 }

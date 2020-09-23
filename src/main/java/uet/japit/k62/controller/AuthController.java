@@ -12,6 +12,7 @@ import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.http_response.HttpResponse;
+import uet.japit.k62.models.response.service_response.ServiceResponse;
 import uet.japit.k62.service.UserService;
 
 @RestController
@@ -24,37 +25,19 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody ReqLogin request)
+    public ResponseEntity login(@RequestBody ReqLogin requestData)
     {
-        HttpResponse response = new HttpResponse();
-        if(userService.authenticateUser(request).isSuccess())
-        {
-            response.setMessage(ErrorConstant.SUCCESS);
-            response.setStatusCode(StatusCode.OK);
-            response.setData(userService.authenticateUser(request).getData());
-            return ResponseEntity.status(200).body(response);
-        }
-        response.setMessage(userService.authenticateUser(request).getMessage());
-        response.setStatusCode(StatusCode.BAD_REQUEST);
-        response.setData(userService.authenticateUser(request));
-        return ResponseEntity.status(400).body(response);
+        HttpResponse responseData = new HttpResponse();
+        ServiceResponse serviceResponse = userService.authenticateUser(requestData);
+        return ServiceResponse.getHttpResponseResponseEntity(responseData, serviceResponse);
     }
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody ReqRegister requestData)
     {
-        HttpResponse response = new HttpResponse();
-        if(userService.register(requestData).isSuccess())
-        {
-            response.setMessage(ErrorConstant.SUCCESS);
-            response.setStatusCode(StatusCode.OK);
-            response.setData(userService.register(requestData).getData());
-            return ResponseEntity.status(200).body(response);
-        }
-        response.setMessage(userService.register(requestData).getMessage());
-        response.setStatusCode(StatusCode.BAD_REQUEST);
-        response.setData(userService.register(requestData).getData());
-        return ResponseEntity.status(400).body(response);
+        HttpResponse responseData = new HttpResponse();
+        ServiceResponse serviceResponse = userService.register(requestData);
+        return ServiceResponse.getHttpResponseResponseEntity(responseData, serviceResponse);
     }
 
 }

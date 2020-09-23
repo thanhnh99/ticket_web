@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PermissionConstant {
     public final static String ADD_PERMISSION = "ADD_PERMISSION";
+    public final static String CHANGE_PERMISSION = "CHANGE_PERMISSION";
     public final static String DISABLE_USER = "DISABLE_USER";
     public final static String ADD_CATEGORY = "ADD_CATEGORY";
     public final static String EDIT_CATEGORY = "EDIT_CATEGORY";
