@@ -1,0 +1,14 @@
+{
+  "retry": "Thử lại",
+  "serverProblem": "Máy chủ gặp vấn đề. Xin vui lòng thử lại.",
+  "unstableNetwork": "Kết nối mạng không ổn dino.",
+
+  "notChosen": "Chưa chọn",
+  "chosenDate": "Chọn ngày",
+
+  "labelRowPerPage": "Số hàng trên mỗi trang:",
+  "rowPerPage": "Số dòng:",
+  "stt": "STT",
+
+  "helloWorld": "Hello World"
+}
