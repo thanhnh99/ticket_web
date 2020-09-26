@@ -11,5 +11,6 @@ public class ErrorConstant {
     public static final String AUTHENTICATE_FAIL = "AUTHENTICATE_FAIL";
     public static final String ACCOUNT_IS_LOCKED = "ACCOUNT_IS_LOCKED";
     public static final String CANT_SELF_UPDATE_PERMISSION = "CANT_SELF_UPDATE_PERMISSION";
+    public static final String CATEGORY_HAS_EXISTED = "CATEGORY_HAS_EXISTED";
 
 }

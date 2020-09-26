@@ -12,6 +12,8 @@ import java.util.Collection;
 @Entity
 public class AccountType extends BaseEntity{
     private String name;
+
+    @Column(unique = true)
     private String code;
 
     @OneToMany(mappedBy = "accountType")
