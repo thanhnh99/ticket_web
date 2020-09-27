@@ -1,4 +1,4 @@
-import { push } from 'connected-react-router';
+import { push, replace } from 'connected-react-router';
 import { get, remove, set } from 'js-cookie';
 import { batch } from 'react-redux';
 import { Action } from 'redux';
@@ -10,52 +10,80 @@ import { AppState, clearStoreAfterLogout } from '../../../redux/reducers';
 import { setUserData } from '../../account/redux/accountReducer';
 import { fetchThunk } from '../../common/redux/thunk';
 import { inAction, out, setValidatingToken, setAuthenticating } from './authReducer';
+import { ROUTES } from '../../../configs/routes';
+import { goToAction, goBackAction } from '../../common/redux/reducer';
 
-export interface ILoginData {
-  email: string;
+export interface ILoginForm {
+  userName: string;
   password: string;
 }
 
-export const defaultLoginData: ILoginData = {
-  email: '0999888777',
+export const defaultLoginForm: ILoginForm = {
+  userName: 'lastromeo1996bn@gmail.com',
   password: '123456',
 };
-export interface IFirstLoginData {
-  username: string;
+export interface IFirstLoginForm {
+  password: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export const defaultFirstLoginForm: IFirstLoginForm = {
+  password: '',
+  newPassword: '',
+  confirmNewPassword: '',
+};
+export interface IChangePasswordForm {
   password: string;
   confirmPassword: string;
 }
 
-export const defaultFirstLoginData: IFirstLoginData = {
-  username: '',
+export const defaultChangePasswordForm: IChangePasswordForm = {
   password: '',
   confirmPassword: '',
 };
-export interface IChangePasswordData {
+
+export interface IResetPasswordData {
   password: string;
   confirmPassword: string;
 }
 
-export const defaultChangePasswordData: IChangePasswordData = {
+export const defaultResetPasswordData: IChangePasswordForm = {
   password: '',
   confirmPassword: '',
 };
 export interface IRegisterData {
-  companyName: string;
-  companySize: number | null;
-  contactPersonName: string;
+  name: string;
+  companySizeRange: some | null;
+  representative: string;
   email: string;
-  phone: string;
-  referenceContactPhone: string;
+  referrerPhone: string;
+  representativePhone: string;
+  password: string;
+  confirmPassword: string;
+  address: string;
+  taxCode: string;
 }
 
 export const defaultRegisterData: IRegisterData = {
-  companyName: '',
-  companySize: null,
-  contactPersonName: '',
-  phone: '',
+  name: '',
+  companySizeRange: null,
+  representative: '',
+  referrerPhone: '',
   email: '',
-  referenceContactPhone: '',
+  representativePhone: '',
+  password: '',
+  confirmPassword: '',
+  address: '',
+  taxCode: '',
+};
+
+export interface IForgotPass {
+  email: string;
+}
+
+export const defaultForgotPass: IForgotPass = {
+  email: '',
 };
 
 export function authIn(
@@ -85,7 +113,7 @@ export function validateAccessToken(
           first = false;
           dispatch(setValidatingToken(true));
           try {
-            const json = await dispatch(fetchThunk(`${API_PATHS.validateAccessToken}`, 'get'));
+            const json = await dispatch(fetchThunk(`${API_PATHS.accountBrief}`, 'get'));
             if (json && json.code === SUCCESS_CODE) {
               dispatch(authIn(json.data));
               prevAccessToken = accessToken;
@@ -116,16 +144,50 @@ export function validateAccessToken(
 }
 
 export function login(
-  data: ILoginData,
+  data: ILoginForm,
 ): ThunkAction<Promise<some>, AppState, null, Action<string>> {
   return async (dispatch, getState) => {
     dispatch(setAuthenticating(true));
     try {
-      const json = await dispatch(fetchThunk(API_PATHS.login, 'post', JSON.stringify(data)));
+      const json = await dispatch(fetchThunk(API_PATHS.login, 'post', JSON.stringify(data), false));
       if (json?.code === SUCCESS_CODE) {
-        set(ACCESS_TOKEN, json.data.accessToken);
-        dispatch(validateAccessToken());
-        return json;
+        json.data.accessToken && set(ACCESS_TOKEN, json.data.accessToken);
+        if (json.data.firstLogin) {
+          dispatch(
+            goToAction({
+              pathname: ROUTES.firstLogin,
+            }),
+          );
+        } else {
+          dispatch(validateAccessToken());
+        }
+      }
+      return json;
+    } finally {
+      dispatch(setAuthenticating(false));
+    }
+  };
+}
+
+export function firstLogin(
+  data: IFirstLoginForm,
+): ThunkAction<Promise<some>, AppState, null, Action<string>> {
+  return async (dispatch, getState) => {
+    dispatch(setAuthenticating(true));
+    try {
+      const json = await dispatch(
+        fetchThunk(
+          API_PATHS.firstLogin,
+          'put',
+          JSON.stringify({
+            oldPassword: data.password,
+            newPassword: data.newPassword,
+          }),
+        ),
+      );
+      if (json?.code === SUCCESS_CODE) {
+        remove(ACCESS_TOKEN);
+        dispatch(goBackAction());
       }
       return json;
     } finally {

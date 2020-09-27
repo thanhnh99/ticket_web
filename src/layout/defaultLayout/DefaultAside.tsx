@@ -1,6 +1,7 @@
 import { ButtonBase, withStyles } from '@material-ui/core';
 import * as React from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 import { connect } from 'react-redux';
 import { PURPLE_300 } from '../../configs/colors';
 import { ROUTES_TAB } from '../../configs/routes';
@@ -11,8 +12,6 @@ import { ReactComponent as BackMenuArrowIcon } from '../../svg/ic_menu_back_arro
 import { ASIDE_ITEM_HEIGHT, ASIDE_MIN_WIDTH, ASIDE_WIDTH, HEADER_HEIGHT } from '../constants';
 import { getListRoutesContain } from '../utils';
 import DefaultAsideItems from './DefaultAsideItems';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-
 
 export const ButtonRow = withStyles(() => ({
   root: {
@@ -62,7 +61,6 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
           position: 'fixed',
           left: 0,
           flexShrink: 0,
-          // background: PRIMARY
           background: 'linear-gradient(174deg, rgba(89,56,148,1) 0%, rgba(199,179,217,1) 100%)',
           zIndex: 1200,
         }}
@@ -94,17 +92,16 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
               marginBottom: 148,
             }}
           >
-            {
-              ROUTES_TAB.map((v: RoutesTabType, index: number) => (
-                <DefaultAsideItems
-                  key={index}
-                  userData={userData}
-                  open={open || hoverOpen}
-                  data={v}
-                  pathname={pathname}
-                  listRouterActive={getListRouterActive}
-                />
-              ))}
+            {ROUTES_TAB.map((v: RoutesTabType, index: number) => (
+              <DefaultAsideItems
+                key={index}
+                userData={userData}
+                open={open || hoverOpen}
+                data={v}
+                pathname={pathname}
+                listRouterActive={getListRouterActive}
+              />
+            ))}
           </div>
         </PerfectScrollbar>
       </div>

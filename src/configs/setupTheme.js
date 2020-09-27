@@ -55,7 +55,7 @@ const typography = {
   h6: { fontSize: 20, lineHeight: '32px', fontWeight: 500 },
   subtitle0: { fontSize: 18, lineHeight: '28px', fontWeight: 500 },
   subtitle1: { fontSize: 16, lineHeight: '24px', fontWeight: 500 },
-  subtitle2: { fontSize: 14, lineHeight: '20px', fontWeight: 500 },
+  subtitle2: { fontSize: 14, lineHeight: '20px', fontWeight: 600 },
   subtitle3: { fontSize: 12, lineHeight: '18px', fontWeight: 500 },
   body1: { fontSize: 16, lineHeight: '24px', fontWeight: 'normal' },
   body2: { fontSize: 14, lineHeight: '20px', fontWeight: 'normal' },

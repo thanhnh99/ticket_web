@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { RoutesTabType, ServiceType } from '../models/permission';
-import { HelloWorld } from '../HelloWorld';
 
 const NotFoundBox = React.lazy(() => import('../modules/common/components/NotFoundBox'));
+
+const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
 
 export const URL_PATH = '/';
 function buildRoutePath(moduleName: ServiceType, path: string) {
@@ -20,17 +21,16 @@ export const ROUTES = {
   transactionSummary: '/transactionSummary',
   accountInfo: '/accountInfo',
   notFound404: '/404',
-  invoices: buildRoutePath('invoices', ''),
-  report: buildRoutePath('report', ''),
+  verify: '/accounts/verify',
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
   {
-    name: 'helloWorld',
+    name: 'home',
     isModule: true,
     path: '/',
     exact: true,
-    component: HelloWorld,
+    component: Home,
   },
   {
     name: 'notFound404',

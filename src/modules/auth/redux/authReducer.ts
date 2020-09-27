@@ -1,5 +1,6 @@
 import { ActionType, createAction, getType } from 'typesafe-actions';
 import { some } from '../../../constants';
+import { DEVICE_KEY } from '../constants';
 
 export enum AuthDialog {
   login,
@@ -17,6 +18,7 @@ export interface AuthState {
   readonly validatingToken: boolean;
   readonly authDialog?: AuthDialog;
   readonly userData?: Readonly<some>;
+  readonly deviceId: string;
 }
 
 export const inAction = createAction('auth/in', (skipSaga: boolean) => ({ skipSaga }))();
@@ -56,11 +58,21 @@ export const defaultSignUpState = {
   username: '',
 };
 
+const key = `${DEVICE_KEY}_v2020-08-12`;
+let deviceId = `${new Date().valueOf()}-${Math.random()}`;
+const value = localStorage.getItem(key);
+if (value === null) {
+  localStorage.setItem(key, deviceId);
+} else {
+  deviceId = value;
+}
+
 export default function reducer(
   state: AuthState = {
     authenticating: false,
     validatingToken: false,
-    auth: true,
+    auth: false,
+    deviceId,
   },
   action: ActionT,
 ): AuthState {

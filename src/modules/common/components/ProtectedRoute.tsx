@@ -9,7 +9,7 @@ interface Props extends RouteProps {
 
 const ProtectedRoute: React.SFC<Props> = (props) => {
   const { auth, ...restProps } = props;
-  // const from = (props.location && `${props.location.pathname}${props.location.search}`) || '/';
+  const from = (props.location && `${props.location.pathname}${props.location.search}`) || '/';
   const state = props.location && props.location.state;
 
   if (auth) {
@@ -21,7 +21,7 @@ const ProtectedRoute: React.SFC<Props> = (props) => {
       to={{
         state,
         pathname: `${ROUTES.login}`,
-        search: '',
+        search: `?from=${encodeURIComponent(from)}`,
       }}
     />
   );
