@@ -1,11 +1,12 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import { FormattedMessage } from 'react-intl';
 import LanguageSelect from '../../intl/components/LanguageSelect';
 import UserInfoDropdown from './UserInfoDropdown';
-import NotificationDropdown from './NotificationDropdown';
+import LoadingButton from '../../common/components/LoadingButton';
 
 interface Props {}
 
-// eslint-disable-next-line no-unused-vars
 const Badge: React.FunctionComponent<Props> = (props) => {
   return (
     <div
@@ -18,8 +19,17 @@ const Badge: React.FunctionComponent<Props> = (props) => {
         position: 'relative',
       }}
     >
+      <LoadingButton
+        style={{ minWidth: 160, marginRight: 16 }}
+        size="large"
+        type="submit"
+        variant="outlined"
+        color="secondary"
+        disableElevation
+      >
+        <FormattedMessage id="createEvent" />
+      </LoadingButton>
       <LanguageSelect />
-      {/* <NotificationDropdown /> */}
       <UserInfoDropdown />
     </div>
   );

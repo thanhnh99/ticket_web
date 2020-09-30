@@ -1,6 +1,9 @@
 import * as React from 'react';
-import Carousel from '../components/Carousel';
+import { FormattedMessage } from 'react-intl';
+import { Row, Col } from '../../../common/components/elements';
+import LoadingButton from '../../../common/components/LoadingButton';
 import Card from '../components/Card';
+import Carousel from '../components/Carousel';
 
 interface Props {}
 
@@ -63,11 +66,60 @@ const listTicket = [
     time: '02/10/2020',
     category: 'Courses',
   },
+  {
+    id: 6,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 7,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 8,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 9,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 10,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 11,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
+  {
+    id: 12,
+    img: 'https://picsum.photos/251/122',
+    title: 'Workshop vẽ tranh màu nước: Classy',
+    time: '02/10/2020',
+    category: 'Courses',
+  },
 ];
 
 const Home: React.FunctionComponent<Props> = () => {
   return (
-    <>
+    <Col>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
         <Carousel tutorialSteps={tutorialSteps} />
       </div>
@@ -75,13 +127,25 @@ const Home: React.FunctionComponent<Props> = () => {
         style={{
           display: 'flex',
           marginTop: '10px',
-          justifyContent: 'space-around',
           flexWrap: 'wrap',
+          justifyContent: 'center',
         }}
       >
         <Card listTicket={listTicket} />
       </div>
-    </>
+      <Row style={{ marginTop: '16px', justifyContent: 'center' }}>
+        <LoadingButton
+          style={{ minWidth: 160, marginRight: 32 }}
+          size="large"
+          type="submit"
+          variant="contained"
+          color="secondary"
+          disableElevation
+        >
+          <FormattedMessage id="more" />
+        </LoadingButton>
+      </Row>
+    </Col>
   );
 };
 

@@ -16,10 +16,10 @@ import { defaultFirstLoginForm, firstLogin, IFirstLoginForm } from '../../redux/
 
 interface Props {}
 
-const FirstLoginForm: React.FunctionComponent<Props> = props => {
+const FirstLoginForm: React.FunctionComponent<Props> = (props) => {
   const intl = useIntl();
   const dispatch = useDispatch<ThunkDispatch<AppState, null, Action<string>>>();
-  const [loading, setLoading] = React.useState(false);
+  const [loading] = React.useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const storeSchema = yup.object().shape({
@@ -51,7 +51,7 @@ const FirstLoginForm: React.FunctionComponent<Props> = props => {
       if (json.code === SUCCESS_CODE) {
         enqueueSnackbar(
           intl.formatMessage({ id: 'firstLoginSuccess' }),
-          snackbarSetting(key => closeSnackbar(key), {
+          snackbarSetting((key) => closeSnackbar(key), {
             color: 'success',
           }),
         );
@@ -59,7 +59,7 @@ const FirstLoginForm: React.FunctionComponent<Props> = props => {
         json.message &&
           enqueueSnackbar(
             json.message,
-            snackbarSetting(key => closeSnackbar(key), {
+            snackbarSetting((key) => closeSnackbar(key), {
               color: 'error',
             }),
           );
@@ -70,7 +70,7 @@ const FirstLoginForm: React.FunctionComponent<Props> = props => {
 
   const formik = useFormik({
     initialValues: defaultFirstLoginForm,
-    onSubmit: values => {
+    onSubmit: (values) => {
       onLogin(values);
     },
     validationSchema: storeSchema,

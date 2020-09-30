@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useIntl } from 'react-intl';
 import { connect, useDispatch } from 'react-redux';
@@ -33,7 +33,7 @@ const Register = (props: Props) => {
       } else {
         enqueueSnackbar(
           json.message,
-          snackbarSetting(key => closeSnackbar(key), {
+          snackbarSetting((key) => closeSnackbar(key), {
             color: 'error',
           }),
         );

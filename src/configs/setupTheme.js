@@ -116,7 +116,7 @@ export const MUI_THEME = createMuiTheme({
     },
     MuiButton: {
       sizeLarge: {
-        minHeight: '48px',
+        minHeight: '40px',
         padding: '0 8px',
         ...typography.subtitle1,
       },

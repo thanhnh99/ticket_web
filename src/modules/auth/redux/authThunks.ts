@@ -1,4 +1,4 @@
-import { push, replace } from 'connected-react-router';
+import { push } from 'connected-react-router';
 import { get, remove, set } from 'js-cookie';
 import { batch } from 'react-redux';
 import { Action } from 'redux';

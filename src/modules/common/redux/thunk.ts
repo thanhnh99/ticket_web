@@ -2,7 +2,7 @@ import { get } from 'js-cookie';
 import { sha256 } from 'js-sha256';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { some, TOKEN } from '../../../constants';
+import { some } from '../../../constants';
 import { AppState } from '../../../redux/reducers';
 import { ACCESS_TOKEN, APP_KEY, APP_ID, VERSION } from '../../auth/constants';
 import { setAuthError, setNetworkError } from './reducer';
@@ -55,10 +55,6 @@ export function fetchThunk(
             'device-info': 'Tripi_One',
             'device-id': deviceId,
           };
-        }
-
-        if (body instanceof FormData) {
-          delete headers['Content-Type'];
         }
 
         if (!auth || !get(ACCESS_TOKEN)) {
