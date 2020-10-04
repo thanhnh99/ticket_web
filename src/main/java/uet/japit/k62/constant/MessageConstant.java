@@ -19,6 +19,7 @@ public class MessageConstant {
      *Category api Error
      */
     public static final String CATEGORY_HAS_EXISTED = "Category này đã tồn tại. Vui lòng chọn tên khác";
+    public static final String CATEGORY_NOT_FOUND = "Category không tồn tại, vui lòng kiểm tra lại.";
 
     /**
      *Event api Error

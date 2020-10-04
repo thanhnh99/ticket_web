@@ -32,6 +32,7 @@ import uet.japit.k62.models.response.data_response.ResLogin;
 import uet.japit.k62.models.response.service_response.ServiceResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,19 +107,24 @@ public class UserService implements UserDetailsService {
     public ServiceResponse loginDisable(HttpServletRequest httpRequest, String userId)
     {
         ServiceResponse serviceResponse = new ServiceResponse();
-        String token = httpRequest.getHeader("Authorization");
-        User loginEnableUser = userDAO.getOne(userId);
-        if(loginEnableUser == null)
+        try {
+            String token = httpRequest.getHeader("Authorization");
+            User loginEnableUser = userDAO.getOne(userId);
+            if(loginEnableUser == null)
+            {
+                throw new UserNotFoundException();
+            }
+            User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
+            loginEnableUser.setUpdatedBy(userSendRequest.getId());
+            loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
+            loginEnableUser.setUpdatedAt(new Date());
+            userDAO.save(loginEnableUser);
+            serviceResponse.setStatus(true);
+            serviceResponse.setMessage(MessageConstant.SUCCESS);
+        } catch (EntityNotFoundException e)
         {
             throw new UserNotFoundException();
         }
-        User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
-        loginEnableUser.setUpdatedBy(userSendRequest.getId());
-        loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
-        loginEnableUser.setUpdatedAt(new Date());
-        userDAO.save(loginEnableUser);
-        serviceResponse.setStatus(true);
-        serviceResponse.setMessage(MessageConstant.SUCCESS);
         return serviceResponse;
     }
 

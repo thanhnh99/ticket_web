@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     }
 
     // Lấy thông tin user từ jwt
-    public String getUserNameFromJWT(String token) {
+    public String getEmailFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)
