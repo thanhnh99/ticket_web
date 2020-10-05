@@ -12,8 +12,11 @@ import uet.japit.k62.models.entity.Category;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.ReqCreateCategory;
 import uet.japit.k62.models.request.ReqEditCategory;
-import uet.japit.k62.models.response.service_response.ServiceResponse;
+import uet.japit.k62.models.response.data_response.ResCategory;
+import uet.japit.k62.models.response.http_response.HttpResponse;
+import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
+import uet.japit.k62.util.ConvertEntityToResponse;
 import uet.japit.k62.util.StringConvert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +31,9 @@ public class CategoryService {
     @Autowired
     IUserDAO userDAO;
 
-    public ServiceResponse addCategory(HttpServletRequest httpRequest, ReqCreateCategory requestData)
+    public MessageResponse addCategory(HttpServletRequest httpRequest, ReqCreateCategory requestData)
     {
-        ServiceResponse response = new ServiceResponse();
+        MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User userSendRequest = userDAO.findByEmail(emailSendRequest);
@@ -48,14 +51,13 @@ public class CategoryService {
         existedCategory.setCreatedBy(userSendRequest.getCreatedBy());
         categoryDAO.save(existedCategory);
 
-        response.setStatus(true);
         response.setMessage(MessageConstant.SUCCESS);
         return response;
     }
 
-    public ServiceResponse editCategory(HttpServletRequest httpRequest, ReqEditCategory requestData, String categoryId)
+    public MessageResponse editCategory(HttpServletRequest httpRequest, ReqEditCategory requestData, String categoryId)
     {
-        ServiceResponse response = new ServiceResponse();
+        MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User userSendRequest = userDAO.findByEmail(emailSendRequest);
@@ -72,14 +74,13 @@ public class CategoryService {
         editCategory.setUpdatedAt(new Date());
         categoryDAO.save(editCategory);
 
-        response.setStatus(true);
         response.setMessage(MessageConstant.SUCCESS);
         return response;
     }
 
-    public ServiceResponse disableCategory(HttpServletRequest httpRequest, String categoryId)
+    public MessageResponse disableCategory(HttpServletRequest httpRequest, String categoryId)
     {
-        ServiceResponse response = new ServiceResponse();
+        MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
 
@@ -94,16 +95,16 @@ public class CategoryService {
         editCategory.setUpdatedAt(new Date());
         categoryDAO.save(editCategory);
 
-        response.setStatus(true);
         response.setMessage(MessageConstant.SUCCESS);
         return response;
     }
 
-    public ServiceResponse getAllCategories()
+    public HttpResponse getAllCategories()
     {
-        ServiceResponse response = new ServiceResponse();
-        List<Category> categoryList = categoryDAO.findAll();
-        throw new SuccessDataReturn(categoryList);
+        HttpResponse response = new HttpResponse();
+        List<ResCategory> categoryList = ConvertEntityToResponse.ConvertCategory(categoryDAO.findAll());
+        response.setData(categoryList);
+        return response;
     }
 
 }

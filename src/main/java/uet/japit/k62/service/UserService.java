@@ -13,12 +13,11 @@ import org.springframework.stereotype.Service;
 import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.constant.PermissionConstant;
+import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.dao.IAccountTypeDAO;
 import uet.japit.k62.dao.IPermissionDAO;
 import uet.japit.k62.dao.IUserDAO;
-import uet.japit.k62.exception.exception_define.AccountWasLockedException;
-import uet.japit.k62.exception.exception_define.UserNotFoundException;
-import uet.japit.k62.exception.exception_define.WrongEmailOrPasswordException;
+import uet.japit.k62.exception.exception_define.*;
 import uet.japit.k62.filters.JwtTokenProvider;
 import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.AccountType;
@@ -29,10 +28,10 @@ import uet.japit.k62.models.request.ReqChangePermission;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.data_response.ResLogin;
-import uet.japit.k62.models.response.service_response.ServiceResponse;
+import uet.japit.k62.models.response.http_response.HttpResponse;
+import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,9 +56,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     IPermissionDAO permissionDAO;
 
-    public ServiceResponse<ResLogin> authenticateUser(ReqLogin request)
+    public HttpResponse<ResLogin> authenticateUser(ReqLogin request)
     {
-        ServiceResponse serviceResponse = new ServiceResponse();
+        HttpResponse httpResponse = new HttpResponse();
         ResLogin response = new ResLogin();
         CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
         if(customUserDetail == null ||
@@ -81,8 +80,9 @@ public class UserService implements UserDetailsService {
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
                 response.setAccountType(customUserDetail.getAccountType());
 
-                serviceResponse.setMessage(MessageConstant.SUCCESS);
-                serviceResponse.setStatus(true);
+                httpResponse.setMessage(MessageConstant.SUCCESS);
+                httpResponse.setStatusCode(StatusCode.OK);
+                httpResponse.setData(response);
             }
             else
             {
@@ -90,8 +90,7 @@ public class UserService implements UserDetailsService {
 
             }
         }
-        serviceResponse.setData(response);
-        return serviceResponse;
+        return httpResponse;
     }
 
     public Boolean userExisted(String email)
@@ -99,55 +98,48 @@ public class UserService implements UserDetailsService {
         User user = userDAO.findByEmail(email);
         if(user == null)
         {
-            throw new UserNotFoundException();
+            return false;
         }
         return true;
     }
 
-    public ServiceResponse loginDisable(HttpServletRequest httpRequest, String userId)
+    public HttpResponse loginDisable(HttpServletRequest httpRequest, String userId)
     {
-        ServiceResponse serviceResponse = new ServiceResponse();
-        try {
-            String token = httpRequest.getHeader("Authorization");
-            User loginEnableUser = userDAO.getOne(userId);
-            if(loginEnableUser == null)
-            {
-                throw new UserNotFoundException();
-            }
-            User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
-            loginEnableUser.setUpdatedBy(userSendRequest.getId());
-            loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
-            loginEnableUser.setUpdatedAt(new Date());
-            userDAO.save(loginEnableUser);
-            serviceResponse.setStatus(true);
-            serviceResponse.setMessage(MessageConstant.SUCCESS);
-        } catch (EntityNotFoundException e)
+        HttpResponse httpResponse = new HttpResponse();
+        String token = httpRequest.getHeader("Authorization");
+        User loginEnableUser = userDAO.findById(userId).get();
+        if(loginEnableUser == null)
         {
             throw new UserNotFoundException();
         }
-        return serviceResponse;
+        User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
+        loginEnableUser.setUpdatedBy(userSendRequest.getId());
+        loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
+        loginEnableUser.setUpdatedAt(new Date());
+        userDAO.save(loginEnableUser);
+        httpResponse.setStatusCode(StatusCode.OK);
+        httpResponse.setMessage(MessageConstant.SUCCESS);
+        return httpResponse;
     }
 
-    public ServiceResponse register(ReqRegister requestData)
+    public MessageResponse register(ReqRegister requestData)
     {
-        ServiceResponse serviceResponse = new ServiceResponse();
-        if(!this.userExisted(requestData.getEmail()))
-        {
-            User newUser = new User();
-            newUser.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.USER));
-            newUser.setPassword(passwordEncoder.encode(requestData.getPassword()));
-            newUser.setEmail(requestData.getEmail());
-            newUser.setDisplayName(requestData.getDisplayName());
-            userDAO.save(newUser);
-            serviceResponse.setStatus(true);
-            serviceResponse.setMessage(MessageConstant.SUCCESS);
-        }
-        else
-        {
-            serviceResponse.setMessage(MessageConstant.USER_EXISTED);
+        MessageResponse messageResponse = new MessageResponse();
 
+        if(this.userExisted(requestData.getEmail()))
+        {
+            throw new UserExistedException();
         }
-        return serviceResponse;
+
+        User newUser = new User();
+        newUser.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.USER));
+        newUser.setPassword(passwordEncoder.encode(requestData.getPassword()));
+        newUser.setEmail(requestData.getEmail());
+        newUser.setDisplayName(requestData.getDisplayName());
+        userDAO.save(newUser);
+        messageResponse.setStatusCode(StatusCode.OK);
+        messageResponse.setMessage(MessageConstant.SUCCESS);
+        return messageResponse;
     }
 
     @Override
@@ -169,9 +161,9 @@ public class UserService implements UserDetailsService {
         return new CustomUserDetail(user);
     }
 
-    public ServiceResponse changeAccountType(HttpServletRequest httpRequest, ReqChangeAccountType requestData)
+    public HttpResponse changeAccountType(HttpServletRequest httpRequest, ReqChangeAccountType requestData)
     {
-        ServiceResponse response = new ServiceResponse();
+        HttpResponse response = new HttpResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         AccountType accountTypeEntity = accountTypeDAO.findByCode(requestData.getAccountType());
@@ -205,16 +197,17 @@ public class UserService implements UserDetailsService {
             user.getPermissionList().add(permissionDAO.findByCode(PermissionConstant.GET_VOUCHER));
         }
         user.setAccountType(accountTypeEntity);
+        user.setUpdatedBy(emailSendRequest);
         userDAO.save(user);
-        response.setStatus(true);
+        response.setStatusCode(StatusCode.OK);
         response.setMessage(MessageConstant.SUCCESS);
         return response;
     }
 
 
-    public ServiceResponse changePermission(HttpServletRequest httpRequest, ReqChangePermission requestData)
+    public HttpResponse changePermission(HttpServletRequest httpRequest, ReqChangePermission requestData)
     {
-        ServiceResponse response = new ServiceResponse();
+        HttpResponse response = new HttpResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User user = userDAO.findById(requestData.getUserId()).get();
@@ -230,12 +223,11 @@ public class UserService implements UserDetailsService {
             user.setUpdatedAt(new Date());
             user.setUpdatedBy(userSendRequest.getId());
             userDAO.save(user);
-            response.setStatus(true);
+            response.setStatusCode(StatusCode.OK);
             response.setMessage(MessageConstant.SUCCESS);
         } else
         {
-            response.setStatus(false);
-            response.setMessage(MessageConstant.CANT_SELF_UPDATE_PERMISSION);
+            throw new NotUpdateSelfPermissionException();
         }
         return response;
     }

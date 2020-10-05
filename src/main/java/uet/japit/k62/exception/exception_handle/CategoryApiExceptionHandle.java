@@ -14,10 +14,10 @@ import uet.japit.k62.models.response.http_response.MessageResponse;
 
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CategoryApiExceptionHandle extends ExceptionHandle{
+public class CategoryApiExceptionHandle{
     @ExceptionHandler(CategoryHasExistedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public MessageResponse AccountWasLockedExceptionHandle() {
+    public MessageResponse CategoryHasExistedExceptionHandle() {
         return new MessageResponse(StatusCode.BAD_REQUEST, MessageConstant.CATEGORY_HAS_EXISTED);
     }
 

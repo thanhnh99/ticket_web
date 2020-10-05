@@ -14,8 +14,10 @@ import uet.japit.k62.exception.exception_define.SuccessMessage;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
-@Order(Ordered.LOWEST_PRECEDENCE)
+//@Order(Ordered.LOWEST_PRECEDENCE)
 public class ExceptionHandle {
     /**
      * Tất cả các Exception không được khai báo sẽ được xử lý tại đây
@@ -25,6 +27,13 @@ public class ExceptionHandle {
     public MessageResponse handleAllException(Exception exception) {
         // quá trình kiểm soat lỗi diễn ra ở đây
         return new MessageResponse(StatusCode.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public MessageResponse NoSuchElementExceptionHandle() {
+        // quá trình kiểm soat lỗi diễn ra ở đây
+        return new MessageResponse(StatusCode.BAD_REQUEST, MessageConstant.NO_SUCH_ELEMENT_EXCEPTION);
     }
 
     /**

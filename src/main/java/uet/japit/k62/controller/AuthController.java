@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uet.japit.k62.models.request.ReqLogin;
 import uet.japit.k62.models.request.ReqRegister;
 import uet.japit.k62.models.response.http_response.HttpResponse;
-import uet.japit.k62.models.response.service_response.ServiceResponse;
+import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.UserService;
 
 @RestController
@@ -25,17 +25,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody ReqLogin requestData)
     {
-        HttpResponse responseData = new HttpResponse();
-        ServiceResponse serviceResponse = userService.authenticateUser(requestData);
-        return ServiceResponse.getHttpResponseResponseEntity(responseData, serviceResponse);
+        HttpResponse responseData = userService.authenticateUser(requestData);
+        return ResponseEntity.ok(responseData);
     }
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody ReqRegister requestData)
     {
-        HttpResponse responseData = new HttpResponse();
-        ServiceResponse serviceResponse = userService.register(requestData);
-        return ServiceResponse.getHttpResponseResponseEntity(responseData, serviceResponse);
+        MessageResponse responseData = userService.register(requestData);
+        return ResponseEntity.ok(responseData);
     }
 
 }
