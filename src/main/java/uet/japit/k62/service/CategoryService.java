@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service;
 import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.dao.ICategoryDAO;
 import uet.japit.k62.dao.IUserDAO;
-import uet.japit.k62.exception.exception_define.CategoryHasExistedException;
-import uet.japit.k62.exception.exception_define.CategoryNotFoundException;
-import uet.japit.k62.exception.exception_define.SuccessDataReturn;
+import uet.japit.k62.exception.exception_define.detail.CategoryHasExistedException;
+import uet.japit.k62.exception.exception_define.detail.CategoryNotFoundException;
 import uet.japit.k62.models.entity.Category;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.ReqCreateCategory;
@@ -31,8 +30,7 @@ public class CategoryService {
     @Autowired
     IUserDAO userDAO;
 
-    public MessageResponse addCategory(HttpServletRequest httpRequest, ReqCreateCategory requestData)
-    {
+    public MessageResponse addCategory(HttpServletRequest httpRequest, ReqCreateCategory requestData) throws CategoryHasExistedException {
         MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
@@ -55,12 +53,10 @@ public class CategoryService {
         return response;
     }
 
-    public MessageResponse editCategory(HttpServletRequest httpRequest, ReqEditCategory requestData, String categoryId)
-    {
+    public MessageResponse editCategory(HttpServletRequest httpRequest, ReqEditCategory requestData, String categoryId) throws CategoryNotFoundException {
         MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
-        User userSendRequest = userDAO.findByEmail(emailSendRequest);
 
         //find Category
         Category editCategory = categoryDAO.findById(categoryId).get();
@@ -78,8 +74,7 @@ public class CategoryService {
         return response;
     }
 
-    public MessageResponse disableCategory(HttpServletRequest httpRequest, String categoryId)
-    {
+    public MessageResponse disableCategory(HttpServletRequest httpRequest, String categoryId) throws CategoryNotFoundException {
         MessageResponse response = new MessageResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);

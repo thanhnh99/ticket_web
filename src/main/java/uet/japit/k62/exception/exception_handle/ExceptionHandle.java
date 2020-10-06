@@ -1,17 +1,15 @@
 package uet.japit.k62.exception.exception_handle;
 
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.constant.StatusCode;
-import uet.japit.k62.exception.exception_define.SuccessDataReturn;
-import uet.japit.k62.exception.exception_define.SuccessMessage;
-import uet.japit.k62.models.response.http_response.HttpResponse;
+import uet.japit.k62.exception.exception_define.common.EntityHasDisableException;
+import uet.japit.k62.exception.exception_define.common.EntityHasExistedException;
+import uet.japit.k62.exception.exception_define.common.EntityNotFoundException;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 
 import java.util.NoSuchElementException;
@@ -36,21 +34,22 @@ public class ExceptionHandle {
         return new MessageResponse(StatusCode.BAD_REQUEST, MessageConstant.NO_SUCH_ELEMENT_EXCEPTION);
     }
 
-    /**
-     * Xử lí data trả về khi thực hiện thành công tại đây.
-     * @return
-     */
-    @ExceptionHandler(SuccessMessage.class)
-    @ResponseStatus(value = HttpStatus.OK)
-    public MessageResponse handleSuccessMessage() {
-        // quá trình kiểm soat lỗi diễn ra ở đây
-        return new MessageResponse(StatusCode.OK, MessageConstant.SUCCESS);
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public MessageResponse EntityNotFoundExceptionHandle(EntityNotFoundException e) {
+        return new MessageResponse(StatusCode.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler(SuccessDataReturn.class)
-    @ResponseStatus(value = HttpStatus.OK)
-    public HttpResponse handleDataReturnSuccess(SuccessDataReturn ex) {
-        // quá trình kiểm soat lỗi diễn ra ở đây
-        return new HttpResponse(StatusCode.OK, MessageConstant.SUCCESS, ex.getData());
+
+    @ExceptionHandler(EntityHasDisableException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public MessageResponse EntityHasDisableExceptionHandle(EntityHasDisableException e) {
+        return new MessageResponse(StatusCode.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(EntityHasExistedException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public MessageResponse EntityHasExistedExceptionHandle(EntityHasExistedException e) {
+        return new MessageResponse(StatusCode.BAD_REQUEST, e.getMessage());
     }
 }

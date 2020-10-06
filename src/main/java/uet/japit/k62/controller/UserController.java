@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uet.japit.k62.dao.IPermissionDAO;
+import uet.japit.k62.exception.exception_define.detail.NotUpdateSelfPermissionException;
+import uet.japit.k62.exception.exception_define.detail.UserNotFoundException;
 import uet.japit.k62.models.request.ReqChangeAccountType;
 import uet.japit.k62.models.request.ReqChangePermission;
 import uet.japit.k62.models.response.http_response.HttpResponse;
@@ -33,8 +35,7 @@ public class UserController {
 
     @PutMapping("/permission")
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).CHANGE_PERMISSION})")
-    public ResponseEntity<HttpResponse> changePermission(HttpServletRequest httpRequest, @RequestBody ReqChangePermission requestData)
-    {
+    public ResponseEntity<HttpResponse> changePermission(HttpServletRequest httpRequest, @RequestBody ReqChangePermission requestData) throws NotUpdateSelfPermissionException {
         HttpResponse responseData = userService.changePermission(httpRequest,requestData);
         return ResponseEntity.ok(responseData);
     }
@@ -42,8 +43,7 @@ public class UserController {
 
     @PutMapping("/{userId}/disable")
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).DISABLE_USER})")
-    public ResponseEntity<HttpResponse> disableUser(HttpServletRequest httpRequest, @PathVariable(name = "userId") String userId)
-    {
+    public ResponseEntity<HttpResponse> disableUser(HttpServletRequest httpRequest, @PathVariable(name = "userId") String userId) throws UserNotFoundException {
         HttpResponse responseData = userService.loginDisable(httpRequest,userId);
         return ResponseEntity.ok(responseData);
     }
