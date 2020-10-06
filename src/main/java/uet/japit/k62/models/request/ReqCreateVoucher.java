@@ -1,21 +1,12 @@
-package uet.japit.k62.models.entity;
+package uet.japit.k62.models.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Voucher extends BaseEntity{
-
-    @Column(unique = true)
+public class ReqCreateVoucher {
     private String code;
     private String organizerId;
     private String minOrder;
@@ -23,4 +14,5 @@ public class Voucher extends BaseEntity{
     private BigDecimal maximumDiscount;
     private Date startTime;
     private Date endTime;
+
 }
