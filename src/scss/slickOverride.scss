@@ -1,0 +1,41 @@
+.slick-dots {
+  bottom: 50px;
+  li {
+    width: auto;
+    div {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+  li.slick-active > div > div {
+    background-color: white;
+  }
+}
+
+.slick-prev {
+  left: 20px;
+}
+
+.slick-next {
+  right: 20px;
+}
+
+.slick-prev,
+.slick-next {
+  width: auto;
+  height: auto;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  display: none;
+}
+
+.slick-arrow {
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  z-index: 100;
+  border-radius: 5px;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
