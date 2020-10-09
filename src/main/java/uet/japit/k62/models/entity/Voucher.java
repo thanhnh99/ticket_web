@@ -17,10 +17,12 @@ public class Voucher extends BaseEntity{
 
     @Column(unique = true)
     private String code;
-    private String organizerId;
     private String minOrder;
     private Integer discountPercentage;
     private BigDecimal maximumDiscount;
     private Date startTime;
     private Date endTime;
+    private VoucherType type;
+    private String conditionValue;
+    private Integer capacity;
 }
