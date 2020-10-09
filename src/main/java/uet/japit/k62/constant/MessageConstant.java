@@ -26,7 +26,10 @@ public class MessageConstant {
     /**
      *Event api Error
      */
-
+    /**
+     * Voucher api Error
+     */
+    public static final String VOUCHER_HAS_EXISTED = "Mã code này đã tồn tại. Vui lòng chọn mã code khác";
     /**
      * Order api Error
      */
