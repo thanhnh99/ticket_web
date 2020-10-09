@@ -17,7 +17,7 @@ import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.dao.IAccountTypeDAO;
 import uet.japit.k62.dao.IPermissionDAO;
 import uet.japit.k62.dao.IUserDAO;
-import uet.japit.k62.exception.exception_define.*;
+import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.filters.JwtTokenProvider;
 import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.AccountType;
@@ -56,8 +56,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     IPermissionDAO permissionDAO;
 
-    public HttpResponse<ResLogin> authenticateUser(ReqLogin request)
-    {
+    public HttpResponse<ResLogin> authenticateUser(ReqLogin request) throws AccountWasLockedException, WrongEmailOrPasswordException {
         HttpResponse httpResponse = new HttpResponse();
         ResLogin response = new ResLogin();
         CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
@@ -103,8 +102,7 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public HttpResponse loginDisable(HttpServletRequest httpRequest, String userId)
-    {
+    public HttpResponse loginDisable(HttpServletRequest httpRequest, String userId) throws UserNotFoundException {
         HttpResponse httpResponse = new HttpResponse();
         String token = httpRequest.getHeader("Authorization");
         User loginEnableUser = userDAO.findById(userId).get();
@@ -122,8 +120,7 @@ public class UserService implements UserDetailsService {
         return httpResponse;
     }
 
-    public MessageResponse register(ReqRegister requestData)
-    {
+    public MessageResponse register(ReqRegister requestData) throws UserExistedException {
         MessageResponse messageResponse = new MessageResponse();
 
         if(this.userExisted(requestData.getEmail()))
@@ -205,8 +202,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public HttpResponse changePermission(HttpServletRequest httpRequest, ReqChangePermission requestData)
-    {
+    public HttpResponse changePermission(HttpServletRequest httpRequest, ReqChangePermission requestData) throws NotUpdateSelfPermissionException {
         HttpResponse response = new HttpResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
