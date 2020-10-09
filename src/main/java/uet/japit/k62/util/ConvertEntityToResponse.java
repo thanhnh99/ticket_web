@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConvertEntityToResponse {
-    public static List<ResCategory> ConvertCategory(List<Category> categoryEntityList)
+    public static List<ResCategory> ConvertListCategoryEntity(List<Category> categoryEntityList)
     {
         List<ResCategory> resCategoryList = new ArrayList<>();
         for(Category categoryEntity : categoryEntityList)
