@@ -97,7 +97,7 @@ public class CategoryService {
     public HttpResponse getAllCategories()
     {
         HttpResponse response = new HttpResponse();
-        List<ResCategory> categoryList = ConvertEntityToResponse.ConvertCategory(categoryDAO.findAll());
+        List<ResCategory> categoryList = ConvertEntityToResponse.ConvertListCategoryEntity(categoryDAO.findAll());
         response.setData(categoryList);
         return response;
     }

@@ -16,6 +16,8 @@ import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("")
 public class AuthController {
@@ -26,13 +28,13 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody ReqLogin requestData) throws AccountWasLockedException, WrongEmailOrPasswordException {
+    public ResponseEntity login(@Valid @RequestBody ReqLogin requestData) throws AccountWasLockedException, WrongEmailOrPasswordException {
         HttpResponse responseData = userService.authenticateUser(requestData);
         return ResponseEntity.ok(responseData);
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody ReqRegister requestData) throws UserExistedException {
+    public ResponseEntity register(@Valid @RequestBody ReqRegister requestData) throws UserExistedException {
         MessageResponse responseData = userService.register(requestData);
         return ResponseEntity.ok(responseData);
     }

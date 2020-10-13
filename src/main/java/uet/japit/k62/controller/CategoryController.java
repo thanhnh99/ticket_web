@@ -14,6 +14,8 @@ import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.CategoryService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/category")
@@ -24,7 +26,7 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_CATEGORY})")
-    public ResponseEntity addCategory(HttpServletRequest httpRequest, @RequestBody ReqCreateCategory requestData) throws CategoryHasExistedException {
+    public ResponseEntity addCategory(HttpServletRequest httpRequest, @Valid @RequestBody ReqCreateCategory requestData) throws CategoryHasExistedException {
         MessageResponse responseData = categoryService.addCategory(httpRequest,requestData);
         return ResponseEntity.ok(responseData);
     }
@@ -32,9 +34,16 @@ public class CategoryController {
     @PutMapping
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).EDIT_CATEGORY})")
     public ResponseEntity editCategory(HttpServletRequest httpRequest,
-                                      @RequestBody ReqEditCategory requestData,
-                                      @PathVariable(name = "category_id") String categoryId) throws CategoryNotFoundException {
+                                      @Valid @RequestBody ReqEditCategory requestData,
+                                      @NotNull @PathVariable(name = "category_id") String categoryId) throws CategoryNotFoundException {
         MessageResponse responseData = categoryService.editCategory(httpRequest,requestData, categoryId);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @DeleteMapping(name = "category_id")
+    public ResponseEntity deleteCategory(HttpServletRequest httpRequest,
+                                         @NotNull @PathVariable(name = "category_id") String categoryId) throws CategoryNotFoundException {
+        MessageResponse responseData = categoryService.disableCategory(httpRequest,categoryId);
         return ResponseEntity.ok(responseData);
     }
 
