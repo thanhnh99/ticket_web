@@ -16,9 +16,8 @@ import { IResetPasswordData } from '../../redux/authThunks';
 import ResetPasswordDesktop from '../components/ResetPasswordDesktop';
 
 interface Props {}
-const ResetPassword: React.FC<Props> = props => {
+const ResetPassword: React.FC<Props> = (props) => {
   const dispatch = useDispatch<ThunkDispatch<AppState, null, Action<string>>>();
-  const intl = useIntl();
   const location = useLocation();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [loading, setLoading] = React.useState(false);
@@ -47,12 +46,12 @@ const ResetPassword: React.FC<Props> = props => {
       if (json.code === SUCCESS_CODE) {
         enqueueSnackbar(
           json.message,
-          snackbarSetting(key => closeSnackbar(key)),
+          snackbarSetting((key) => closeSnackbar(key)),
         );
       } else {
         enqueueSnackbar(
           json.message,
-          snackbarSetting(key => closeSnackbar(key), {
+          snackbarSetting((key) => closeSnackbar(key), {
             color: 'error',
           }),
         );

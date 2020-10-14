@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# ticket_web
-=======
 ## Start project
 
 ### `npm start`
@@ -17,4 +14,3 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
->>>>>>> ab4c0882334f5dfdf8474b8678ad4da808e1507d

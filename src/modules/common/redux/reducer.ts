@@ -3,9 +3,8 @@ import { LocationDescriptorObject } from 'history';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { ActionType, createAction, getType } from 'typesafe-actions';
-import { API_PATHS } from '../../../configs/API';
 import { ROUTES_TAB } from '../../../configs/routes';
-import { some, SUCCESS_CODE } from '../../../constants';
+import { some } from '../../../constants';
 import { comparePathName, getCurrentRole, getListRoutesContain } from '../../../layout/utils';
 import { SelectItem } from '../../../models/object';
 import { AppState } from '../../../redux/reducers';
@@ -19,7 +18,6 @@ import {
   transactionsTypeData,
   tripApprovalStatusOptions,
 } from './constants';
-import { fetchThunk } from './thunk';
 
 export interface CommonState {
   networkErrorMsg: string;

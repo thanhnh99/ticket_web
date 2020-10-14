@@ -29,7 +29,7 @@ const MediaCard: React.FunctionComponent<Props> = (props) => {
         <Card
           className={classes.root}
           key={item.id}
-          style={{ marginBottom: '10px', borderRadius: '7px' }}
+          style={{ marginBottom: '10px', marginLeft: '8px', borderRadius: '7px' }}
         >
           <CardActionArea style={{ width: '240px', padding: '4px 8px' }}>
             <CardMedia className={classes.media} image={item.img} style={{ borderRadius: '7px' }} />

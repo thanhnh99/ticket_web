@@ -71,4 +71,4 @@ export const {
 
 export const BACK_GROUND = BLUE_50;
 export const PRIMARY = CA_ID === 17 ? BLUE_300 : TEAL;
-export const SECONDARY = CA_ID === 17 ? RED : PURPLE;
+export const SECONDARY = CA_ID === 17 ? GREEN_300 : PURPLE;

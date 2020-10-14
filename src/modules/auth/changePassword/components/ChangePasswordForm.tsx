@@ -3,13 +3,12 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as yup from 'yup';
-import { Col } from '../../../common/components/elements';
 import FormControlTextField from '../../../common/components/FormControlTextField';
 import LoadingButton from '../../../common/components/LoadingButton';
 import { defaultChangePasswordForm } from '../../redux/authThunks';
 
 interface Props {}
-const ChangePasswordForm: React.FC<Props> = props => {
+const ChangePasswordForm: React.FC<Props> = (props) => {
   const intl = useIntl();
   const storeSchema = yup.object().shape({
     password: yup
@@ -31,7 +30,7 @@ const ChangePasswordForm: React.FC<Props> = props => {
   });
   const formik = useFormik({
     initialValues: defaultChangePasswordForm,
-    onSubmit: values => {},
+    onSubmit: (values) => {},
     validationSchema: storeSchema,
   });
   return (

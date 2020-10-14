@@ -1,15 +1,14 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
-import { RoutesTabType, ServiceType } from '../models/permission';
+import { RoutesTabType } from '../models/permission';
 
 const NotFoundBox = React.lazy(() => import('../modules/common/components/NotFoundBox'));
 
 const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
 
 export const URL_PATH = '/';
-function buildRoutePath(moduleName: ServiceType, path: string) {
-  return `/${moduleName}${path}`;
-}
+// function buildRoutePath(moduleName: ServiceType, path: string) {
+//   return `/${moduleName}${path}`;
+// }
 
 export const ROUTES = {
   login: '/login',
@@ -22,6 +21,7 @@ export const ROUTES = {
   accountInfo: '/accountInfo',
   notFound404: '/404',
   verify: '/accounts/verify',
+  createEvent: '/event/create',
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
@@ -31,6 +31,54 @@ export const ROUTES_TAB: RoutesTabType[] = [
     path: '/',
     exact: true,
     component: Home,
+  },
+  {
+    name: 'music',
+    isModule: true,
+    path: '/music',
+    exact: true,
+  },
+  {
+    name: 'sport',
+    isModule: true,
+    path: '/sport',
+    exact: true,
+  },
+  {
+    name: 'conference',
+    isModule: true,
+    path: '/conference',
+    exact: true,
+  },
+  {
+    name: 'courses',
+    isModule: true,
+    path: '/courses',
+    exact: true,
+  },
+  {
+    name: 'eventHN',
+    isModule: true,
+    path: '/eventHN',
+    exact: true,
+  },
+  {
+    name: 'eventHCM',
+    isModule: true,
+    path: '/eventHCM',
+    exact: true,
+  },
+  {
+    name: 'contact',
+    isModule: true,
+    path: '/contact',
+    exact: true,
+  },
+  {
+    name: 'aboutUs',
+    isModule: true,
+    path: '/aboutUs',
+    exact: true,
   },
   {
     name: 'notFound404',

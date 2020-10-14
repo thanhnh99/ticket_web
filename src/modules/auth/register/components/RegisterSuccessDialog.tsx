@@ -1,16 +1,15 @@
 import { Button, DialogActions, Typography } from '@material-ui/core';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import DialogCustom from '../../../common/components/DialogCustom';
-import { Row } from '../../../common/components/elements';
 import { GREY_500 } from '../../../../configs/colors';
+import DialogCustom from '../../../common/components/DialogCustom';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   content?: string;
 }
-const RegisterSuccessDialog: React.FC<Props> = props => {
+const RegisterSuccessDialog: React.FC<Props> = (props) => {
   const { open, onClose, content } = props;
   return (
     <DialogCustom
