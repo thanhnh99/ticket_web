@@ -62,7 +62,6 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.firstLogin} component={FirstLogin} />
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
-
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
         </Switch>
       </React.Suspense>
