@@ -27,13 +27,12 @@ public class Event extends BaseEntity{
     private Date endSellingTime;
     private Boolean isPopular = false;
     private Boolean isBroadcasting = false;
+    private String city;
+    private String fullAddress;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @ManyToMany(mappedBy = "eventList")
-    private Collection<Location> locationList = new ArrayList<Location>();
 
     @OneToMany(mappedBy = "event")
     private Collection<TicketClass> ticketClasses = new ArrayList<TicketClass>();

@@ -44,9 +44,6 @@ public class EventService {
     ICategoryDAO categoryDAO;
 
     @Autowired
-    ILocationDAO locationDAO;
-
-    @Autowired
     DAO dao;
 
     public MessageResponse addEvent(HttpServletRequest httpRequest, ReqCreateEvent requestData) throws Exception {
@@ -61,18 +58,6 @@ public class EventService {
         }
         Event newEvent = new Event(requestData);
         newEvent.setCategory(category);
-        eventDAO.save(newEvent);
-
-
-
-        //Create Location
-        for(ReqCreateLocation reqCreateLocation : requestData.getLocationList())
-        {
-            Location locationEntity = new Location(reqCreateLocation);
-            locationEntity.getEventList().add(newEvent);
-            locationDAO.save(locationEntity);
-            newEvent.getLocationList().add(locationEntity);
-        }
         newEvent.setCreatedBy(userSendRequest.getEmail());
         eventDAO.save(newEvent);
         response.setStatusCode(StatusCode.OK);
@@ -90,29 +75,27 @@ public class EventService {
             throw new EventNotFoundException();
         }
         //upload CoverImage
-        Path locationFile = Paths.get("resource/static/images");
-        if(!Files.exists(locationFile))
-        {
-            Files.createDirectory(locationFile);
-        }
-        Files.copy(coverImage.getInputStream(), locationFile.resolve(System.currentTimeMillis() + coverImage.getOriginalFilename()));
+        Path locationPath = Paths.get(".\\src\\main\\resources\\static\\images").toAbsolutePath();
+        String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + coverImage.getOriginalFilename();
+        String coverPath = "static/images/" + coverName;
+        Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
         String filename = new String();
-        Path file = locationFile.resolve(filename);
+        Path file = locationPath.resolve(filename);
         UrlResource resource = new UrlResource(file.toUri());
         if (resource.exists() || resource.isReadable()) {
-            String coverLink = resource.getURL().toString();
-            event.setCoverImageUrl(coverLink);
+            event.setCoverImageUrl(coverPath);
         }
         else throw new Exception("Could not read file");
 
         //upload mapEvent Image
-        Files.copy(mapImage.getInputStream(), locationFile.resolve(System.currentTimeMillis() + mapImage.getOriginalFilename()));
-        String mapImageName = new String();
-        Path mapPath = locationFile.resolve(mapImageName);
+        String mapImageName = "Cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + mapImage.getOriginalFilename();
+        String mapImagePath = "static/images/" + mapImageName;
+        Files.copy(mapImage.getInputStream(), locationPath.resolve("map_" + eventId + "_" + System.currentTimeMillis()+ "_" + mapImage.getOriginalFilename()));
+        String mapName = new String();
+        Path mapPath = locationPath.resolve(mapName);
         UrlResource resourceMapImage = new UrlResource(mapPath.toUri());
         if (resourceMapImage.exists() || resourceMapImage.isReadable()) {
-            String mapLink = resource.getURL().toString();
-            event.setMapImageUrl(mapLink);
+            event.setMapImageUrl(mapImagePath);
         }
         else throw new Exception();
         eventDAO.save(event);

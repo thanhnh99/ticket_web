@@ -3,7 +3,9 @@ package uet.japit.k62.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
 import uet.japit.k62.models.request.ReqCreateEvent;
 import uet.japit.k62.models.response.http_response.HttpResponse;
@@ -12,6 +14,7 @@ import uet.japit.k62.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @RestController
@@ -50,6 +53,15 @@ public class EventController {
                                       @RequestParam(name = "price", required = false) Boolean price)
     {
         HttpResponse response = eventService.search(categoryId, startTime, endTime, location, price);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{event_id}/upload")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_EVENT})")
+    public ResponseEntity uploadImageForEvent(@RequestParam(name = "coverImage") @NotNull MultipartFile coverImage,
+                                              @RequestParam(name = "mapImage") @NotNull MultipartFile mapImage,
+                                              @PathVariable(name = "event_id") @NotNull String eventId) throws Exception {
+        MessageResponse response =  eventService.uploadImage(coverImage, mapImage,eventId);
         return ResponseEntity.ok(response);
     }
 

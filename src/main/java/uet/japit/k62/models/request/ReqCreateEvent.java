@@ -8,7 +8,6 @@ import javax.mail.Multipart;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -24,25 +23,19 @@ public class ReqCreateEvent {
     private String description;
 
     @NotNull(message = "startTime may not be null")
-    private String startTime;
+    private Long startTime;
 
     @NotNull(message = "endTime may not be null")
-    private String endTime;
+    private Long endTime;
 
     @NotNull(message = "startSellingTime may not be null")
-    private String startSellingTime;
+    private Long startSellingTime;
 
     @NotNull(message = "endSellingTime may not be null")
-    private String endSellingTime;
+    private Long endSellingTime;
 
     @NotBlank(message = "categoryId may not be blank")
     @NotNull(message = "categoryId may not be null")
     @NotEmpty(message = "categoryId may not be empty")
     private String categoryId;
-
-    @NotNull(message = "locationList may not be null")
-    private Collection<ReqCreateLocation> locationList;
-
-    @NotNull(message = "ticketClassList may not be null")
-    private Collection<ReqCreateTicketClass> ticketClassList;
 }
