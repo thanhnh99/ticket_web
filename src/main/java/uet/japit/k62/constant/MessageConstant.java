@@ -26,6 +26,7 @@ public class MessageConstant {
     /**
      *Event api Error
      */
+    public static final String EVENT_NOT_FOUND = "Event không tồn tại, vui lòng kiểm tra lại.";
 
     /**
      * Order api Error

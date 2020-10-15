@@ -3,6 +3,7 @@ package uet.japit.k62.models.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uet.japit.k62.models.request.ReqCreateEvent;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 public class Event extends BaseEntity{
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String coverImageUrl;
     private String mapImageUrl;
@@ -23,8 +25,8 @@ public class Event extends BaseEntity{
     private Date endTime;
     private Date startSellingTime;
     private Date endSellingTime;
-    private Boolean isPopular;
-    private Boolean isBroadcasting;
+    private Boolean isPopular = false;
+    private Boolean isBroadcasting = false;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -41,5 +43,15 @@ public class Event extends BaseEntity{
 
     @OneToMany(mappedBy = "event")
     private Collection<Comment> commentList = new ArrayList<Comment>();
+
+    public Event(ReqCreateEvent reqCreateEvent)
+    {
+        this.name = reqCreateEvent.getName();
+        this.description = reqCreateEvent.getDescription();
+        this.startSellingTime = new Date(reqCreateEvent.getStartSellingTime());
+        this.startTime = new Date(reqCreateEvent.getStartTime());
+        this.endSellingTime = new Date(reqCreateEvent.getEndSellingTime());
+        this.endTime = new Date(reqCreateEvent.getEndTime());
+    }
 
 }

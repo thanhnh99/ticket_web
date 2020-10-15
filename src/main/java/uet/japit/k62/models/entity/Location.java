@@ -3,6 +3,8 @@ package uet.japit.k62.models.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uet.japit.k62.models.request.ReqCreateLocation;
+import uet.japit.k62.models.request.ReqCreateTicketClass;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,4 +25,13 @@ public class Location extends BaseEntity{
                 joinColumns = @JoinColumn(name = "location_id"),
                 inverseJoinColumns = @JoinColumn(name = "event_id"))
     private Collection<Event> eventList = new ArrayList<Event>();
+
+
+    public Location(ReqCreateLocation reqCreateLocation)
+    {
+        this.fullAddress = reqCreateLocation.getFullAddress();
+        this.city = reqCreateLocation.getCity();
+        this.district = reqCreateLocation.getDistrict();
+        this.commune = reqCreateLocation.getCommune();
+    }
 }
