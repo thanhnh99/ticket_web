@@ -76,16 +76,10 @@ public class EventService {
         }
         //upload CoverImage
         Path locationPath = Paths.get(".\\src\\main\\resources\\static\\images").toAbsolutePath();
-        String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + coverImage.getOriginalFilename();
+        String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + coverImage.getOriginalFilename().replaceAll("\\s","");;
         String coverPath = "static/images/" + coverName;
         Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
-        String filename = new String();
-        Path file = locationPath.resolve(filename);
-        UrlResource resource = new UrlResource(file.toUri());
-        if (resource.exists() || resource.isReadable()) {
-            event.setCoverImageUrl(coverPath);
-        }
-        else throw new Exception("Could not read file");
+        event.setCoverImageUrl(coverPath);
 
         //upload mapEvent Image
         String mapImageName = "Cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + mapImage.getOriginalFilename();
@@ -94,10 +88,7 @@ public class EventService {
         String mapName = new String();
         Path mapPath = locationPath.resolve(mapName);
         UrlResource resourceMapImage = new UrlResource(mapPath.toUri());
-        if (resourceMapImage.exists() || resourceMapImage.isReadable()) {
-            event.setMapImageUrl(mapImagePath);
-        }
-        else throw new Exception();
+        event.setMapImageUrl(mapImagePath);
         eventDAO.save(event);
         return new MessageResponse(StatusCode.OK, MessageConstant.SUCCESS);
     }
