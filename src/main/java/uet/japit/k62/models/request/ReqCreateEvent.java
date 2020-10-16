@@ -38,4 +38,14 @@ public class ReqCreateEvent {
     @NotNull(message = "categoryId may not be null")
     @NotEmpty(message = "categoryId may not be empty")
     private String categoryId;
+
+    @NotBlank(message = "city may not be blank")
+    @NotNull(message = "city may not be null")
+    @NotEmpty(message = "city may not be empty")
+    private String city;
+
+    @NotBlank(message = "fullAddress may not be blank")
+    @NotNull(message = "fullAddress may not be null")
+    @NotEmpty(message = "fullAddress may not be empty")
+    private String fullAddress;
 }

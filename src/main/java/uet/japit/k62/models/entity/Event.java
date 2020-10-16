@@ -3,6 +3,7 @@ package uet.japit.k62.models.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import uet.japit.k62.models.request.ReqCreateEvent;
 
 import javax.persistence.*;
@@ -32,6 +33,7 @@ public class Event extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @ToString.Exclude
     private Category category;
 
     @OneToMany(mappedBy = "event")
@@ -51,6 +53,8 @@ public class Event extends BaseEntity{
         this.startTime = new Date(reqCreateEvent.getStartTime());
         this.endSellingTime = new Date(reqCreateEvent.getEndSellingTime());
         this.endTime = new Date(reqCreateEvent.getEndTime());
+        this.city = reqCreateEvent.getCity();
+        this.fullAddress = reqCreateEvent.getFullAddress();
     }
 
 }

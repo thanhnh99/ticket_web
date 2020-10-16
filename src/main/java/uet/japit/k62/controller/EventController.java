@@ -47,21 +47,21 @@ public class EventController {
 
     @GetMapping("/search")
     public ResponseEntity searchEvent(@RequestParam(name = "category_id", required = false) String categoryId,
-                                      @RequestParam(name = "start_time", required = false) Date startTime,
-                                      @RequestParam(name = "end_time", required = false) Date endTime,
+                                      @RequestParam(name = "end_time", required = false) Integer time,
                                       @RequestParam(name = "location", required = false) String location,
                                       @RequestParam(name = "price", required = false) Boolean price)
     {
-        HttpResponse response = eventService.search(categoryId, startTime, endTime, location, price);
+        HttpResponse response = eventService.search(categoryId, time, location, price);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{event_id}/upload")
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_EVENT})")
-    public ResponseEntity uploadImageForEvent(@RequestParam(name = "coverImage") @NotNull MultipartFile coverImage,
+    public ResponseEntity uploadImageForEvent(HttpServletRequest httpServletRequest,
+                                              @RequestParam(name = "coverImage") @NotNull MultipartFile coverImage,
                                               @RequestParam(name = "mapImage") @NotNull MultipartFile mapImage,
                                               @PathVariable(name = "event_id") @NotNull String eventId) throws Exception {
-        MessageResponse response =  eventService.uploadImage(coverImage, mapImage,eventId);
+        MessageResponse response =  eventService.uploadImage(httpServletRequest, coverImage, mapImage,eventId);
         return ResponseEntity.ok(response);
     }
 

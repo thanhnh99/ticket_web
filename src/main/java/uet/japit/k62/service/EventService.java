@@ -5,9 +5,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.dao.*;
+import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.CategoryHasExistedException;
 import uet.japit.k62.exception.exception_define.detail.CategoryNotFoundException;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
@@ -24,10 +26,12 @@ import uet.japit.k62.util.StringConvert;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -65,35 +69,48 @@ public class EventService {
         return response;
     }
 
-    public MessageResponse uploadImage(MultipartFile coverImage,
+    public MessageResponse uploadImage(HttpServletRequest httpRequest,
+                                       MultipartFile coverImage,
                                        MultipartFile mapImage,
                                        String eventId) throws Exception {
-
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
         Event event = eventDAO.findById(eventId).get();
         if(event == null)
         {
             throw new EventNotFoundException();
         }
-        //upload CoverImage
-        Path locationPath = Paths.get(".\\src\\main\\resources\\static\\images").toAbsolutePath();
-        String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + coverImage.getOriginalFilename().replaceAll("\\s","");;
-        String coverPath = "static/images/" + coverName;
-        Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
-        event.setCoverImageUrl(coverPath);
+        if(emailSendRequest.equals(event.getCreatedBy()) ||
+            userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT)
+        )
+        {
+            //upload CoverImage
+            String currentPath = Paths.get("").toAbsolutePath().toString();
+            String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(coverImage.getOriginalFilename()).replaceAll("\\s","");;
+            String saveToSeverPath = currentPath + "/src/main/resources/static/images/" + coverName;
+            String savetoDBPath = "/static/images/" + coverName;
+            coverImage.transferTo(new File(saveToSeverPath));
+//        Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
+            event.setCoverImageUrl(savetoDBPath);
 
-        //upload mapEvent Image
-        String mapImageName = "Cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + mapImage.getOriginalFilename();
-        String mapImagePath = "static/images/" + mapImageName;
-        Files.copy(mapImage.getInputStream(), locationPath.resolve("map_" + eventId + "_" + System.currentTimeMillis()+ "_" + mapImage.getOriginalFilename()));
-        String mapName = new String();
-        Path mapPath = locationPath.resolve(mapName);
-        UrlResource resourceMapImage = new UrlResource(mapPath.toUri());
-        event.setMapImageUrl(mapImagePath);
-        eventDAO.save(event);
-        return new MessageResponse(StatusCode.OK, MessageConstant.SUCCESS);
+            //upload mapEvent Image
+            String mapImageName = "map_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(mapImage.getOriginalFilename());
+            String saveMapToSeverPath = currentPath + "/src/main/resources/static/images/" + mapImageName;
+            String saveMapToDBPath = "/static/images/" + mapImageName;
+//        Files.copy(mapImage.getInputStream(), locationPath.resolve(mapImageName));
+            mapImage.transferTo(new File(saveMapToSeverPath));
+            event.setMapImageUrl(saveMapToDBPath);
+            eventDAO.save(event);
+            return new MessageResponse(StatusCode.OK, MessageConstant.SUCCESS);
+        }
+        else
+        {
+            throw new UnAuthorException();
+        }
     }
 
-    public HttpResponse getEvent()
+    public HttpResponse getEvent(HttpServletRequest httpRequest)
     {
         return null;
     }
@@ -109,14 +126,14 @@ public class EventService {
     }
 
     public HttpResponse search(String categoryId,
-                               Date startTime,
-                               Date endTime,
+                               Integer time,
                                String location,
                                Boolean price)
     {
         HttpResponse response = new HttpResponse();
         List<Category> categoryList = categoryDAO.findAll();
-        String query = "select * from event where ";
+        String query = "select * from event where inner join ticketclass" +
+                " on event.id = ticketclass.event_id ";
         if(categoryId != null)
         {
             for(Category category : categoryList)
@@ -127,6 +144,39 @@ public class EventService {
                 }
             }
         }
+        if(time != null && time instanceof Integer)
+        {
+//            query+=" and event.start_date between  " + new Date().getTime() + "and" + (new Date().getTime();
+
+        }
+        if(location != null)
+        {
+            if(location.equals("Hà Nội"))
+            {
+                query += " and event.city = \"Hà Nội\" ";
+            }
+            else  if(location.equals("Hồ Chí Minh"))
+            {
+                query += " and event.city = \"Hồ Chí Minh\" ";
+            }
+            else
+            {
+                query += " and event.city <> \"Hà Nội\" " +
+                        " and event.city <>\"Hồ Chí Minh\"";
+            }
+        }
+        if(price != null)
+        {
+            if(price == true)
+            {
+                query += " and ticketclass.price > 0";
+            }
+            else
+            {
+                query += "and ticketclass.price > 0";
+            }
+        }
+        query += "groupBy event.id";
         System.out.println(query);
 //        query += ";";
         List<Event> eventList = dao.search(query);
