@@ -9,14 +9,15 @@ import java.util.Date;
 
 @Data
 public class ResEvent {
+    private String id;
     private String name;
     private String description;
     private String coverImageUrl;
     private String mapImageUrl;
-    private Date startTime;
-    private Date endTime;
-    private Date startSellingTime;
-    private Date endSellingTime;
+    private long startTime;
+    private long endTime;
+    private long startSellingTime;
+    private long endSellingTime;
     private Boolean isPopular;
     private Boolean isBroadcasting;
     private String categoryId;
@@ -24,6 +25,7 @@ public class ResEvent {
 
     public ResEvent(Event event)
     {
+        this.id = event.getId();
         this.name = event.getName();
         this.description = event.getDescription();
         this.coverImageUrl = event.getCoverImageUrl();

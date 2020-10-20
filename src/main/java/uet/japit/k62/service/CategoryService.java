@@ -67,7 +67,7 @@ public class CategoryService {
         editCategory.setName(requestData.getName());
         editCategory.setCode(StringConvert.convertStringToCode(requestData.getName()));
         editCategory.setUpdatedBy(emailSendRequest);
-        editCategory.setUpdatedAt(new Date());
+        editCategory.setUpdatedAt(new Date().getTime());
         categoryDAO.save(editCategory);
 
         response.setMessage(MessageConstant.SUCCESS);
@@ -87,7 +87,7 @@ public class CategoryService {
         }
         editCategory.setIsActive(!editCategory.getIsActive());
         editCategory.setUpdatedBy(emailSendRequest);
-        editCategory.setUpdatedAt(new Date());
+        editCategory.setUpdatedAt(new Date().getTime());
         categoryDAO.save(editCategory);
 
         response.setMessage(MessageConstant.SUCCESS);

@@ -22,10 +22,10 @@ public class Event extends BaseEntity{
     private String description;
     private String coverImageUrl;
     private String mapImageUrl;
-    private Date startTime;
-    private Date endTime;
-    private Date startSellingTime;
-    private Date endSellingTime;
+    private long startTime;
+    private long endTime;
+    private long startSellingTime;
+    private long endSellingTime;
     private Boolean isPopular = false;
     private Boolean isBroadcasting = false;
     private String city;
@@ -49,10 +49,10 @@ public class Event extends BaseEntity{
     {
         this.name = reqCreateEvent.getName();
         this.description = reqCreateEvent.getDescription();
-        this.startSellingTime = new Date(reqCreateEvent.getStartSellingTime());
-        this.startTime = new Date(reqCreateEvent.getStartTime());
-        this.endSellingTime = new Date(reqCreateEvent.getEndSellingTime());
-        this.endTime = new Date(reqCreateEvent.getEndTime());
+        this.startSellingTime = new Date(reqCreateEvent.getStartSellingTime()).getTime();
+        this.startTime = new Date(reqCreateEvent.getStartTime()).getTime();
+        this.endSellingTime = new Date(reqCreateEvent.getEndSellingTime()).getTime();
+        this.endTime = new Date(reqCreateEvent.getEndTime()).getTime();
         this.city = reqCreateEvent.getCity();
         this.fullAddress = reqCreateEvent.getFullAddress();
     }

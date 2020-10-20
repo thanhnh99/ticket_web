@@ -15,7 +15,6 @@ public class DAO {
 
     public  List<Event> search(String query)
     {
-        Query sqlQuery = (Query) em.createQuery(query).getResultList();
-        return (List<Event>) sqlQuery;
+        return  em.createQuery(query).getResultList();
     }
 }
