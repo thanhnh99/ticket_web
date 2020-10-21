@@ -1,6 +1,7 @@
 package uet.japit.k62.service;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,8 @@ import uet.japit.k62.models.response.data_response.ResVoucher;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class VoucherService {
@@ -30,6 +33,7 @@ public class VoucherService {
     IEventDAO eventDAO;
     @Autowired
     ICategoryDAO categoryDAO;
+
     public Voucher addVoucher(HttpServletRequest httpRequest,
                                             @RequestBody ReqCreateVoucher requestData) throws VoucherHasExistedException, InvalidConditionException {
         String token = httpRequest.getHeader("Authorization");
@@ -61,5 +65,20 @@ public class VoucherService {
         Voucher voucher =  voucherDAO.findByCode(code).orElseThrow(VoucherNotFoundException::new);
         return new ModelMapper().map(voucher, ResVoucher.class);
     }
+    public List<ResVoucher> getByEvent(String eventId) {
+        List<Voucher> vouchers =  voucherDAO.getAvailableVoucher(VoucherType.EVENT, eventId);
+        List<Voucher> vouchersByAll =  voucherDAO.findByTypeAndEndTimeAfter(VoucherType.ALL, new Date());
+        vouchers.addAll(vouchersByAll);
+        return new ModelMapper().map(vouchers, new TypeToken<List<ResVoucher>>() {}.getType());
+    }
+    public List<ResVoucher> getVoucherCreatedBy(HttpServletRequest httpRequest ) {
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        System.out.println(userSendRequest.getId());
+        List<Voucher> vouchers =  voucherDAO.findByCreatedBy(userSendRequest.getId());
+        System.out.println(vouchers.size());
+        return new ModelMapper().map(vouchers, new TypeToken<List<ResVoucher>>() {}.getType());
 
+    }
 }

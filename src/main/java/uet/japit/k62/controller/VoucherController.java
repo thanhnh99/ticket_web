@@ -17,6 +17,7 @@ import uet.japit.k62.service.VoucherService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/voucher")
@@ -31,8 +32,18 @@ public class VoucherController {
         return ResponseEntity.ok(responseData);
     }
     @GetMapping("/{voucher_code}")
-    public ResponseEntity getByCode(HttpServletRequest httpRequest, @PathVariable(value = "voucher_code") String code) throws VoucherNotFoundException {
+    public ResponseEntity getByCode(@PathVariable(value = "voucher_code") String code) throws VoucherNotFoundException {
         HttpResponse<ResVoucher> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS, voucherService.getByCode(code));
+        return ResponseEntity.ok(responseData);
+    }
+    @GetMapping("")
+    public ResponseEntity getByEvent(@RequestParam String event_id) {
+        HttpResponse<List<ResVoucher>> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS, voucherService.getByEvent(event_id));
+        return ResponseEntity.ok(responseData);
+    }
+    @GetMapping("/created")
+    public ResponseEntity getMyCreatedVoucher(HttpServletRequest httpRequest) {
+        HttpResponse<List<ResVoucher>> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS, voucherService.getVoucherCreatedBy(httpRequest));
         return ResponseEntity.ok(responseData);
     }
 }
