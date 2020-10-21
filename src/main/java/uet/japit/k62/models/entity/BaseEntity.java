@@ -17,9 +17,9 @@ import java.util.UUID;
 public abstract class BaseEntity {
     @Id
     private String id = UUID.randomUUID().toString();
-    private Date createdAt = new Date();
+    private long createdAt = new Date().getTime();
     private String createdBy;
-    private Date updatedAt = new Date();
+    private long updatedAt = new Date().getTime();
     private String updatedBy;
     private Boolean isActive = true;
 }

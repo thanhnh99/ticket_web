@@ -113,7 +113,7 @@ public class UserService implements UserDetailsService {
         User userSendRequest = userDAO.findByEmail(AttributeTokenService.getEmailFromToken(token));
         loginEnableUser.setUpdatedBy(userSendRequest.getId());
         loginEnableUser.setIsActive(!loginEnableUser.getIsActive());
-        loginEnableUser.setUpdatedAt(new Date());
+        loginEnableUser.setUpdatedAt(new Date().getTime());
         userDAO.save(loginEnableUser);
         httpResponse.setStatusCode(StatusCode.OK);
         httpResponse.setMessage(MessageConstant.SUCCESS);
@@ -216,7 +216,7 @@ public class UserService implements UserDetailsService {
                 Permission permissionEntity = permissionDAO.findByCode(permissionCode);
                 user.getPermissionList().add(permissionEntity);
             }
-            user.setUpdatedAt(new Date());
+            user.setUpdatedAt(new Date().getTime());
             user.setUpdatedBy(userSendRequest.getId());
             userDAO.save(user);
             response.setStatusCode(StatusCode.OK);

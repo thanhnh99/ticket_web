@@ -15,9 +15,6 @@ public class ReqCreateTicketClass {
     private BigDecimal price;
 
     @NotBlank
-    private Integer numberAvailable;
-
-    @NotBlank
     private Integer total;
 
     @NotBlank
@@ -28,4 +25,7 @@ public class ReqCreateTicketClass {
 
     @NotBlank
     private Integer maxPerPerson;
+
+    @NotBlank
+    private String eventId;
 }
