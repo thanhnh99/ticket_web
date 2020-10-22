@@ -34,7 +34,7 @@ public class VoucherService {
     @Autowired
     ICategoryDAO categoryDAO;
 
-    public Voucher addVoucher(HttpServletRequest httpRequest,
+    public ResVoucher addVoucher(HttpServletRequest httpRequest,
                                             @RequestBody ReqCreateVoucher requestData) throws VoucherHasExistedException, InvalidConditionException {
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
@@ -58,7 +58,7 @@ public class VoucherService {
         Voucher voucher = new ModelMapper().map(requestData, Voucher.class);
         voucher.setCreatedBy(userSendRequest.getId());
         voucherDAO.save(voucher);
-        return voucher;
+        return new ModelMapper().map(voucher, ResVoucher.class);
     }
 
     public ResVoucher getByCode(String code) throws VoucherNotFoundException {

@@ -9,7 +9,6 @@ import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.exception.exception_define.detail.InvalidConditionException;
 import uet.japit.k62.exception.exception_define.detail.VoucherHasExistedException;
 import uet.japit.k62.exception.exception_define.detail.VoucherNotFoundException;
-import uet.japit.k62.models.entity.Voucher;
 import uet.japit.k62.models.request.ReqCreateVoucher;
 import uet.japit.k62.models.response.data_response.ResVoucher;
 import uet.japit.k62.models.response.http_response.HttpResponse;
@@ -28,7 +27,7 @@ public class VoucherController {
     @PostMapping
     public ResponseEntity addVoucher(HttpServletRequest httpRequest,
                                      @Valid @RequestBody ReqCreateVoucher requestData) throws VoucherHasExistedException, InvalidConditionException {
-        HttpResponse<Voucher> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS, voucherService.addVoucher(httpRequest,requestData));
+        HttpResponse<ResVoucher> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS, voucherService.addVoucher(httpRequest,requestData));
         return ResponseEntity.ok(responseData);
     }
     @GetMapping("/{voucher_code}")
