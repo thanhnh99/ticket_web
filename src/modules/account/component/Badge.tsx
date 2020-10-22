@@ -21,18 +21,18 @@ const Badge: React.FunctionComponent<Props> = (props) => {
         position: 'relative',
       }}
     >
-      <LoadingButton
-        style={{ minWidth: 160, marginRight: 16 }}
-        size="large"
-        type="submit"
-        variant="outlined"
-        color="secondary"
-        disableElevation
-      >
-        <a target='_blank' href="/event/create">
+      <a target='_blank' href="/event/create">
+        <LoadingButton
+          style={{ minWidth: 160, marginRight: 16 }}
+          size="large"
+          type="submit"
+          variant="outlined"
+          color="secondary"
+          disableElevation
+        >
           <FormattedMessage id="createEvent" />
-        </a>
-      </LoadingButton>
+        </LoadingButton>
+      </a>
       <LanguageSelect />
       <UserInfoDropdown />
     </div>
