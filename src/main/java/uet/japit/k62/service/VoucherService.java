@@ -75,9 +75,7 @@ public class VoucherService {
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User userSendRequest = userDAO.findByEmail(emailSendRequest);
-        System.out.println(userSendRequest.getId());
         List<Voucher> vouchers =  voucherDAO.findByCreatedBy(userSendRequest.getId());
-        System.out.println(vouchers.size());
         return new ModelMapper().map(vouchers, new TypeToken<List<ResVoucher>>() {}.getType());
 
     }
