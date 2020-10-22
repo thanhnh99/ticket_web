@@ -4,7 +4,6 @@ package uet.japit.k62.models.response.data_response;
 import lombok.Data;
 import uet.japit.k62.models.entity.Event;
 
-import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -14,10 +13,10 @@ public class ResEvent {
     private String description;
     private String coverImageUrl;
     private String mapImageUrl;
-    private long startTime;
-    private long endTime;
-    private long startSellingTime;
-    private long endSellingTime;
+    private Date startTime;
+    private Date endTime;
+    private Date startSellingTime;
+    private Date endSellingTime;
     private Boolean isPopular;
     private Boolean isBroadcasting;
     private String categoryId;

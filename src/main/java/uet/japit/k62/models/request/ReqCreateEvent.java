@@ -2,9 +2,7 @@ package uet.japit.k62.models.request;
 
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.Multipart;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,16 +21,16 @@ public class ReqCreateEvent {
     private String description;
 
     @NotNull(message = "startTime may not be null")
-    private Long startTime;
+    private Date startTime;
 
     @NotNull(message = "endTime may not be null")
-    private Long endTime;
+    private Date endTime;
 
     @NotNull(message = "startSellingTime may not be null")
-    private Long startSellingTime;
+    private Date startSellingTime;
 
     @NotNull(message = "endSellingTime may not be null")
-    private Long endSellingTime;
+    private Date endSellingTime;
 
     @NotBlank(message = "categoryId may not be blank")
     @NotNull(message = "categoryId may not be null")

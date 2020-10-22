@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,10 +21,10 @@ public class Event extends BaseEntity{
     private String description;
     private String coverImageUrl;
     private String mapImageUrl;
-    private long startTime;
-    private long endTime;
-    private long startSellingTime;
-    private long endSellingTime;
+    private Date startTime;
+    private Date endTime;
+    private Date startSellingTime;
+    private Date endSellingTime;
     private Boolean isPopular = false;
     private Boolean isBroadcasting = false;
     private String city;
@@ -49,10 +48,10 @@ public class Event extends BaseEntity{
     {
         this.name = reqCreateEvent.getName();
         this.description = reqCreateEvent.getDescription();
-        this.startSellingTime = new Date(reqCreateEvent.getStartSellingTime()).getTime();
-        this.startTime = new Date(reqCreateEvent.getStartTime()).getTime();
-        this.endSellingTime = new Date(reqCreateEvent.getEndSellingTime()).getTime();
-        this.endTime = new Date(reqCreateEvent.getEndTime()).getTime();
+        this.startSellingTime = reqCreateEvent.getStartSellingTime();
+        this.startTime = reqCreateEvent.getStartTime();
+        this.endSellingTime = reqCreateEvent.getEndSellingTime();
+        this.endTime = reqCreateEvent.getEndTime();
         this.city = reqCreateEvent.getCity();
         this.fullAddress = reqCreateEvent.getFullAddress();
     }
