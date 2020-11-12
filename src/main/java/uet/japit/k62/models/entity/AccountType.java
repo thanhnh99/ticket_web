@@ -20,10 +20,4 @@ public class AccountType extends BaseEntity{
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<User> ticketClasses = new ArrayList<User>();
-//
-//    @ManyToMany
-//    @JoinTable(name = "user_role",
-//                joinColumns = @JoinColumn(name = "role_id"),
-//                inverseJoinColumns = @JoinColumn(name = "user_id"))
-//    private Collection<User> userList = new ArrayList<User>();
 }

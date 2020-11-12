@@ -18,6 +18,12 @@ import java.util.Collection;
 public class Booking extends BaseEntity{
     private Integer totalTicket;
 
+    private Boolean isSuccess;
+
+    private String emailBooking;
+
+    private String phoneBooking;
+
 
     @ManyToOne
     @JoinColumn(name = "event_id")

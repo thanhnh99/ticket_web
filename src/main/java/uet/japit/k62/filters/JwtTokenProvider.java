@@ -22,7 +22,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject((userDetail.getUser().getEmail()))
                 .setIssuedAt(now)
-                .setExpiration(expirationDate)
+//                .setExpiration(expirationDate)
                 .claim("password", userDetail.getPassword())
                 .claim("username",userDetail.getUsername())
                 .claim("permissions", userDetail.getAuthorities())
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     }
 
     // Lấy thông tin user từ jwt
-    public String getUserNameFromJWT(String token) {
+    public String getEmailFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)

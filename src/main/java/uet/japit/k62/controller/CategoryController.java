@@ -4,16 +4,18 @@ package uet.japit.k62.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import uet.japit.k62.exception.exception_define.detail.CategoryHasExistedException;
+import uet.japit.k62.exception.exception_define.detail.CategoryNotFoundException;
 import uet.japit.k62.models.request.ReqCreateCategory;
+import uet.japit.k62.models.request.ReqEditCategory;
 import uet.japit.k62.models.response.http_response.HttpResponse;
-import uet.japit.k62.models.response.service_response.ServiceResponse;
+import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.CategoryService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/category")
@@ -24,10 +26,31 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_CATEGORY})")
-    public ResponseEntity addCategory(HttpServletRequest httpRequest, @RequestBody ReqCreateCategory requestData)
+    public ResponseEntity addCategory(HttpServletRequest httpRequest, @Valid @RequestBody ReqCreateCategory requestData) throws CategoryHasExistedException {
+        MessageResponse responseData = categoryService.addCategory(httpRequest,requestData);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @PutMapping
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).EDIT_CATEGORY})")
+    public ResponseEntity editCategory(HttpServletRequest httpRequest,
+                                      @Valid @RequestBody ReqEditCategory requestData,
+                                      @NotNull @PathVariable(name = "category_id") String categoryId) throws CategoryNotFoundException {
+        MessageResponse responseData = categoryService.editCategory(httpRequest,requestData, categoryId);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @DeleteMapping(name = "category_id")
+    public ResponseEntity deleteCategory(HttpServletRequest httpRequest,
+                                         @NotNull @PathVariable(name = "category_id") String categoryId) throws CategoryNotFoundException {
+        MessageResponse responseData = categoryService.disableCategory(httpRequest,categoryId);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @GetMapping
+    public ResponseEntity getAllCategory()
     {
-        HttpResponse responseData = new HttpResponse();
-        ServiceResponse serviceResponse = categoryService.addCategory(httpRequest,requestData);
-        return ServiceResponse.getHttpResponseResponseEntity(responseData, serviceResponse);
+        HttpResponse responseData = categoryService.getAllCategories();
+        return ResponseEntity.ok(responseData);
     }
 }

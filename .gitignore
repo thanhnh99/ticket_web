@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+src/main/java/uet/japit/k62/constant/MailConstant.java
+src/main/resources/static/images/**
