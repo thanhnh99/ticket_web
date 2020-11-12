@@ -1,21 +1,12 @@
-package uet.japit.k62.models.entity;
+package uet.japit.k62.models.response.data_response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import uet.japit.k62.models.entity.VoucherType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
-
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Voucher extends BaseEntity{
-
-    @Column(unique = true)
+public class ResVoucher {
     private String code;
     private String minOrder;
     private Integer discountPercentage;

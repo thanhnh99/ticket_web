@@ -10,6 +10,7 @@ import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.exception.exception_define.common.EntityHasDisableException;
 import uet.japit.k62.exception.exception_define.common.EntityHasExistedException;
 import uet.japit.k62.exception.exception_define.common.EntityNotFoundException;
+import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 
 import java.util.NoSuchElementException;
@@ -51,5 +52,11 @@ public class ExceptionHandle {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public MessageResponse EntityHasExistedExceptionHandle(EntityHasExistedException e) {
         return new MessageResponse(StatusCode.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(UnAuthorException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public MessageResponse UnAuthorExceptionHandle(UnAuthorException e) {
+        return new MessageResponse(StatusCode.UN_AUTHORIZATION, e.getMessage());
     }
 }

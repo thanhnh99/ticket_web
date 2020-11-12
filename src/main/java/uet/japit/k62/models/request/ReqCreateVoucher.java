@@ -1,28 +1,30 @@
-package uet.japit.k62.models.entity;
+package uet.japit.k62.models.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import uet.japit.k62.models.entity.VoucherType;
+import uet.japit.k62.validator.DateRange;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Voucher extends BaseEntity{
-
-    @Column(unique = true)
+@DateRange(start ="startTime", end= "endTime")
+public class ReqCreateVoucher {
+    @NotNull
     private String code;
+    @PositiveOrZero
     private String minOrder;
+    @Min(0)
+    @Max(100)
     private Integer discountPercentage;
+    @Positive
     private BigDecimal maximumDiscount;
     private Date startTime;
+    @Future
     private Date endTime;
     private VoucherType type;
     private String conditionValue;
+    @Positive
     private Integer capacity;
 }

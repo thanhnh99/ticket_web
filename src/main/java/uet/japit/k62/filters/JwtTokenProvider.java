@@ -22,7 +22,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject((userDetail.getUser().getEmail()))
                 .setIssuedAt(now)
-                .setExpiration(expirationDate)
+//                .setExpiration(expirationDate)
                 .claim("password", userDetail.getPassword())
                 .claim("username",userDetail.getUsername())
                 .claim("permissions", userDetail.getAuthorities())
