@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 public class ResVoucher {
     private String code;
-    private String minOrder;
+    private long minOrder;
     private Integer discountPercentage;
     private BigDecimal maximumDiscount;
     private Date startTime;

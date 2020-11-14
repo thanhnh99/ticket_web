@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -18,12 +19,12 @@ import java.util.Collection;
 public class Booking extends BaseEntity{
     private Integer totalTicket;
 
-    private Boolean isSuccess;
+    private BookingStatus status;
 
     private String emailBooking;
 
     private String phoneBooking;
-
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "event_id")

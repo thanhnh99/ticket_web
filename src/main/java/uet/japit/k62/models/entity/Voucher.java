@@ -17,7 +17,7 @@ public class Voucher extends BaseEntity{
 
     @Column(unique = true)
     private String code;
-    private String minOrder;
+    private long minOrder;
     private Integer discountPercentage;
     private BigDecimal maximumDiscount;
     private Date startTime;

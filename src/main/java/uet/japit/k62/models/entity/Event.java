@@ -56,4 +56,7 @@ public class Event extends BaseEntity{
         this.fullAddress = reqCreateEvent.getFullAddress();
     }
 
+    public Event(String id) {
+        this.setId(id);
+    }
 }

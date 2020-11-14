@@ -22,6 +22,4 @@ public class BookingDetail extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
-
-
 }
