@@ -26,7 +26,7 @@ public class MessageConstant {
     /**
      *Event api Error
      */
-    public static final String EVENT_NOT_FOUND = "Event không tồn tại, vui lòng kiểm tra lại.";
+    public static final String EVENT_NOT_FOUND = "Sự kiện không tồn tại hoặc đã bị xóa trước đó, vui lòng kiểm tra lại.";
     /**
      * Voucher api Error
      */
