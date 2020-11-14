@@ -29,9 +29,9 @@ public class EventController {
 
     @PostMapping
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_EVENT})")
-    public ResponseEntity<MessageResponse> addEvent(HttpServletRequest httpServletRequest,
+    public ResponseEntity<HttpResponse> addEvent(HttpServletRequest httpServletRequest,
                                                     @Valid @RequestBody ReqCreateEvent reqCreateEvent) throws Exception {
-        MessageResponse response = eventService.addEvent(httpServletRequest, reqCreateEvent);
+        HttpResponse response = eventService.addEvent(httpServletRequest, reqCreateEvent);
         return ResponseEntity.ok(response);
     }
 
