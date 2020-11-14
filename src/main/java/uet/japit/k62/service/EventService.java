@@ -1,22 +1,23 @@
 package uet.japit.k62.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.constant.MessageConstant;
+import uet.japit.k62.constant.PermissionConstant;
 import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.common.UnAuthorException;
-import uet.japit.k62.exception.exception_define.detail.CategoryHasExistedException;
 import uet.japit.k62.exception.exception_define.detail.CategoryNotFoundException;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
 import uet.japit.k62.models.entity.*;
-import uet.japit.k62.models.request.ReqCreateCategory;
 import uet.japit.k62.models.request.ReqCreateEvent;
-import uet.japit.k62.models.request.ReqCreateLocation;
 import uet.japit.k62.models.request.ReqCreateTicketClass;
 import uet.japit.k62.models.response.data_response.ResEvent;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
@@ -26,16 +27,14 @@ import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.util.ConvertEntityToResponse;
 import uet.japit.k62.util.StringConvert;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,8 +52,6 @@ public class EventService {
     @Autowired
     ITicketClassDAO ticketClassDAO;
 
-    @Autowired
-    DAO dao;
 
     public HttpResponse addEvent(HttpServletRequest httpRequest, ReqCreateEvent requestData) throws Exception {
         HttpResponse response = new HttpResponse();
@@ -92,22 +89,28 @@ public class EventService {
             userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT)
         )
         {
-            //upload CoverImage
             String currentPath = Paths.get("").toAbsolutePath().toString();
-            String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(coverImage.getOriginalFilename()).replaceAll("\\s","");;
-            String saveToSeverPath = currentPath + "/src/main/resources/static/images/" + coverName;
-            String savetoDBPath = "/static/images/" + coverName;
-            coverImage.transferTo(new File(saveToSeverPath));
-//        Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
-            event.setCoverImageUrl(savetoDBPath);
+            if(coverImage != null)
+            {
+                //upload CoverImage
+                String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(coverImage.getOriginalFilename()).replaceAll("\\s","");;
+                String saveToSeverPath = currentPath + "/src/main/resources/static/images/" + coverName;
+                String savetoDBPath = "/static/images/" + coverName;
+                coverImage.transferTo(new File(saveToSeverPath));
+                //Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
+                event.setCoverImageUrl(savetoDBPath);
+            }
 
-            //upload mapEvent Image
-            String mapImageName = "map_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(mapImage.getOriginalFilename());
-            String saveMapToSeverPath = currentPath + "/src/main/resources/static/images/" + mapImageName;
-            String saveMapToDBPath = "/static/images/" + mapImageName;
-//        Files.copy(mapImage.getInputStream(), locationPath.resolve(mapImageName));
-            mapImage.transferTo(new File(saveMapToSeverPath));
-            event.setMapImageUrl(saveMapToDBPath);
+            if(mapImage != null)
+            {
+                //upload mapEvent Image
+                String mapImageName = "map_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(mapImage.getOriginalFilename());
+                String saveMapToSeverPath = currentPath + "/src/main/resources/static/images/" + mapImageName;
+                String saveMapToDBPath = "/static/images/" + mapImageName;
+                //Files.copy(mapImage.getInputStream(), locationPath.resolve(mapImageName));
+                mapImage.transferTo(new File(saveMapToSeverPath));
+                event.setMapImageUrl(saveMapToDBPath);
+            }
             eventDAO.save(event);
             return new MessageResponse(StatusCode.OK, MessageConstant.SUCCESS);
         }
@@ -180,7 +183,7 @@ public class EventService {
 
     public HttpResponse getEventById(String eventId) throws EventNotFoundException {
         Event event = eventDAO.findById(eventId).get();
-        if(event == null)
+        if(event == null || !event.getIsActive())
         {
             throw new EventNotFoundException();
         }
@@ -188,63 +191,53 @@ public class EventService {
         return new HttpResponse(resData);
     }
 
-    public HttpResponse search(String categoryId,
-                               Integer time,
-                               String location,
-                               Boolean price)
-    {
+    public HttpResponse search(Specification<Event> specs) {
         HttpResponse response = new HttpResponse();
-        List<Category> categoryList = categoryDAO.findAll();
-        String query = new String();
-//        query += "select * from event inner join ticket_class" +
-//                " on event.id = ticket_class.event_id ";
-        query += "select * from event";
-        if(categoryId != null)
-        {
-            for(Category category : categoryList)
-            {
-                if (category.getId().equals(categoryId))
-                {
-                    query += "event.category_id=" + "'"  +categoryId + "'";
-                }
-            }
-        }
-        if(time != null && time instanceof Integer)
-        {
-//            query+=" and event.start_date between  " + new Date().getTime() + "and" + (new Date().getTime()+ time);
-        }
-        if(location != null)
-        {
-            if(location.equals("Hà Nội"))
-            {
-                query += " and event.city = \"Hà Nội\" ";
-            }
-            else  if(location.equals("Hồ Chí Minh"))
-            {
-                query += " and event.city = \"Hồ Chí Minh\" ";
-            }
-            else
-            {
-                query += " and event.city <> 'Hà Nội' " +
-                        " and event.city <>'Hồ Chí Minh' ";
-            }
-        }
-        if(price != null)
-        {
-            if(price == true)
-            {
-                query += " and ticket_class.price > 0 ";
-            }
-            else
-            {
-                query += " and ticket_class.price > 0 ";
-            }
-        }
-//        query += " group by event.id";
-        System.out.println(query);
-//        query += ";";
-        List<Event> eventList = dao.search(query);
-        response.setData(eventList);
+        List<Event> eventsEntity = eventDAO.findAll(Specification.where(specs));
+        List<ResEvent> eventsResponse = ConvertEntityToResponse.ConvertListEventEntity(eventsEntity);
+        response.setData(eventsResponse);;
         return response;
+    }
+
+    public HttpResponse editEvent(HttpServletRequest httpRequest,
+                                  ReqCreateEvent reqEditEvent,
+                                  String eventId) throws UnAuthorException {
+        Event event = eventDAO.findById(eventId).get();
+        HttpResponse response = new HttpResponse();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        if(userSendRequest.getAccountType().getCode().equals(AccountTypeConstant.ROOT)
+        ||userSendRequest.getAccountType().getCode().equals(AccountTypeConstant.ADMIN)
+            || userSendRequest.getEmail().equals(event.getCreatedBy()))
+        {
+            Event newEvent = new Event(reqEditEvent);
+            newEvent.setId(eventId);
+            Category category = categoryDAO.findById(reqEditEvent.getCategoryId()).get();
+            newEvent.setCategory(category);
+            newEvent.setCreatedBy(userSendRequest.getEmail());
+            eventDAO.save(newEvent);
+            response.setData(new ResEvent(newEvent));
+            return response;
+        }
+        else throw new UnAuthorException();
+    }
+
+    public MessageResponse deleteEvent(HttpServletRequest httpRequest,
+                                       String eventId) throws UnAuthorException {
+        Event event = eventDAO.findById(eventId).get();
+        MessageResponse response = new MessageResponse();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        if(userSendRequest.getAccountType().getCode().equals(AccountTypeConstant.ROOT)
+                ||userSendRequest.getAccountType().getCode().equals(AccountTypeConstant.ADMIN)
+                || userSendRequest.getEmail().equals(event.getCreatedBy()))
+        {
+            event.setIsActive(false);
+            eventDAO.save(event);
+            return response;
+        }
+        else throw new UnAuthorException();
     }
 }

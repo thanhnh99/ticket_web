@@ -80,4 +80,14 @@ public class User extends BaseEntity{
     {
         this.permissionList.add(permission);
     }
+
+    public Boolean hasPerMission(Permission permissionCheck)
+    {
+        for(Permission permission : this.permissionList)
+        {
+            if(permission.getCode().equals(permissionCheck.getCode())) return true;
+        }
+        return false;
+    }
+
 }
