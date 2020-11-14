@@ -56,8 +56,8 @@ public class EventService {
     @Autowired
     DAO dao;
 
-    public MessageResponse addEvent(HttpServletRequest httpRequest, ReqCreateEvent requestData) throws Exception {
-        MessageResponse response = new MessageResponse();
+    public HttpResponse addEvent(HttpServletRequest httpRequest, ReqCreateEvent requestData) throws Exception {
+        HttpResponse response = new HttpResponse();
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User userSendRequest = userDAO.findByEmail(emailSendRequest);
@@ -72,6 +72,7 @@ public class EventService {
         eventDAO.save(newEvent);
         response.setStatusCode(StatusCode.OK);
         response.setMessage(MessageConstant.SUCCESS);
+        response.setData(new ResEvent(newEvent));
         return response;
     }
 
