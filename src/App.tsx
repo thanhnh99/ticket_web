@@ -6,7 +6,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { ROUTES } from './configs/routes';
+import { ROUTES, ROUTES_TAB } from './configs/routes';
 import { validateAccessToken } from './modules/auth/redux/authThunks';
 import AuthProblemDialog from './modules/common/components/AuthProblemDialog';
 import LoadingIcon from './modules/common/components/LoadingIcon';
@@ -33,6 +33,10 @@ const ChangePassword = React.lazy(
 
 const CreateEvent = React.lazy(
   () => import('./modules/ticketpro/events/pages/CreateEvent'),
+);
+
+const EditEventInfo = React.lazy(
+  () => import('./modules/ticketpro/events/pages/EditEventInfo'),
 );
 // const ResetPassword = React.lazy(() => import('./modules/auth/resetPassword/pages/ResetPassword'));
 
@@ -66,7 +70,8 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.firstLogin} component={FirstLogin} />
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
-          <ProtectedRoute auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.editEventInfo} component={EditEventInfo} />
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
         </Switch>
       </React.Suspense>

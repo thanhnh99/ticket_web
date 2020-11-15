@@ -5,28 +5,34 @@ import { Row, Col, snackbarSetting } from '../../../common/components/elements';
 import LoadingButton from '../../../common/components/LoadingButton';
 import FormControlAutoComplete from '../../../common/components/FormControlAutoComplete';
 import FormControlTextField from '../../../common/components/FormControlTextField';
-import FormControlSelect from '../../../common/components/FormControlSelect';
+import { SingleSelect } from '../../../common/components/SingleSelect';
 import { useSnackbar } from 'notistack';
 import { defaultLoginForm, login, ILoginForm } from '../../../auth/redux/authThunks';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { some } from "../../../../constants";
 
-interface Props { }
+interface Props {
+    params: undefined;
+    onUpdateFilter(params: undefined): void;
+    loading?: boolean;
+}
 
 
-const CreateEventForm: React.FunctionComponent<Props> = () => {
+const CreateEventForm: React.FunctionComponent = () => {
 
     const intl = useIntl();
     const dispatch = useDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
 
     const defaultCreateEventForm = {
         eventName: '',
         locationName: '',
         location: '',
         eventType: [
-            {number: 1, value: 'âm nhạc'},
-            {number: 2, value: 'Thể thao'},
+            { number: 1, value: 'âm nhạc' },
+            { number: 2, value: 'Thể thao' },
         ]
     };
 
@@ -44,15 +50,17 @@ const CreateEventForm: React.FunctionComponent<Props> = () => {
         }
     });
 
+    let eventOption: some = [{ "1": "hello" }];
+
     return (
         <form onSubmit={formik.handleSubmit} >
             <Col>
-                <Typography variant="h5" 
-                style={{ 
-                    backgroundColor: '#dedede', 
-                    padding: 20,
-                    textAlign: 'center', 
-                    fontWeight: 'bold' 
+                <Typography variant="h5"
+                    style={{
+                        backgroundColor: '#dedede',
+                        padding: 20,
+                        textAlign: 'center',
+                        fontWeight: 'bold'
                     }}>
                     <FormattedMessage id="Create Event" />
                 </Typography>
@@ -96,7 +104,7 @@ const CreateEventForm: React.FunctionComponent<Props> = () => {
                 <FormControlTextField
                     id="password"
                     fullWidth
-                    formControlStyle={{ width: 550, marginLeft: 36, marginRight: 36, marginBottom: 36 }}
+                    formControlStyle={{ width: 550, marginLeft: 36, marginRight: 36 }}
                     // label={<FormattedMessage id="auth.newPassword" />}
                     placeholder={intl.formatMessage({ id: 'Địa chỉ' })}
                     onChange={formik.handleChange}
@@ -109,13 +117,24 @@ const CreateEventForm: React.FunctionComponent<Props> = () => {
                         autoComplete: 'off',
                     }}
                     type="text"
-                // errorMessage={
-                //   formik.errors.password && formik.submitCount > 0 ? formik.errors.password : undefined
-                // }
                 />
-                {/* <FormControlSelect options={defaultCreateEventForm.eventType}/> */}
+                <SingleSelect
+                    // value={formik.values.positionId}
+                    onSelectOption={(value: any) => {
+                        formik.setFieldValue('positionId', value);
+                    }}
+                    formControlStyle={{ width: 550, marginLeft: 36, marginRight: 36, marginBottom: 36 }}
+                    getOptionLabel={value => value.name}
+                    options={[
+                        { id: undefined, name: intl.formatMessage({ id: 'Âm nhạc' }) },
+                        { id: undefined, name: intl.formatMessage({ id: 'Thể thao' }) },
+                        { id: undefined, name: intl.formatMessage({ id: 'Sách' }) },
+                        { id: undefined, name: intl.formatMessage({ id: 'Ngoài trời' }) },
+                    ]}
+                    optional
+                />
                 <LoadingButton
-                    style={{ minWidth: 160}}
+                    style={{ minWidth: 160 }}
                     size="large"
                     type="submit"
                     variant="contained"
