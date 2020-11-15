@@ -11,4 +11,5 @@ import java.util.List;
 public interface ITicketClassDAO extends JpaRepository<TicketClass, String> {
     @Query("select t from TicketClass t where event_id = ?1")
     List<TicketClass> findByEventID(String event_id);
+
 }
