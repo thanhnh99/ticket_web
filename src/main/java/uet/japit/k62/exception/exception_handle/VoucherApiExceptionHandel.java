@@ -16,7 +16,7 @@ import uet.japit.k62.models.response.http_response.MessageResponse;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class VoucherApiExceptionHandel {
     @ExceptionHandler(InvalidConditionException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.OK)
     public MessageResponse handelInvalidConditionException() {
         return new MessageResponse(StatusCode.BAD_REQUEST, MessageConstant.INVALID_CONDITION);
     }
