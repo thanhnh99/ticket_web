@@ -103,7 +103,7 @@ export function validateAccessToken(
           // try {
           //   const json = await dispatch(fetchThunk(`${API_PATHS.accountBrief}`, 'get'));
           //   if (json && json.code === SUCCESS_CODE) {
-              dispatch(authIn(accessToken));
+
           //     prevAccessToken = accessToken;
           //   } else if (getState().auth.auth) {
           //     dispatch(out());
@@ -140,7 +140,8 @@ export function login(
       const json = await dispatch(fetchThunk(API_PATHS.login, 'post', JSON.stringify(data), false));
       if (json.statusCode == SUCCESS_CODE) {
         json.data.token && set(ACCESS_TOKEN, json.data.token);
-        dispatch(validateAccessToken());
+        dispatch(validateAccessToken(json.data));
+        dispatch(authIn(json.data));
       }
       return json;
     } finally {
