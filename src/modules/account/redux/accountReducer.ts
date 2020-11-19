@@ -3,7 +3,7 @@ import { ActionType, createAction, getType } from 'typesafe-actions';
 import { some } from '../../../constants';
 
 export interface AccountState {
-  readonly userData?: some;
+  readonly userData?: string;
 }
 
 export const setUserData = createAction('account/setUserData', (data?: some) => ({ data }))();

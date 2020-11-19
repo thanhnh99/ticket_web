@@ -4,8 +4,9 @@ import { Row, Col } from '../../../common/components/elements';
 import LoadingButton from '../../../common/components/LoadingButton';
 import Card from '../components/Card';
 import Carousel from '../components/Carousel';
+import axios from 'axios';
 
-interface Props {}
+interface Props { }
 
 const tutorialSteps = [
   {
@@ -30,94 +31,100 @@ const tutorialSteps = [
   },
 ];
 
-const listTicket = [
-  {
-    id: 1,
-    img: 'https://picsum.photos/250/120',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '10/10/2020',
-    category: 'Nightlife',
-  },
-  {
-    id: 2,
-    img: 'https://picsum.photos/251/120',
-    title: 'Đêm nhạc FRANZ LISZT & ANTONIN DVOŘÁK',
-    time: '03/10/2020',
-    category: 'Art & Culture',
-  },
-  {
-    id: 3,
-    img: 'https://picsum.photos/250/121',
-    title: 'Kịch IDECAF: MƯU BÀ TÚ',
-    time: '03/10/2020',
-    category: 'Theater & Plays',
-  },
-  {
-    id: 4,
-    img: 'https://picsum.photos/250/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 5,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 6,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 7,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 8,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 9,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 10,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 11,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-  {
-    id: 12,
-    img: 'https://picsum.photos/251/122',
-    title: 'Workshop vẽ tranh màu nước: Classy',
-    time: '02/10/2020',
-    category: 'Courses',
-  },
-];
+// const listTicket = [
+//   {
+//     id: 1,
+//     img: 'https://picsum.photos/250/120',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '10/10/2020',
+//     category: 'Nightlife',
+//   },
+//   {
+//     id: 2,
+//     img: 'https://picsum.photos/251/120',
+//     title: 'Đêm nhạc FRANZ LISZT & ANTONIN DVOŘÁK',
+//     time: '03/10/2020',
+//     category: 'Art & Culture',
+//   },
+//   {
+//     id: 3,
+//     img: 'https://picsum.photos/250/121',
+//     title: 'Kịch IDECAF: MƯU BÀ TÚ',
+//     time: '03/10/2020',
+//     category: 'Theater & Plays',
+//   },
+//   {
+//     id: 4,
+//     img: 'https://picsum.photos/250/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 5,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 6,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 7,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 8,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 9,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 10,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 11,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+//   {
+//     id: 12,
+//     img: 'https://picsum.photos/251/122',
+//     title: 'Workshop vẽ tranh màu nước: Classy',
+//     time: '02/10/2020',
+//     category: 'Courses',
+//   },
+// ];
+
 
 const Home: React.FunctionComponent<Props> = () => {
+  const listTicket = React.useState([]);
+
+  // React.useEffect(() => {
+  //   let response = await axios.get()
+  // }, [listTicket])
   return (
     <Col>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
