@@ -14,4 +14,5 @@ public class ResLogin {
     String token;
     List<GrantedAuthority> permissionList;
     String accountType;
+    String displayName;
 }

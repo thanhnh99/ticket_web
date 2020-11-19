@@ -78,6 +78,7 @@ public class UserService implements UserDetailsService {
                 response.setToken(token);
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
                 response.setAccountType(customUserDetail.getAccountType());
+                response.setDisplayName(customUserDetail.getDisplayName());
 
                 httpResponse.setMessage(MessageConstant.SUCCESS);
                 httpResponse.setStatusCode(StatusCode.OK);

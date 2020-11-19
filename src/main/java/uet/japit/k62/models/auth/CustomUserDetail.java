@@ -59,4 +59,8 @@ public class CustomUserDetail implements UserDetails {
     {
         return user.getAccountType().getCode();
     }
+
+    public String getDisplayName() {
+        return user.getDisplayName();
+    }
 }
