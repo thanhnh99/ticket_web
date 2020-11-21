@@ -3,6 +3,7 @@ package uet.japit.k62.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.IBookingDAO;
 import uet.japit.k62.dao.IEventDAO;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookingService {
     @Value("${booking.time-out}")
-    private int timeout;
+    private long timeout;
     @Autowired
     private ITicketClassDAO ticketDao;
     @Autowired
@@ -40,7 +41,8 @@ public class BookingService {
     private IVoucherDAO voucherDAO;
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
-
+    @Autowired
+    private Environment env;
     public List<ResTicketClass> getTicketInfo(String event_id){
         List<TicketClass> tickets = ticketDao.findByEventID(event_id);
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
@@ -102,23 +104,27 @@ public class BookingService {
     public String checkout(String bookingId, String paymentType) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
         IPayment payment;
         if (paymentType.equals("momo")){
-            payment = new MomoPayment(restTemplateBuilder);
+            payment = new MomoPayment(restTemplateBuilder, env);
         }
         else {
             throw new PaymentTypeNotSupported();
         }
         Booking booking = bookingDAO.findById(bookingId).orElseThrow(BookingNotFoundException::new);
         // check if booking is not time out
-        if (booking.getStatus() == BookingStatus.RESERVED
-                && TimeUnit.DAYS.convert((new Date().getTime())- booking.getCreatedAt().getTime(), TimeUnit.MINUTES) < timeout){
-            System.out.println("create payment request");
-            return payment.createPaymentRequest(bookingId, booking.getPrice().longValue(), booking.getEmailBooking());
-        }
-        else {
-            if (booking.getStatus() == BookingStatus.RESERVED){
+        if (booking.getStatus() == BookingStatus.RESERVED){
+            long diffTime = (new Date().getTime())- booking.getCreatedAt().getTime();
+            long diffInMin = TimeUnit.MINUTES.convert(diffTime, TimeUnit.MILLISECONDS);
+            if(diffInMin < timeout){
+                System.out.println("create payment request");
+                return payment.createPaymentRequest(bookingId, booking.getPrice().longValue(), booking.getEmailBooking());
+            }
+            else {
                 booking.setStatus(BookingStatus.FAILED);
                 bookingDAO.save(booking);
+                throw new InvalidPaymentException();
             }
+        }
+        else {
             throw new InvalidPaymentException();
         }
     }

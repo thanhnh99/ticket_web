@@ -1,12 +1,11 @@
 package uet.japit.k62.service.payment;
 
-import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uet.japit.k62.exception.exception_define.detail.PaymentCreateRequestException;
 import uet.japit.k62.util.Encoder;
@@ -18,26 +17,25 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+@Service
 public class MomoPayment implements IPayment {
     private final RestTemplate restTemplate;
-    @Value("${momo.base-url}")
     private String BASE_URL;
-    @Value("${access-key}")
     private String accessKey;
-    @Value("${partner-code}")
     private String partnerCode;
     private String returnUrl = "/%s/finish";
     private String notifyUrl = "/%s/payment-notification";
-    @Value("${momo.public-key}")
     String publicKey;
-    @Value("${momo.private-key}")
     String privateKey;
-    public MomoPayment(RestTemplateBuilder restTemplateBuilder) {
+    public MomoPayment(RestTemplateBuilder restTemplateBuilder, Environment env) {
         restTemplate = restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(500))
                                             .setReadTimeout(Duration.ofSeconds(500))
                                             .build();;
-
+        this.BASE_URL = env.getProperty("momo.base-url");
+        this.accessKey = env.getProperty("momo.access-key");
+        this.partnerCode = env.getProperty("momo.partner-code");
+        this.publicKey = env.getProperty("momo.public-key");
+        this.privateKey = env.getProperty("momo.private-key");
     }
     @Override
     public String createPaymentRequest(String requestId, long amount, String userEmail) throws PaymentCreateRequestException {
@@ -76,18 +74,12 @@ public class MomoPayment implements IPayment {
             e.printStackTrace();
         }
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
-        ResponseEntity<JsonObject> response = this.restTemplate.postForEntity(url, entity, JsonObject.class);
-        if(response.getBody().get("errorCode").getAsInt() == 0){
-
-            return response.getBody().get("payUrl").getAsString();
+        Map<String, Object> response = this.restTemplate.postForObject(url, entity, Map.class);
+        if((Integer) response.get("errorCode") == 0){
+            return response.get("payUrl").toString();
         }
         else {
-            throw new PaymentCreateRequestException(response.getBody().get("localMessage").getAsString());
+            throw new PaymentCreateRequestException(response.get("localMessage").toString());
         }
-    }
-
-    @Override
-    public void verifyPayment() {
-
     }
 }

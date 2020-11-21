@@ -1,6 +1,5 @@
 package uet.japit.k62.controller;
 
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +11,7 @@ import uet.japit.k62.models.request.ReqCheckout;
 import uet.japit.k62.models.request.payment.MomoIPN;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.payment.ResMomoCheckout;
 import uet.japit.k62.models.response.data_response.payment.ResMomoIPN;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.service.BookingService;
@@ -38,9 +38,8 @@ public class BookingController {
     @PostMapping("/{booking_id}/checkout")
     public ResponseEntity checkout(@PathVariable(value = "booking_id") String booking_id, @RequestBody ReqCheckout reqCheckout) throws InvalidPaymentException, BookingNotFoundException, PaymentTypeNotSupported, PaymentCreateRequestException {
         String payUrl = bookingService.checkout(booking_id, reqCheckout.getType());
-        JsonObject json = new JsonObject();
-        json.addProperty("payUrl", payUrl);
-        return ResponseEntity.ok(new HttpResponse<JsonObject>(StatusCode.OK, MessageConstant.SUCCESS, json));
+        ResMomoCheckout resMomoCheckout = new ResMomoCheckout(payUrl);
+        return ResponseEntity.ok(new HttpResponse<ResMomoCheckout>(StatusCode.OK, MessageConstant.SUCCESS, resMomoCheckout));
     }
     @GetMapping("/{booking_id/payment-notify")
     public ResponseEntity notifyPayment(@RequestBody MomoIPN reqIPN){
