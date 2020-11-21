@@ -8,12 +8,14 @@ import java.math.BigDecimal;
 import java.util.List;
 @Data
 public class ResBooking {
+    private String bookingId;
     private String email;
     private String phone;
     private BookingStatus status;
     private BigDecimal price;
     private List<ResBookingDetail> tickets;
     public ResBooking(Booking booking, List<ResBookingDetail> tickets){
+        this.bookingId = booking.getId();
         this.tickets = tickets;
         email = booking.getEmailBooking();
         phone = booking.getPhoneBooking();
