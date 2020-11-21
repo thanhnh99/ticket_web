@@ -1,8 +1,13 @@
 package uet.japit.k62.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
-import uet.japit.k62.dao.*;
+import uet.japit.k62.dao.IBookingDAO;
+import uet.japit.k62.dao.IEventDAO;
+import uet.japit.k62.dao.ITicketClassDAO;
+import uet.japit.k62.dao.IVoucherDAO;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
@@ -10,14 +15,20 @@ import uet.japit.k62.models.request.ReqSelectedTicket;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResBookingDetail;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.service.payment.IPayment;
+import uet.japit.k62.service.payment.MomoPayment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
+    @Value("${booking.time-out}")
+    private int timeout;
     @Autowired
     private ITicketClassDAO ticketDao;
     @Autowired
@@ -27,7 +38,8 @@ public class BookingService {
     @Autowired
     private IVoucherDAO voucherDAO;
     @Autowired
-    private IBookingDetailDAO bookingDetailDAO;
+    private RestTemplateBuilder restTemplateBuilder;
+
     public List<ResTicketClass> getTicketInfo(String event_id){
         List<TicketClass> tickets = ticketDao.findByEventID(event_id);
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
@@ -84,5 +96,24 @@ public class BookingService {
         bookingDAO.save(booking);
 //        bookingDetailDAO.saveAll(bookingDetails);
         return new ResBooking(booking, resBookingDetails);
+    }
+
+    public String checkout(String bookingId, String paymentType) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
+        IPayment payment;
+        if (paymentType.equals("momo")){
+            payment = new MomoPayment(restTemplateBuilder);
+        }
+        else {
+            throw new PaymentTypeNotSupported();
+        }
+        Booking booking = bookingDAO.findById(bookingId).orElseThrow(BookingNotFoundException::new);
+        // check if booking is not time out
+        if (booking.getStatus() == BookingStatus.RESERVED
+                && TimeUnit.DAYS.convert((new Date().getTime())- booking.getCreatedAt().getTime(), TimeUnit.MINUTES) < timeout){
+            return payment.createPaymentRequest(bookingId, booking.getPrice().longValue(), booking.getEmailBooking());
+        }
+        else {
+            throw new InvalidPaymentException();
+        }
     }
 }
