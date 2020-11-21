@@ -1,5 +1,6 @@
 package uet.japit.k62.controller;
 
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,7 @@ import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
+import uet.japit.k62.models.request.ReqCheckout;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
 import uet.japit.k62.models.response.http_response.HttpResponse;
@@ -30,5 +32,12 @@ public class BookingController {
         HttpResponse<ResBooking> response = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS,
                 bookingService.selectTickets(reqSelectedTicket, event_id));
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/{booking_id}/checkout")
+    public ResponseEntity checkout(@PathVariable(value = "booking_id") String booking_id, @RequestBody ReqCheckout reqCheckout) throws InvalidPaymentException, BookingNotFoundException, PaymentTypeNotSupported, PaymentCreateRequestException {
+        String payUrl = bookingService.checkout(booking_id, reqCheckout.getType());
+        JsonObject json = new JsonObject();
+        json.addProperty("payUrl", payUrl);
+        return ResponseEntity.ok(new HttpResponse<JsonObject>(StatusCode.OK, MessageConstant.SUCCESS, json));
     }
 }
