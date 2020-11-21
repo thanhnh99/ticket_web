@@ -12,6 +12,7 @@ import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqSelectedTicket;
+import uet.japit.k62.models.request.payment.MomoIPN;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResBookingDetail;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
@@ -114,7 +115,25 @@ public class BookingService {
             return payment.createPaymentRequest(bookingId, booking.getPrice().longValue(), booking.getEmailBooking());
         }
         else {
+            if (booking.getStatus() == BookingStatus.RESERVED){
+                booking.setStatus(BookingStatus.FAILED);
+                bookingDAO.save(booking);
+            }
             throw new InvalidPaymentException();
+        }
+    }
+    public void finishPayment(MomoIPN req){
+        try {
+            Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
+            if(req.isSuccess()){
+                booking.setStatus(BookingStatus.SUCCEED);
+            }
+            else {
+                booking.setStatus(BookingStatus.FAILED);
+            }
+            bookingDAO.save(booking);
+        } catch (BookingNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
