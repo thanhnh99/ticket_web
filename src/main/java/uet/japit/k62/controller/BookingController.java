@@ -9,8 +9,10 @@ import uet.japit.k62.constant.StatusCode;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqCheckout;
+import uet.japit.k62.models.request.payment.MomoIPN;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.payment.ResMomoIPN;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.service.BookingService;
 
@@ -39,5 +41,11 @@ public class BookingController {
         JsonObject json = new JsonObject();
         json.addProperty("payUrl", payUrl);
         return ResponseEntity.ok(new HttpResponse<JsonObject>(StatusCode.OK, MessageConstant.SUCCESS, json));
+    }
+    @GetMapping("/{booking_id/payment-notify")
+    public ResponseEntity notifyPayment(@RequestBody MomoIPN reqIPN){
+        ResMomoIPN resMomoIPN = new ResMomoIPN(reqIPN);
+        System.out.println("success payment: "+  reqIPN);
+        return ResponseEntity.ok(resMomoIPN);
     }
 }

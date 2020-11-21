@@ -110,6 +110,7 @@ public class BookingService {
         // check if booking is not time out
         if (booking.getStatus() == BookingStatus.RESERVED
                 && TimeUnit.DAYS.convert((new Date().getTime())- booking.getCreatedAt().getTime(), TimeUnit.MINUTES) < timeout){
+            System.out.println("create payment request");
             return payment.createPaymentRequest(bookingId, booking.getPrice().longValue(), booking.getEmailBooking());
         }
         else {
