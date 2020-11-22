@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import { FormattedMessage } from 'react-intl';
 import LanguageSelect from '../../intl/components/LanguageSelect';
 import UserInfoDropdown from './UserInfoDropdown';

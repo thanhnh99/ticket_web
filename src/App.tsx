@@ -6,7 +6,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { ROUTES } from './configs/routes';
+import { BOOKING_URL, ROUTES } from './configs/routes';
 import { validateAccessToken } from './modules/auth/redux/authThunks';
 import AuthProblemDialog from './modules/common/components/AuthProblemDialog';
 import LoadingIcon from './modules/common/components/LoadingIcon';
@@ -31,7 +31,6 @@ const ChangePassword = React.lazy(
   () => import('./modules/auth/changePassword/pages/ChangePassword'),
 );
 // const ResetPassword = React.lazy(() => import('./modules/auth/resetPassword/pages/ResetPassword'));
-
 const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLayout'));
 
 function mapStateToProps(state: AppState) {
@@ -63,7 +62,14 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
+          <ProtectedRoute
+            auth={auth.auth}
+            strict
+            path={BOOKING_URL}
+            component={DefaultLayout}
+          />
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
+      
         </Switch>
       </React.Suspense>
     </>

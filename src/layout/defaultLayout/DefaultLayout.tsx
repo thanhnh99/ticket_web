@@ -12,6 +12,7 @@ import LoadingIcon from '../../modules/common/components/LoadingIcon';
 import { AppState } from '../../redux/reducers';
 import { flatRoutes, getListRoutesActivate } from '../utils';
 import DefaultAside from './DefaultAside';
+import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
 const mapStateToProps = (state: AppState) => {
@@ -92,7 +93,7 @@ const DefaultLayout: React.FunctionComponent<Props> = (props) => {
               </Switch>
             </React.Suspense>
           </Container>
-          {/* <DefaultFooter /> */}
+          <DefaultFooter />
         </Col>
       </PageWrapper>
     </>
