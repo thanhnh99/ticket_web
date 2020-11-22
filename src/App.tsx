@@ -6,7 +6,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { BOOKING_URL, ROUTES } from './configs/routes';
+import { ROUTES } from './configs/routes';
 import { validateAccessToken } from './modules/auth/redux/authThunks';
 import AuthProblemDialog from './modules/common/components/AuthProblemDialog';
 import LoadingIcon from './modules/common/components/LoadingIcon';
@@ -30,7 +30,15 @@ const ForgotPassword = React.lazy(
 const ChangePassword = React.lazy(
   () => import('./modules/auth/changePassword/pages/ChangePassword'),
 );
-// const ResetPassword = React.lazy(() => import('./modules/auth/resetPassword/pages/ResetPassword'));
+
+const CreateEvent = React.lazy(
+  () => import('./modules/ticketpro/events/pages/CreateEvent'),
+);
+
+const TicketDetail = React.lazy(() => import('./modules/ticketpro/ticketDetail/pages/TicketDetail'))
+
+const ChooseTicket = React.lazy(() => import('./modules/ticketpro/booking/pages/chooseTicket')) 
+
 const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLayout'));
 
 function mapStateToProps(state: AppState) {
@@ -62,12 +70,10 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
-          <ProtectedRoute
-            auth={auth.auth}
-            strict
-            path={BOOKING_URL}
-            component={DefaultLayout}
-          />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket}/>
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail} component={TicketDetail}/>
+          
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
       
         </Switch>

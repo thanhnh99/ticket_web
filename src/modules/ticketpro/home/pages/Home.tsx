@@ -1,32 +1,34 @@
 import * as React from 'react';
+import Slider from 'react-slick';
 import { FormattedMessage } from 'react-intl';
 import { Row, Col } from '../../../common/components/elements';
 import LoadingButton from '../../../common/components/LoadingButton';
 import Card from '../components/Card';
-import Carousel from '../components/Carousel';
+import {slideSettings } from '../common/Slider/setting';
+import { some } from '../../../../constants';
 
 interface Props {}
 
 const tutorialSteps = [
   {
     label: 'San Francisco – Oakland Bay Bridge, United States',
-    imgPath: 'https://picsum.photos/692/266',
+    imgPath: 'https://picsum.photos/1592/266',
   },
   {
     label: 'Bird',
-    imgPath: 'https://picsum.photos/691/266',
+    imgPath: 'https://picsum.photos/1591/266',
   },
   {
     label: 'Bali, Indonesia',
-    imgPath: 'https://picsum.photos/691/265',
+    imgPath: 'https://picsum.photos/1591/265',
   },
   {
     label: 'NeONBRAND Digital Marketing, Las Vegas, United States',
-    imgPath: 'https://picsum.photos/693/266',
+    imgPath: 'https://picsum.photos/1593/266',
   },
   {
     label: 'Goč, Serbia',
-    imgPath: 'https://picsum.photos/691/268',
+    imgPath: 'https://picsum.photos/1591/268',
   },
 ];
 
@@ -120,8 +122,16 @@ const listTicket = [
 const Home: React.FunctionComponent<Props> = () => {
   return (
     <Col>
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Carousel tutorialSteps={tutorialSteps} />
+      <div style={{marginLeft: 36, marginRight: 36}}>
+        <Slider  {...slideSettings()}>
+        {
+          tutorialSteps.map((item: some, index: number) => (
+            <div key={index}>
+              <img src={item.imgPath} style={{height: 250}} alt={item.lable}/>
+            </div>
+          ))
+        }
+        </Slider>
       </div>
       <div
         style={{

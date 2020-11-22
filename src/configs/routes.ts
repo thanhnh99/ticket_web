@@ -3,15 +3,14 @@ import { RoutesTabType } from '../models/permission';
 
 const TicketDetail = React.lazy(() => import('../modules/ticketpro/ticketDetail/pages/TicketDetail'));
 
+const ChooseTicket = React.lazy(() => import('../modules/ticketpro/booking/pages/chooseTicket'))
+
 const NotFoundBox = React.lazy(() => import('../modules/common/components/NotFoundBox'));
 
 const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
 
 export const URL_PATH = '/';
 export const BOOKING_URL = '/booking';
-// function buildRoutePath(moduleName: ServiceType, path: string) {
-//   return `/${moduleName}${path}`;
-// }
 
 export const ROUTES = {
   login: '/login',
@@ -24,11 +23,13 @@ export const ROUTES = {
   accountInfo: '/accountInfo',
   notFound404: '/404',
   verify: '/accounts/verify',
-  ticketDetail: 'event/ticketDetail',
   booking: {
     notFound404: '/booking/404',
-    ticketDetail: '/ticketDetail'
+    ticketDetail: '/ticketDetail',
+    chooseTicket: '/chooseTicket'
   },
+  createEvent: '/event/create',
+  editEventInfo: '/event/edit'
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
@@ -87,7 +88,6 @@ export const ROUTES_TAB: RoutesTabType[] = [
     path: '/aboutUs',
     exact: true,
   },
-
   {
     name: 'notFound404',
     isModule: true,
@@ -95,15 +95,7 @@ export const ROUTES_TAB: RoutesTabType[] = [
     component: NotFoundBox,
     disableBreadcrumb: true,
     hidden: true,
-  },
-  {
-    name: 'ticketDetail',
-    isModule: true,
-    path: ROUTES.ticketDetail,
-    component: TicketDetail,
-    disableBreadcrumb: true,
-    exact: true,
-  },
+  }
 ];
 
 export const ROUTES_BOOKING: RoutesTabType[] = [
@@ -114,14 +106,28 @@ export const ROUTES_BOOKING: RoutesTabType[] = [
     component: NotFoundBox,
     disableBreadcrumb: true,
     hidden: true,
+  }
+];
+export const ROUTES_EVENT: RoutesTabType[] = [
+  {
+    name: 'Thời gian',
+    isModule: true,
+    path: '/event/edit/time',
+    exact: true,
   },
   {
-    name: 'ticketDetail',
+    name: 'Cài đặt',
     isModule: true,
-    path: ROUTES.booking.ticketDetail,
-    component: TicketDetail,
-    disableBreadcrumb: true,
-    hidden: true,
+    path: '/event/edit/settings',
+    exact: true,
   },
+  {
+    name: 'Thông tin thanh toán',
+    isModule: true,
+    path: '/event/edit/payment-info',
+    exact: true,
+  },
+
 ];
+
 export const ROUTES_ALL: RoutesTabType[] = [...ROUTES_TAB];
