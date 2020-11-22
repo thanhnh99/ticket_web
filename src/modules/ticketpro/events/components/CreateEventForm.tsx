@@ -1,11 +1,24 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
 import { Typography } from '@material-ui/core';
+<<<<<<< HEAD
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Col} from '../../../common/components/elements';
 import LoadingButton from '../../../common/components/LoadingButton';
 import FormControlTextField from '../../../common/components/FormControlTextField';
 import { SingleSelect } from '../../../common/components/SingleSelect';
+=======
+import { Row, Col, snackbarSetting } from '../../../common/components/elements';
+import LoadingButton from '../../../common/components/LoadingButton';
+import FormControlAutoComplete from '../../../common/components/FormControlAutoComplete';
+import FormControlTextField from '../../../common/components/FormControlTextField';
+import { SingleSelect } from '../../../common/components/SingleSelect';
+import { useSnackbar } from 'notistack';
+import { defaultLoginForm, login, ILoginForm } from '../../../auth/redux/authThunks';
+import { useDispatch } from 'react-redux';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { some } from "../../../../constants";
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
 
 interface Props {
     params: undefined;
@@ -15,7 +28,16 @@ interface Props {
 
 
 const CreateEventForm: React.FunctionComponent = () => {
+<<<<<<< HEAD
     const intl = useIntl();
+=======
+
+    const intl = useIntl();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
     const defaultCreateEventForm = {
         eventName: '',
         locationName: '',
@@ -26,6 +48,7 @@ const CreateEventForm: React.FunctionComponent = () => {
         ]
     };
 
+<<<<<<< HEAD
     const formik = useFormik({
         initialValues: defaultCreateEventForm,
         onSubmit: values => {
@@ -33,6 +56,24 @@ const CreateEventForm: React.FunctionComponent = () => {
         }
     });
 
+=======
+    const onLogin = React.useCallback(
+        () => {
+
+        },
+        [closeSnackbar, dispatch, enqueueSnackbar],
+    );
+
+    const formik = useFormik({
+        initialValues: defaultCreateEventForm,
+        onSubmit: values => {
+            onLogin();
+        }
+    });
+
+    let eventOption: some = [{ "1": "hello" }];
+
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
     return (
         <form onSubmit={formik.handleSubmit} >
             <Col>
@@ -49,6 +90,10 @@ const CreateEventForm: React.FunctionComponent = () => {
                     id="password"
                     fullWidth
                     formControlStyle={{ width: 550, marginTop: 20, marginLeft: 36, marginRight: 36 }}
+<<<<<<< HEAD
+=======
+                    // label={<FormattedMessage id="auth.newPassword" />}
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
                     placeholder={intl.formatMessage({ id: 'Tên sự kiện' })}
                     onChange={formik.handleChange}
                     value={formik.values.eventName}
@@ -65,6 +110,10 @@ const CreateEventForm: React.FunctionComponent = () => {
                     id="password"
                     fullWidth
                     formControlStyle={{ width: 550, marginLeft: 36, marginRight: 36 }}
+<<<<<<< HEAD
+=======
+                    // label={<FormattedMessage id="auth.newPassword" />}
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
                     placeholder={intl.formatMessage({ id: 'Tên địa điểm' })}
                     onChange={formik.handleChange}
                     value={formik.values.locationName}
@@ -76,12 +125,22 @@ const CreateEventForm: React.FunctionComponent = () => {
                         autoComplete: 'off',
                     }}
                     type="text"
+<<<<<<< HEAD
           
+=======
+                // errorMessage={
+                //   formik.errors.password && formik.submitCount > 0 ? formik.errors.password : undefined
+                // }
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
                 />
                 <FormControlTextField
                     id="password"
                     fullWidth
                     formControlStyle={{ width: 550, marginLeft: 36, marginRight: 36 }}
+<<<<<<< HEAD
+=======
+                    // label={<FormattedMessage id="auth.newPassword" />}
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
                     placeholder={intl.formatMessage({ id: 'Địa chỉ' })}
                     onChange={formik.handleChange}
                     value={formik.values.location}
@@ -95,6 +154,10 @@ const CreateEventForm: React.FunctionComponent = () => {
                     type="text"
                 />
                 <SingleSelect
+<<<<<<< HEAD
+=======
+                    // value={formik.values.positionId}
+>>>>>>> dd35f1f23f605a2bbb4ceac5889ccdcd2b1d096d
                     onSelectOption={(value: any) => {
                         formik.setFieldValue('positionId', value);
                     }}
