@@ -206,17 +206,7 @@
   "auth.verify": "Xác thực đăng ký",
   "auth.verifying": "Đăng ký của bạn đang được xác thực, xin đừng chuyển hướng...",
 
-  "companySize": "Quy mô",
-  "companySize.value": "{from} - {to} nhân viên",
 
-  "adult": "Người lớn",
-  "children": "Trẻ em",
-  "infant": "Trẻ nhỏ",
-  "baby": "Em bé",
-  "student": "Sinh viên",
-  "senior": "Người cao tuổi",
-
-  "helloWorld": "Hello World",
   "footer.license": "UET VNU",
   "footer.hotlineNumber": "0387870022",
   "footer.email": "nguyentheanh@gmail.com",
@@ -227,6 +217,10 @@
   "account.registerSuccess": "Kiểm tra email của bạn",
   "account.backToLogin": "Về trang đăng nhập",
   "account.backToRegister": "Về trang đăng ký",
+
+  "ticket.about": "Giới thiệu",
+  "ticket.info": "Thông tin vé",
+  "ticket.organizer": "Nhà tổ chức",
 
   "auth.forgotPassword": "Lấy lại mật khẩu",
   "auth.forgotPasswordNote": "Bạn cần nhập đầy đủ các thông tin sau để nhận mã xác thực",

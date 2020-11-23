@@ -42,7 +42,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
   const { router, open, onClose, userData } = props;
   const { pathname } = router.location;
   const [hoverOpen, setOpen] = React.useState(false);
-  const [route, setRoute] = React.useState<any>();
+  const [route, setRoute] = React.useState<some[]>([]);
 
   const getCategory = async () => {
     await axios.get(API_PATHS.getCategory)
@@ -59,6 +59,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
 
         setRoute(a);
         console.log(a);
+        console.log(route)
         return response.data.data;
       })
       .catch(e => {
@@ -68,6 +69,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
 
   React.useEffect(() => {
     getCategory()
+    console.log(route)
   }, [])
 
   const getListRouterActive = React.useMemo(() => {
