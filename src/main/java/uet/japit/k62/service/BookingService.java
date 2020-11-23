@@ -65,14 +65,23 @@ public class BookingService {
         }
 
         // validate promotion
-        Voucher voucher = voucherDAO.findByCode(reqBooking.getVoucher()).orElseThrow(VoucherNotFoundException::new);
-        Event event = eventDAO.findById(eventId).orElseThrow(EventNotFoundException::new);
-        // check voucher valid for this booking
-        if((voucher.getType() == VoucherType.EVENT  && !eventId.equals(voucher.getConditionValue())) ||
-                (voucher.getType() == VoucherType.CATEGORY && !event.getCategory().getId().equals(voucher.getConditionValue()))||
-                (voucher.getType() == VoucherType.EVENT && !event.getCreatedBy().equals(voucher.getConditionValue()))){
-            throw new InvalidVoucherException();
+        long minOrder = 0;
+        double discount = 0.0;
+        long maxDiscount = 0;
+        if (reqBooking.getVoucher() != null && !reqBooking.getVoucher().isEmpty()){
+            Voucher voucher = voucherDAO.findByCode(reqBooking.getVoucher()).orElseThrow(VoucherNotFoundException::new);
+            Event event = eventDAO.findById(eventId).orElseThrow(EventNotFoundException::new);
+            // check voucher valid for this booking
+            if((voucher.getType() == VoucherType.EVENT  && !eventId.equals(voucher.getConditionValue())) ||
+                    (voucher.getType() == VoucherType.CATEGORY && !event.getCategory().getId().equals(voucher.getConditionValue()))||
+                    (voucher.getType() == VoucherType.EVENT && !event.getCreatedBy().equals(voucher.getConditionValue()))){
+                throw new InvalidVoucherException();
+            }
+            minOrder = voucher.getMinOrder();
+            discount = voucher.getDiscountPercentage();
+            maxDiscount = voucher.getMaximumDiscount().longValue();
         }
+
         long price = 0;
         // create tmp booking
         Booking booking = new Booking();
@@ -92,8 +101,8 @@ public class BookingService {
         }
         booking.setBookingDetailList(bookingDetails);
         booking.setEvent(new Event(eventId));
-        if(price > voucher.getMinOrder()){
-            price -= Math.min(price * voucher.getDiscountPercentage() / 100, voucher.getMaximumDiscount().longValue());
+        if(price > minOrder){
+            price -= Math.min(price * discount / 100, maxDiscount);
         }
         booking.setPrice(new BigDecimal(price));
         bookingDAO.save(booking);
