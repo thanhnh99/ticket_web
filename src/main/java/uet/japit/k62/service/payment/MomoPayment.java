@@ -11,6 +11,8 @@ import uet.japit.k62.exception.exception_define.detail.PaymentCreateRequestExcep
 import uet.japit.k62.util.Encoder;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
@@ -23,8 +25,8 @@ public class MomoPayment implements IPayment {
     private String BASE_URL;
     private String accessKey;
     private String partnerCode;
-    private String returnUrl = "/%s/finish";
-    private String notifyUrl = "/%s/payment-notification";
+    private String returnUrl = "%s/%s/finish";
+    private String notifyUrl = "%s/%s/payment-notification";
     String publicKey;
     String privateKey;
     public MomoPayment(RestTemplateBuilder restTemplateBuilder, Environment env) {
@@ -39,8 +41,14 @@ public class MomoPayment implements IPayment {
     }
     @Override
     public String createPaymentRequest(String requestId, long amount, String userEmail) throws PaymentCreateRequestException {
-        String notifyUrl = String.format(this.notifyUrl, requestId);
-        String returnUrl = String.format(this.returnUrl, requestId);
+        String hostBase = "";
+        try {
+            hostBase = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        String notifyUrl = String.format(this.notifyUrl, hostBase, requestId);
+        String returnUrl = String.format(this.returnUrl, hostBase, requestId);
         HttpHeaders headers = new HttpHeaders();
         // set `content-type` header
         headers.setContentType(MediaType.APPLICATION_JSON);
