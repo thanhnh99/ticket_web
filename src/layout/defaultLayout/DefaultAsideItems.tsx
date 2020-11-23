@@ -25,7 +25,7 @@ interface Props extends ReturnType<typeof mapStateToProps> {
   data: RoutesTabType;
   pathname: string;
   open: boolean;
-  listRouterActive: some[];
+  listRouterActive: some[] | undefined;
   userData: some | undefined;
 }
 

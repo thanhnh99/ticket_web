@@ -12,6 +12,9 @@ import { ReactComponent as BackMenuArrowIcon } from '../../svg/ic_menu_back_arro
 import { ASIDE_ITEM_HEIGHT, ASIDE_MIN_WIDTH, ASIDE_WIDTH, HEADER_HEIGHT } from '../constants';
 import { getListRoutesContain } from '../utils';
 import DefaultAsideItems from './DefaultAsideItems';
+import axios from 'axios';
+import { some } from '../../constants';
+import { API_PATHS } from '../../configs/API';
 
 export const ButtonRow = withStyles(() => ({
   root: {
@@ -39,6 +42,33 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
   const { router, open, onClose, userData } = props;
   const { pathname } = router.location;
   const [hoverOpen, setOpen] = React.useState(false);
+  const [route, setRoute] = React.useState<any>();
+
+  const getCategory = async () => {
+    await axios.get(API_PATHS.getCategory)
+      .then((response) => {
+
+        let a = response.data.data.map(element => {
+          return {
+            name: element.name,
+            isModule: true,
+            path: '/' + element.code,
+            exact: true,
+          }
+        })
+
+        setRoute(a);
+        console.log(a);
+        return response.data.data;
+      })
+      .catch(e => {
+        return [];
+      })
+  }
+
+  React.useEffect(() => {
+    getCategory()
+  }, [])
 
   const getListRouterActive = React.useMemo(() => {
     return getListRoutesContain(ROUTES_TAB, router.location.pathname);
@@ -77,8 +107,8 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
           {open || hoverOpen ? (
             <BackMenuArrowIcon />
           ) : (
-            <IconMenu className="svgFillAll" style={{ stroke: 'white', width: 24, height: 24 }} />
-          )}
+              <IconMenu className="svgFillAll" style={{ stroke: 'white', width: 24, height: 24 }} />
+            )}
         </ButtonRow>
         <PerfectScrollbar
           onMouseEnter={() => {
@@ -99,7 +129,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
                 open={open || hoverOpen}
                 data={v}
                 pathname={pathname}
-                listRouterActive={getListRouterActive}
+                listRouterActive={route}
               />
             ))}
           </div>

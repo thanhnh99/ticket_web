@@ -41,6 +41,10 @@ const UserInfoDropdown: React.FunctionComponent<Props> = (props) => {
   const { dispatch, userData } = props;
   const [open, setOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    console.log(userData)
+  }, [])
+
   const onBlur = React.useCallback((e: React.FocusEvent<HTMLDivElement>) => {
     if (e.relatedTarget instanceof Element) {
       if (e.currentTarget.contains(e.relatedTarget as Element)) {

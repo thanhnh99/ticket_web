@@ -22,4 +22,5 @@ export const API_PATHS = {
   login: `${getBaseUrl(APIServices.one)}/login`,
   firstLogin: `${getBaseUrl(APIServices.one)}/public/accounts/passwords/first-login`,
   accountBrief: `${getBaseUrl(APIServices.one)}/accounts/brief`,
+  getCategory: `${getBaseUrl(APIServices.one)}/category`
 };

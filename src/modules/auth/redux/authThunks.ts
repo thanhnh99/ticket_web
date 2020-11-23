@@ -100,24 +100,6 @@ export function validateAccessToken(
         if (first || prevAccessToken !== accessToken || force) {
           first = false;
           dispatch(setValidatingToken(true));
-          // try {
-          //   const json = await dispatch(fetchThunk(`${API_PATHS.accountBrief}`, 'get'));
-          //   if (json && json.code === SUCCESS_CODE) {
-
-          //     prevAccessToken = accessToken;
-          //   } else if (getState().auth.auth) {
-          //     dispatch(out());
-          //     remove(ACCESS_TOKEN);
-              dispatch(setUserData());
-          //     dispatch(
-          //       push({
-          //         pathname: '/',
-          //       }),
-          //     );
-          //   }
-          // } finally {
-          //   dispatch(setValidatingToken(false));
-          // }
         }
       } else if (state.auth.auth) {
         dispatch(out());
@@ -141,6 +123,7 @@ export function login(
       if (json.statusCode == SUCCESS_CODE) {
         json.data.token && set(ACCESS_TOKEN, json.data.token);
         dispatch(validateAccessToken(json.data));
+        dispatch(setUserData(json.data));
         dispatch(authIn(json.data));
       }
       return json;

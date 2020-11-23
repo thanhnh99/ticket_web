@@ -35,13 +35,6 @@ const DefaultLayout: React.FunctionComponent<Props> = (props) => {
   }, [matches]);
 
   React.useEffect(() => {
-    // return () => {
-    //   document.getElementById('zendesk')?.remove();
-    //   const elements = document.getElementsByClassName('zopim');
-    //   while (elements?.length > 0) {
-    //     elements?.[0].parentNode?.removeChild(elements[0]);
-    //   }
-    // };
   }, [dispatch]);
 
   const listRoutes = React.useMemo(() => {

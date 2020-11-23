@@ -32,55 +32,6 @@ export const ROUTES_TAB: RoutesTabType[] = [
     component: Home,
   },
   {
-    name: 'music',
-    isModule: true,
-    path: '/music',
-    exact: true,
-  },
-  {
-    name: 'sport',
-    isModule: true,
-    path: '/sport',
-    exact: true,
-  },
-  {
-    name: 'conference',
-    isModule: true,
-    path: '/conference',
-    exact: true,
-  },
-  {
-    name: 'courses',
-    isModule: true,
-    path: '/courses',
-    exact: true,
-  },
-  {
-    name: 'eventHN',
-    isModule: true,
-    path: '/eventHN',
-    exact: true,
-  },
-  {
-    name: 'eventHCM',
-    isModule: true,
-    path: '/eventHCM',
-    exact: true,
-  },
-  {
-    name: 'contact',
-    isModule: true,
-    path: '/contact',
-    exact: true,
-  },
-  {
-    name: 'aboutUs',
-    isModule: true,
-    path: '/aboutUs',
-    exact: true,
-  },
-
-  {
     name: 'notFound404',
     isModule: true,
     path: ROUTES.notFound404,
