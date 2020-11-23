@@ -144,9 +144,11 @@ public class BookingService {
                 List<TicketCode> ticketCodeList = new LinkedList<>();
                 for (BookingDetail detail : booking.getBookingDetailList()){
                     for(int i = 0 ; i < detail.getQuantity(); i++){
-                        String code = UUID.randomUUID().toString().replace('-', 'A').toUpperCase();
+                        TicketCode ticketCode = new TicketCode();
+                        String code = ticketCode.getId().replace('-', 'A').toUpperCase();
                         System.out.println("Generate ticket code: " + code);
-                        TicketCode ticketCode = new TicketCode(code, detail);
+                        ticketCode.setBooking(detail);
+                        ticketCode.setCode(code);
                         ticketCodeList.add(ticketCode);
                     }
                 }
