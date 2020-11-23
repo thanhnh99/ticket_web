@@ -3,8 +3,10 @@ package uet.japit.k62.models.response.data_response;
 
 import lombok.Data;
 import uet.japit.k62.models.entity.Event;
+import uet.japit.k62.models.entity.TicketClass;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ResEvent {
@@ -20,7 +22,9 @@ public class ResEvent {
     private Boolean isPopular;
     private Boolean isBroadcasting;
     private String categoryId;
-
+    private String city;
+    private String fullAddress;
+    private List<ResTicketClass> ticketClassList;
 
     public ResEvent(Event event)
     {
@@ -36,5 +40,11 @@ public class ResEvent {
         this.isPopular = event.getIsPopular();
         this.isBroadcasting = event.getIsBroadcasting();
         this.categoryId = event.getCategory().getId();
+        this.city = event.getCity();
+        this.fullAddress = event.getFullAddress();
+        for(TicketClass ticketClass: event.getTicketClasses())
+        {
+            ticketClassList.add(new ResTicketClass(ticketClass));
+        }
     }
 }
