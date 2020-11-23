@@ -43,7 +43,7 @@ public class BookingController {
         ResMomoCheckout resMomoCheckout = new ResMomoCheckout(payUrl);
         return ResponseEntity.ok(new HttpResponse<ResMomoCheckout>(StatusCode.OK, MessageConstant.SUCCESS, resMomoCheckout));
     }
-    @GetMapping("/{booking_id/payment-notify")
+    @PostMapping("/{booking_id}/payment-notification")
     public ResponseEntity notifyPayment(@RequestBody MomoIPN reqIPN){
         bookingService.finishPayment(reqIPN);
         ResMomoIPN resMomoIPN = new ResMomoIPN(reqIPN);
