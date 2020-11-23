@@ -5,31 +5,27 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uet.japit.k62.exception.exception_define.detail.PaymentCreateRequestException;
 import uet.japit.k62.util.Encoder;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-@Service
 public class MomoPayment implements IPayment {
     private final RestTemplate restTemplate;
     private String BASE_URL;
     private String accessKey;
     private String partnerCode;
-    private String returnUrl = "%s/%s/finish";
-    private String notifyUrl = "%s/%s/payment-notification";
+    private String returnUrl = "%s/finish";
+    private String notifyUrl = "%s/payment-notification";
     String publicKey;
     String privateKey;
-    public MomoPayment(RestTemplateBuilder restTemplateBuilder, Environment env) {
+    public MomoPayment(RestTemplateBuilder restTemplateBuilder, Environment env, String baseUrl) {
         restTemplate = restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(500))
                                             .setReadTimeout(Duration.ofSeconds(500))
                                             .build();;
@@ -38,17 +34,13 @@ public class MomoPayment implements IPayment {
         this.partnerCode = env.getProperty("momo.partner-code");
         this.publicKey = env.getProperty("momo.public-key");
         this.privateKey = env.getProperty("momo.private-key");
+        returnUrl = baseUrl + returnUrl;
+        notifyUrl = baseUrl + notifyUrl;
     }
     @Override
     public String createPaymentRequest(String requestId, long amount, String userEmail) throws PaymentCreateRequestException {
-        String hostBase = "";
-        try {
-            hostBase = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        String notifyUrl = String.format(this.notifyUrl, hostBase, requestId);
-        String returnUrl = String.format(this.returnUrl, hostBase, requestId);
+        String notifyUrl = String.format(this.notifyUrl, requestId);
+        String returnUrl = String.format(this.returnUrl, requestId);
         HttpHeaders headers = new HttpHeaders();
         // set `content-type` header
         headers.setContentType(MediaType.APPLICATION_JSON);

@@ -101,10 +101,10 @@ public class BookingService {
         return new ResBooking(booking, resBookingDetails);
     }
 
-    public String checkout(String bookingId, String paymentType) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
+    public String checkout(String bookingId, String paymentType, String baseUrl) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
         IPayment payment;
         if (paymentType.equals("momo")){
-            payment = new MomoPayment(restTemplateBuilder, env);
+            payment = new MomoPayment(restTemplateBuilder, env, baseUrl);
         }
         else {
             throw new PaymentTypeNotSupported();

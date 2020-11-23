@@ -16,6 +16,7 @@ import uet.japit.k62.models.response.data_response.payment.ResMomoIPN;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.service.BookingService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -36,8 +37,9 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
     @PostMapping("/{booking_id}/checkout")
-    public ResponseEntity checkout(@PathVariable(value = "booking_id") String booking_id, @RequestBody ReqCheckout reqCheckout) throws InvalidPaymentException, BookingNotFoundException, PaymentTypeNotSupported, PaymentCreateRequestException {
-        String payUrl = bookingService.checkout(booking_id, reqCheckout.getType());
+    public ResponseEntity checkout(@PathVariable(value = "booking_id") String booking_id, @RequestBody ReqCheckout reqCheckout, HttpServletRequest request) throws InvalidPaymentException, BookingNotFoundException, PaymentTypeNotSupported, PaymentCreateRequestException {
+        String baseUrl = String.format("%s://%s:%d/booking/",request.getScheme(),  request.getServerName(), request.getServerPort());
+        String payUrl = bookingService.checkout(booking_id, reqCheckout.getType(), baseUrl);
         ResMomoCheckout resMomoCheckout = new ResMomoCheckout(payUrl);
         return ResponseEntity.ok(new HttpResponse<ResMomoCheckout>(StatusCode.OK, MessageConstant.SUCCESS, resMomoCheckout));
     }
