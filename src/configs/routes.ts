@@ -110,6 +110,7 @@ export const ROUTES_BOOKING: RoutesTabType[] = [
   }
 ];
 
+
 export const ROUTES_EVENT: RoutesTabType[] = [
   {
     name: 'Chỉnh sửa thông tin',
