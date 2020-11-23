@@ -25,7 +25,7 @@ interface Props extends ReturnType<typeof mapStateToProps> {
   data: RoutesTabType;
   pathname: string;
   open: boolean;
-  listRouterActive: some[];
+  listRouterActive: some[] | undefined;
   userData: some | undefined;
 }
 
@@ -34,7 +34,7 @@ const DefaultAsideItems: React.FC<Props> = (props: Props) => {
   const [openList, setOpen] = React.useState(false);
 
   const listRoutes = React.useMemo(() => {
-    return data?.subMenu ? getListRoutesActivate(data?.subMenu, userData?.roleGroup?.role) : [];
+    return data?.subMenu ? getListRoutesActivate(data?.subMenu, userData) : [];
   }, [data, userData]);
 
   const checkPermission = React.useMemo(() => {

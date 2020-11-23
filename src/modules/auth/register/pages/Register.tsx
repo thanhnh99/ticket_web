@@ -12,7 +12,7 @@ import { fetchThunk } from '../../../common/redux/thunk';
 import { API_PATHS } from '../../../../configs/API';
 import { SUCCESS_CODE } from '../../../../constants';
 import { snackbarSetting } from '../../../common/components/elements';
-
+import axios from 'axios';
 const mapStateToProps = (state: AppState) => ({ validatingToken: state.auth.validatingToken });
 
 interface Props {}
@@ -27,16 +27,20 @@ const Register = (props: Props) => {
   const onRegister = React.useCallback(
     async (values: IRegisterData) => {
       setLoading(true);
+      console.log(JSON.stringify(values))
       const json = await dispatch(fetchThunk(API_PATHS.register, 'post', JSON.stringify(values)));
-      if (json?.code === SUCCESS_CODE) {
+      console.log(json)
+      if (json?.statusCode === SUCCESS_CODE) {
+        console.log(json);
         setDialogContent(json.message);
       } else {
         enqueueSnackbar(
-          json.message,
+          "error",
           snackbarSetting((key) => closeSnackbar(key), {
             color: 'error',
           }),
         );
+        console.log(json)
       }
       setLoading(false);
     },

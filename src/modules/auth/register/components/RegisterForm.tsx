@@ -26,12 +26,7 @@ const RegisterForm: React.FunctionComponent<Props> = (props) => {
   const intl = useIntl();
 
   const storeSchema = yup.object().shape({
-    name: yup
-      .string()
-      .trim()
-      .required(intl.formatMessage({ id: 'required' })),
-
-    representative: yup
+    displayName: yup
       .string()
       .trim()
       .required(intl.formatMessage({ id: 'required' })),
@@ -40,11 +35,6 @@ const RegisterForm: React.FunctionComponent<Props> = (props) => {
       .email(intl.formatMessage({ id: 'emailInvalid' }))
       .trim()
       .required(intl.formatMessage({ id: 'required' })),
-    referrerPhone: yup
-      .string()
-      .trim()
-      .required(intl.formatMessage({ id: 'required' })),
-    representativePhone: yup.string().trim().notRequired(),
     password: yup
       .string()
       .trim()
@@ -79,84 +69,20 @@ const RegisterForm: React.FunctionComponent<Props> = (props) => {
 
       <Row style={{ marginBottom: 12 }}>
         <FormControlTextField
-          id="name"
-          formControlStyle={{ flex: 2 }}
-          label={<FormattedMessage id="auth.companyName" />}
-          placeholder={intl.formatMessage({ id: 'auth.enterCompanyName' })}
-          value={formik.values.name}
+          id="displayName"
+          formControlStyle={{ flex: 1 }}
+          label={<FormattedMessage id="tên hiển thị" />}
+          placeholder='Nhập tên hiển thị'
+          value={formik.values.displayName}
           onChange={formik.handleChange}
           inputProps={{
             maxLength: 50,
-            autoComplete: 'off',
           }}
-          errorMessage={
-            formik.errors.name && formik.submitCount > 0 ? formik.errors.name : undefined
-          }
+         
         />
       </Row>
 
       <Row style={{ marginBottom: 12 }}>
-        <FormControlTextField
-          id="address"
-          formControlStyle={{ flex: 2 }}
-          optional
-          label={<FormattedMessage id="address" />}
-          placeholder={intl.formatMessage({ id: 'enterAddress' })}
-          value={formik.values.address}
-          onChange={formik.handleChange}
-          inputProps={{
-            maxLength: 255,
-          }}
-        />
-        <FormControlTextField
-          id="taxCode"
-          formControlStyle={{ flex: 1 }}
-          optional
-          label={<FormattedMessage id="taxCode" />}
-          placeholder={intl.formatMessage({ id: 'enterTaxCode' })}
-          value={formik.values.taxCode}
-          onChange={formik.handleChange}
-          inputProps={{
-            maxLength: 15,
-          }}
-        />
-      </Row>
-
-      <Row style={{ marginBottom: 12 }}>
-        <Row style={{ flex: 2, marginRight: 24 }}>
-          <FormControlTextField
-            id="representative"
-            formControlStyle={{ flex: 1 }}
-            label={<FormattedMessage id="auth.contactPersonName" />}
-            placeholder={intl.formatMessage({ id: 'auth.enterContactPersonName' })}
-            value={formik.values.representative}
-            onChange={formik.handleChange}
-            inputProps={{
-              maxLength: 255,
-            }}
-            errorMessage={
-              formik.errors.representative && formik.submitCount > 0
-                ? formik.errors.representative
-                : undefined
-            }
-          />
-          <FormControlTextField
-            id="referrerPhone"
-            formControlStyle={{ flex: 1, margin: 0 }}
-            label={<FormattedMessage id="auth.phone" />}
-            placeholder={intl.formatMessage({ id: 'auth.enterPhone' })}
-            value={formik.values.referrerPhone}
-            onChange={formik.handleChange}
-            inputProps={{
-              maxLength: 15,
-            }}
-            errorMessage={
-              formik.errors.referrerPhone && formik.submitCount > 0
-                ? formik.errors.referrerPhone
-                : undefined
-            }
-          />
-        </Row>
         <FormControlTextField
           id="email"
           formControlStyle={{ flex: 1 }}
@@ -172,27 +98,6 @@ const RegisterForm: React.FunctionComponent<Props> = (props) => {
           }
         />
       </Row>
-
-      <Row style={{ marginBottom: 12 }}>
-        <FormControlTextField
-          id="representativePhone"
-          formControlStyle={{ flex: 1 }}
-          label={<FormattedMessage id="auth.referenceContactPhone" />}
-          placeholder={intl.formatMessage({ id: 'auth.enterPhone' })}
-          value={formik.values.representativePhone}
-          onChange={formik.handleChange}
-          inputProps={{
-            maxLength: 15,
-          }}
-          optional
-          errorMessage={
-            formik.errors.representativePhone && formik.submitCount > 0
-              ? formik.errors.representativePhone
-              : undefined
-          }
-        />
-      </Row>
-
       <Row style={{ marginBottom: 12 }}>
         <FormControlTextField
           id="password"
@@ -223,8 +128,8 @@ const RegisterForm: React.FunctionComponent<Props> = (props) => {
           }}
           type="password"
           errorMessage={
-            formik.errors.confirmPassword && formik.submitCount > 0
-              ? formik.errors.confirmPassword
+            formik.values.confirmPassword && formik.submitCount > 0
+              ? ''
               : undefined
           }
         />

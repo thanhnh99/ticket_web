@@ -3,18 +3,15 @@ import * as React from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { connect } from 'react-redux';
-import { PURPLE_300 } from '../../configs/colors';
-import { ROUTES_TAB } from '../../configs/routes';
-import { RoutesTabType } from '../../models/permission';
-import { AppState } from '../../redux/reducers';
-import { ReactComponent as IconMenu } from '../../svg/ic_menu.svg';
-import { ReactComponent as BackMenuArrowIcon } from '../../svg/ic_menu_back_arrow.svg';
-import { ASIDE_ITEM_HEIGHT, ASIDE_MIN_WIDTH, ASIDE_WIDTH, HEADER_HEIGHT } from '../constants';
-import { getListRoutesContain } from '../utils';
-import DefaultAsideItems from './DefaultAsideItems';
-import axios from 'axios';
-import { some } from '../../constants';
-import { API_PATHS } from '../../configs/API';
+import { PURPLE_300 } from '../../../../configs/colors';
+import { ROUTES, ROUTES_EVENT } from '../../../../configs/routes';
+import { RoutesTabType } from '../../../../models/permission';
+import { AppState } from '../../../../redux/reducers';
+import { ReactComponent as IconMenu } from '../../../../svg/ic_menu.svg';
+import { ReactComponent as BackMenuArrowIcon } from '../../../../svg/ic_menu_back_arrow.svg';
+import { ASIDE_ITEM_HEIGHT, ASIDE_MIN_WIDTH, ASIDE_WIDTH, HEADER_HEIGHT } from '../../../../layout/constants';
+import { getListRoutesContain } from '../../../../layout/utils';
+import DefaultAsideItems from '../../../../layout/defaultLayout/DefaultAsideItems';
 
 export const ButtonRow = withStyles(() => ({
   root: {
@@ -38,38 +35,14 @@ interface Props extends ReturnType<typeof mapStateToProps> {
   onClose(): void;
 }
 
-const DefaultAside: React.FunctionComponent<Props> = (props) => {
+const EditAside: React.FunctionComponent<Props> = (props) => {
   const { router, open, onClose, userData } = props;
   const { pathname } = router.location;
   const [hoverOpen, setOpen] = React.useState(false);
-  const [route, setRoute] = React.useState<some[]>([]);
 
-  React.useEffect(() => {
-    getCategory();
-  }, []);
-
-  const getCategory = async () => {
-    await axios.get(API_PATHS.getCategory)
-      .then((response) => {
-
-        let a = response.data.data.map(element => {
-            return {
-              name: element.name,
-              isModule: true,
-              path: '/' + element.code,
-              exact: true,
-            }
-        })
-        let routeResult = [...ROUTES_TAB];
-        console.log(routeResult)
-        routeResult.push(...a);
-        setRoute(routeResult);
-        return;
-      })
-      .catch(e => {
-        return [];
-      })
-  }
+  const getListRouterActive = React.useMemo(() => {
+    return getListRoutesContain(ROUTES_EVENT, router.location.pathname);
+  }, [router.location.pathname]);
 
   return (
     <>
@@ -104,8 +77,8 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
           {open || hoverOpen ? (
             <BackMenuArrowIcon />
           ) : (
-              <IconMenu className="svgFillAll" style={{ stroke: 'white', width: 24, height: 24 }} />
-            )}
+            <IconMenu className="svgFillAll" style={{ stroke: 'white', width: 24, height: 24 }} />
+          )}
         </ButtonRow>
         <PerfectScrollbar
           onMouseEnter={() => {
@@ -119,14 +92,14 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
               marginBottom: 148,
             }}
           >
-            {route.map((v: any, index: number) => (
+            {ROUTES_EVENT.map((v: RoutesTabType, index: number) => (
               <DefaultAsideItems
                 key={index}
                 userData={userData}
                 open={open || hoverOpen}
                 data={v}
                 pathname={pathname}
-                listRouterActive={route}
+                listRouterActive={getListRouterActive}
               />
             ))}
           </div>
@@ -136,4 +109,4 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(DefaultAside);
+export default connect(mapStateToProps)(EditAside);

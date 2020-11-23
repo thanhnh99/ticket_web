@@ -26,7 +26,7 @@ const LoginForm: React.FunctionComponent<Props> = props => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const storeSchema = yup.object().shape({
-    userName: yup
+    email: yup
       .string()
       // .email(intl.formatMessage({ id: 'emailInvalid' }))
       .required(intl.formatMessage({ id: 'required' }))
@@ -68,18 +68,18 @@ const LoginForm: React.FunctionComponent<Props> = props => {
           <FormattedMessage id="login" />
         </Typography>
         <FormControlTextField
-          id="userName"
+          id="email"
           formControlStyle={{ width: 250, marginTop: 48 }}
           label={<FormattedMessage id="email" />}
           placeholder={intl.formatMessage({ id: 'enterEmail' })}
-          value={formik.values.userName}
+          value={formik.values.email}
           onChange={formik.handleChange}
           inputProps={{
             maxLength: 50,
             autoComplete: 'off',
           }}
           errorMessage={
-            formik.errors.userName && formik.submitCount > 0 ? formik.errors.userName : undefined
+            formik.errors.email && formik.submitCount > 0 ? formik.errors.email : undefined
           }
         />
 

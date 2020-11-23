@@ -1,11 +1,12 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 import LanguageSelect from '../../intl/components/LanguageSelect';
 import UserInfoDropdown from './UserInfoDropdown';
 import LoadingButton from '../../common/components/LoadingButton';
+import { ROUTES } from '../../../configs/routes';
 
-interface Props {}
+interface Props { }
 
 const Badge: React.FunctionComponent<Props> = (props) => {
   return (
@@ -19,16 +20,21 @@ const Badge: React.FunctionComponent<Props> = (props) => {
         position: 'relative',
       }}
     >
-      <LoadingButton
-        style={{ minWidth: 160, marginRight: 16 }}
-        size="large"
-        type="submit"
-        variant="outlined"
-        color="secondary"
-        disableElevation
-      >
-        <FormattedMessage id="createEvent" />
-      </LoadingButton>
+      <Link target='_blank' to="/event/create" style={{textDecoration: 'none'}}>
+
+        <LoadingButton
+          style={{ minWidth: 160, marginRight: 16 }}
+          size="large"
+          type="submit"
+          variant="outlined"
+          color="secondary"
+          disableElevation
+        >
+          <FormattedMessage id="createEvent" />
+        </LoadingButton>
+
+      </Link>
+
       <LanguageSelect />
       <UserInfoDropdown />
     </div>

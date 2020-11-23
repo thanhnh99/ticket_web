@@ -5,7 +5,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { some } from '../../../../constants';
+import { ROUTES } from '../../../../configs/routes';
 
 interface Props {
   listTicket: some;
@@ -25,13 +27,13 @@ const MediaCard: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   return (
     <>
-      {listTicket.map((item: some) => (
-        <Card
+      {listTicket.map((item: some, index: some) => (
+        <Link to={ROUTES.booking.ticketDetail + "/" + item.id} style={{textDecoration: 'none'}}>
+         <Card
           className={classes.root}
-          key={item.id}
           style={{ marginBottom: '10px', marginLeft: '8px', borderRadius: '7px' }}
         >
-          <CardActionArea style={{ width: '240px', padding: '4px 8px' }}>
+          <CardActionArea style={{ width: '260px', padding: '8px 8px' }}>
             <CardMedia className={classes.media} image={item.img} style={{ borderRadius: '7px' }} />
             <CardContent>
               <Typography gutterBottom variant="subtitle2" component="h3">
@@ -46,6 +48,7 @@ const MediaCard: React.FunctionComponent<Props> = (props) => {
             </CardContent>
           </CardActionArea>
         </Card>
+        </Link>
       ))}
     </>
   );

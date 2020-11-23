@@ -14,12 +14,12 @@ import { ROUTES } from '../../../configs/routes';
 import { goToAction, goBackAction } from '../../common/redux/reducer';
 
 export interface ILoginForm {
-  userName: string;
+  email: string;
   password: string;
 }
 
 export const defaultLoginForm: ILoginForm = {
-  userName: 'lastromeo1996bn@gmail.com',
+  email: 'hoangnamuet.vnu@gmail.com',
   password: '123456',
 };
 export interface IFirstLoginForm {
@@ -53,29 +53,17 @@ export const defaultResetPasswordData: IChangePasswordForm = {
   confirmPassword: '',
 };
 export interface IRegisterData {
-  name: string;
-  companySizeRange: some | null;
-  representative: string;
+  displayName: string;
   email: string;
-  referrerPhone: string;
-  representativePhone: string;
   password: string;
-  confirmPassword: string;
-  address: string;
-  taxCode: string;
+  confirmPassword: string
 }
 
 export const defaultRegisterData: IRegisterData = {
-  name: '',
-  companySizeRange: null,
-  representative: '',
-  referrerPhone: '',
+  displayName: '',
   email: '',
-  representativePhone: '',
   password: '',
-  confirmPassword: '',
-  address: '',
-  taxCode: '',
+  confirmPassword: ''
 };
 
 export interface IForgotPass {
@@ -112,24 +100,6 @@ export function validateAccessToken(
         if (first || prevAccessToken !== accessToken || force) {
           first = false;
           dispatch(setValidatingToken(true));
-          try {
-            const json = await dispatch(fetchThunk(`${API_PATHS.accountBrief}`, 'get'));
-            if (json && json.code === SUCCESS_CODE) {
-              dispatch(authIn(json.data));
-              prevAccessToken = accessToken;
-            } else if (getState().auth.auth) {
-              dispatch(out());
-              remove(ACCESS_TOKEN);
-              dispatch(setUserData());
-              dispatch(
-                push({
-                  pathname: '/',
-                }),
-              );
-            }
-          } finally {
-            dispatch(setValidatingToken(false));
-          }
         }
       } else if (state.auth.auth) {
         dispatch(out());
@@ -150,17 +120,11 @@ export function login(
     dispatch(setAuthenticating(true));
     try {
       const json = await dispatch(fetchThunk(API_PATHS.login, 'post', JSON.stringify(data), false));
-      if (json?.code === SUCCESS_CODE) {
-        json.data.accessToken && set(ACCESS_TOKEN, json.data.accessToken);
-        if (json.data.firstLogin) {
-          dispatch(
-            goToAction({
-              pathname: ROUTES.firstLogin,
-            }),
-          );
-        } else {
-          dispatch(validateAccessToken());
-        }
+      if (json.statusCode == SUCCESS_CODE) {
+        json.data.token && set(ACCESS_TOKEN, json.data.token);
+        dispatch(validateAccessToken(json.data));
+        dispatch(setUserData(json.data));
+        dispatch(authIn(json.data));
       }
       return json;
     } finally {
