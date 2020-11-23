@@ -138,6 +138,8 @@
 //                newEvent.setCategory(category);
 //                newEvent.setCreatedBy("thanhnh99.amc@gmail.com");
 //                newEvent.setIsBroadcasting(true);
+//                newEvent.setCoverImageUrl("https://images.tkbcdn.com/1/1560/600/Upload/eventcover/2020/11/17/4F707C.jpg");
+//                newEvent.setMapImageUrl("https://httt.uit.edu.vn/wp-content/uploads/2019/05/So_Do_Cho_Ngoi.png");
 //                eventDAO.save(newEvent);
 //                for(int j = 0; j < faker.number().numberBetween(2,5); j++)
 //                {
