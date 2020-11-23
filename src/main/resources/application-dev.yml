@@ -11,7 +11,7 @@ spring:
     url: jdbc:mysql://localhost:3306/ticket_web
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: nguyenhue189
+    password:
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
 server:

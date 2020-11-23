@@ -5,6 +5,7 @@ import lombok.Data;
 import uet.japit.k62.models.entity.Event;
 import uet.japit.k62.models.entity.TicketClass;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,9 +43,11 @@ public class ResEvent {
         this.categoryId = event.getCategory().getId();
         this.city = event.getCity();
         this.fullAddress = event.getFullAddress();
+        List<ResTicketClass> ticketClasses= new ArrayList<>();
         for(TicketClass ticketClass: event.getTicketClasses())
         {
-            ticketClassList.add(new ResTicketClass(ticketClass));
+            ticketClasses.add(new ResTicketClass(ticketClass));
         }
+        this.setTicketClassList(ticketClasses);
     }
 }
