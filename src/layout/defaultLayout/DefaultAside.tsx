@@ -44,37 +44,32 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
   const [hoverOpen, setOpen] = React.useState(false);
   const [route, setRoute] = React.useState<some[]>([]);
 
+  React.useEffect(() => {
+    getCategory();
+  }, []);
+
   const getCategory = async () => {
     await axios.get(API_PATHS.getCategory)
       .then((response) => {
 
         let a = response.data.data.map(element => {
-          return {
-            name: element.name,
-            isModule: true,
-            path: '/' + element.code,
-            exact: true,
-          }
+            return {
+              name: element.name,
+              isModule: true,
+              path: '/' + element.code,
+              exact: true,
+            }
         })
-
-        setRoute(a);
-        console.log(a);
-        console.log(route)
-        return response.data.data;
+        let routeResult = [ROUTES_TAB];
+        console.log(routeResult)
+        routeResult.push(...a);
+        setRoute(routeResult);
+        return;
       })
       .catch(e => {
         return [];
       })
   }
-
-  React.useEffect(() => {
-    getCategory()
-    console.log(route)
-  }, [])
-
-  const getListRouterActive = React.useMemo(() => {
-    return getListRoutesContain(ROUTES_TAB, router.location.pathname);
-  }, [router.location.pathname]);
 
   return (
     <>
@@ -124,7 +119,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
               marginBottom: 148,
             }}
           >
-            {ROUTES_TAB.map((v: RoutesTabType, index: number) => (
+            {route.map((v: any, index: number) => (
               <DefaultAsideItems
                 key={index}
                 userData={userData}

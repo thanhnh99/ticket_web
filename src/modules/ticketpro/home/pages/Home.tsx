@@ -4,9 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { Row, Col } from '../../../common/components/elements';
 import LoadingButton from '../../../common/components/LoadingButton';
 import Card from '../components/Card';
-import {slideSettings } from '../common/Slider/setting';
+import { slideSettings } from '../common/Slider/setting';
 import { some } from '../../../../constants';
 import axios from 'axios';
+import { API_PATHS } from "../../../../configs/API";
 
 interface Props { }
 
@@ -33,111 +34,79 @@ const tutorialSteps = [
   },
 ];
 
-// const listTicket = [
-//   {
-//     id: 1,
-//     img: 'https://picsum.photos/250/120',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '10/10/2020',
-//     category: 'Nightlife',
-//   },
-//   {
-//     id: 2,
-//     img: 'https://picsum.photos/251/120',
-//     title: 'Đêm nhạc FRANZ LISZT & ANTONIN DVOŘÁK',
-//     time: '03/10/2020',
-//     category: 'Art & Culture',
-//   },
-//   {
-//     id: 3,
-//     img: 'https://picsum.photos/250/121',
-//     title: 'Kịch IDECAF: MƯU BÀ TÚ',
-//     time: '03/10/2020',
-//     category: 'Theater & Plays',
-//   },
-//   {
-//     id: 4,
-//     img: 'https://picsum.photos/250/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 5,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 6,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 7,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 8,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 9,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 10,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 11,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-//   {
-//     id: 12,
-//     img: 'https://picsum.photos/251/122',
-//     title: 'Workshop vẽ tranh màu nước: Classy',
-//     time: '02/10/2020',
-//     category: 'Courses',
-//   },
-// ];
+
+const convertToDateTime = (unixtimestamp:any) => {
+ 
+  // Convert timestamp to milliseconds
+  var date = new Date(unixtimestamp*1000);
+ 
+  // Year
+  var year = date.getFullYear();
+ 
+  // Month
+  var month = date.getMonth();
+ 
+  // Day
+  var day = date.getDate();
+ 
+  // Hours
+  var hours = date.getHours();
+ 
+  // Minutes
+  var minutes = "0" + date.getMinutes();
+ 
+  // Seconds
+  var seconds = "0" + date.getSeconds();
+ 
+  // Display date time in MM-dd-yyyy h:m:s format
+  var convdataTime = day+'/'+month+'/'+year+' '+hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  return convdataTime;
+  
+ }
 
 
 const Home: React.FunctionComponent<Props> = () => {
-  const listTicket = React.useState([]);
+  const [listTicket, setListTicket] = React.useState<some[]>([]);
 
-  // React.useEffect(() => {
-  //   let response = await axios.get()
-  // }, [listTicket])
+  const getEvent = async () => {
+    let response = await axios.get(API_PATHS.getEvent);
+    setListTicket(
+      response.data.data.map(element => {
+        return(
+          {
+            id: element.id,
+            img: element.coverImageUrl,
+            title: element.name,
+            time: convertToDateTime(element.startTime),
+            description: element.description,
+            mapImageUrl: element.mapImageUrl,
+            endTi: element.endTi,
+            startSellingTime: element.startSellingTime,
+            endSellingTime: element.endSellingTime,
+            isPopular: element.isPopular,
+            isBroadcasting: element.isBroadcasting,
+            categoryId: element.categoryId
+          }
+        )
+      })
+    )
+  }
+
+  React.useEffect(() => {
+    getEvent();
+  }, [])
+
   return (
     <Col>
-      <div style={{marginLeft: 36, marginRight: 36}}>
+      <div style={{ marginLeft: 36, marginRight: 36 }}>
         <Slider  {...slideSettings()}>
-        {
-          tutorialSteps.map((item: some, index: number) => (
-            <div key={index}>
-              <img src={item.imgPath} style={{height: 250}} alt={item.lable}/>
-            </div>
-          ))
-        }
+          {
+            tutorialSteps.map((item: some, index: number) => (
+              <div key={index}>
+                <img src={item.imgPath} style={{ height: 250 }} alt={item.lable} />
+              </div>
+            ))
+          }
         </Slider>
       </div>
       <div
