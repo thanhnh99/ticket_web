@@ -6,7 +6,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { ROUTES, ROUTES_TAB } from './configs/routes';
+import { ROUTES } from './configs/routes';
 import { validateAccessToken } from './modules/auth/redux/authThunks';
 import AuthProblemDialog from './modules/common/components/AuthProblemDialog';
 import LoadingIcon from './modules/common/components/LoadingIcon';

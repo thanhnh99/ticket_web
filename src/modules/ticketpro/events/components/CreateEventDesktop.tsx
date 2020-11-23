@@ -4,7 +4,6 @@ import { Row, PageContainer } from '../../../common/components/elements';
 import CreateEventForm from './CreateEventForm';
 
 import BackgroundImage from '../../../../assets/background/create_event_background.jpg'
-import Footer from '../../../auth/commons/Footer';
 
 interface Props {}
 const CreateEventDesktop = (props: Props) => {

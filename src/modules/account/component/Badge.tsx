@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import LanguageSelect from '../../intl/components/LanguageSelect';
 import UserInfoDropdown from './UserInfoDropdown';
 import LoadingButton from '../../common/components/LoadingButton';
-import { ROUTES } from '../../../configs/routes';
 
 interface Props { }
 

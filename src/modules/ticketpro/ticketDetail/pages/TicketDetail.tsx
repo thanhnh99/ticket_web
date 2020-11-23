@@ -5,7 +5,7 @@ import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/s
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import { deepOrange, green } from '@material-ui/core/colors';
+import { deepOrange} from '@material-ui/core/colors';
 import { Dispatch } from 'redux';
 import { Link } from 'react-router-dom';
 import { ReactComponent as IcLocation } from '../../../../svg/ic_pin.svg';
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TicketDetail: React.FunctionComponent<Props> = (props) => {
   const [currentTabIndex, setIndex] = React.useState(0);
-  const [showSticky, setShowSticky] = React.useState(false);
+  const [, setShowSticky] = React.useState(false);
   const rootDiv = React.useRef<HTMLDivElement>(null);
   const classes = useStyles();
 
@@ -167,7 +167,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                 </div>
                 <div>
                   <Box component="span" m={1}>
-                    <Link to={ROUTES.booking.chooseTicket}>
+                    <Link to={ROUTES.booking.chooseTicket} style={{textDecoration: "none"}}>
                     <Button
                       variant="contained"
                       style={{
@@ -331,6 +331,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                               Bình
                             </Typography>
                           </Line>
+                          <Link to={ROUTES.booking.chooseTicket} style={{textDecoration: "none"}}> 
                           <Button
                             variant="contained"
                             style={{
@@ -348,6 +349,8 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                           >
                             Mua vé ngay
                           </Button>
+                          </Link>
+                          
                         </Box>
                       </div>
                     </div>

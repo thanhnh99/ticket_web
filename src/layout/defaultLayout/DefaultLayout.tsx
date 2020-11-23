@@ -26,7 +26,7 @@ interface Props extends ReturnType<typeof mapStateToProps> {
 }
 
 const DefaultLayout: React.FunctionComponent<Props> = (props) => {
-  const { dispatch, userData } = props;
+  const { userData } = props;
   const location = useLocation();
   const [openSideBar, setOpenSideBar] = React.useState(true);
   const matches = useMediaQuery(MUI_THEME.breakpoints.up('md'));
@@ -34,16 +34,6 @@ const DefaultLayout: React.FunctionComponent<Props> = (props) => {
   React.useEffect(() => {
     setOpenSideBar(matches);
   }, [matches]);
-
-  React.useEffect(() => {
-    // return () => {
-    //   document.getElementById('zendesk')?.remove();
-    //   const elements = document.getElementsByClassName('zopim');
-    //   while (elements?.length > 0) {
-    //     elements?.[0].parentNode?.removeChild(elements[0]);
-    //   }
-    // };
-  }, [dispatch]);
 
   const listRoutes = React.useMemo(() => {
     return getListRoutesActivate(flatRoutes(ROUTES_TAB), userData?.roleGroup?.role);

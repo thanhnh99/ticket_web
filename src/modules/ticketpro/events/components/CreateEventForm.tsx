@@ -37,6 +37,7 @@ const CreateEventForm: React.FunctionComponent = () => {
         () => {
 
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [closeSnackbar, dispatch, enqueueSnackbar],
     );
 
