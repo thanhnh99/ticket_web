@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import uet.japit.k62.dao.IBookingDAO;
-import uet.japit.k62.dao.IEventDAO;
-import uet.japit.k62.dao.ITicketClassDAO;
-import uet.japit.k62.dao.IVoucherDAO;
+import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
@@ -21,9 +18,7 @@ import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -41,6 +36,8 @@ public class BookingService {
     private IVoucherDAO voucherDAO;
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
+    @Autowired
+    private ITicketCodeDAO ticketCodeDAO;
     @Autowired
     private Environment env;
     public List<ResTicketClass> getTicketInfo(String event_id){
@@ -139,9 +136,21 @@ public class BookingService {
     }
     public void finishPayment(MomoIPN req){
         try {
+
             Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
             if(req.isSuccess()){
                 booking.setStatus(BookingStatus.SUCCEED);
+                System.out.println("create ticket code");
+                List<TicketCode> ticketCodeList = new LinkedList<>();
+                for (BookingDetail detail : booking.getBookingDetailList()){
+                    for(int i = 0 ; i < detail.getQuantity(); i++){
+                        String code = UUID.randomUUID().toString().replace('-', 'A').toUpperCase();
+                        System.out.println("Generate ticket code: " + code);
+                        TicketCode ticketCode = new TicketCode(code, detail);
+                        ticketCodeList.add(ticketCode);
+                    }
+                }
+                ticketCodeDAO.saveAll(ticketCodeList);
             }
             else {
                 booking.setStatus(BookingStatus.FAILED);
