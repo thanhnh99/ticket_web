@@ -60,7 +60,7 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
               exact: true,
             }
         })
-        let routeResult = [ROUTES_TAB];
+        let routeResult = [...ROUTES_TAB];
         console.log(routeResult)
         routeResult.push(...a);
         setRoute(routeResult);

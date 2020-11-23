@@ -14,9 +14,29 @@ import { GREY, PRIMARY, RED, WHITE } from '../../../../configs/colors';
 import DefaultHeader from '../../../../layout/defaultLayout/DefaultHeader';
 import { some } from '../../../../constants';
 import { ROUTES } from '../../../../configs/routes';
+import Axios from 'axios';
+import { API_PATHS } from '../../../../configs/API';
 
 interface Props {
+  match: any,
   dispatch: Dispatch;
+}
+
+interface Data {
+  id: string,
+  name: string,
+  description: string,
+  coverImageUrl: string,
+  mapImageUrl: string,
+  startTime: number | undefined,
+  endTime: string,
+  startSellingTime: string,
+  endSellingTime: string,
+  isPopular: string,
+  isBroadcasting: string,
+  categoryId: string,
+  fullAddress: string,
+  ticketClassList: any[]
 }
 
 const OFFSET = 145;
@@ -106,13 +126,72 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const convertToDateTime = (unixtimestamp: any) => {
+
+  // Convert timestamp to milliseconds
+  var date = new Date(unixtimestamp * 1000);
+
+  // Year
+  var year = date.getFullYear();
+
+  // Month
+  var month = date.getMonth();
+
+  // Day
+  var day = date.getDate();
+
+  // Hours
+  var hours = date.getHours();
+
+  // Minutes
+  var minutes = "0" + date.getMinutes();
+
+  // Seconds
+  var seconds = "0" + date.getSeconds();
+
+  // Display date time in MM-dd-yyyy h:m:s format
+  var convdataTime = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  return convdataTime;
+
+}
+
 const TicketDetail: React.FunctionComponent<Props> = (props) => {
+  const eventId = props.match.params.id;
   const [currentTabIndex, setIndex] = React.useState(0);
   const [showSticky, setShowSticky] = React.useState(false);
+  const [eventData, setEventData] = React.useState<Data>(
+    {
+      id: "",
+      name: "",
+      description: "",
+      coverImageUrl: "",
+      mapImageUrl: "",
+      startTime: undefined,
+      endTime: "",
+      startSellingTime: "",
+      endSellingTime: "",
+      isPopular: "",
+      isBroadcasting: "",
+      categoryId: "",
+      fullAddress: "",
+      ticketClassList: [{}]
+    }
+  );
   const rootDiv = React.useRef<HTMLDivElement>(null);
   const classes = useStyles();
 
+  const getEventInfo = async () => {
+    let response = Axios.get(API_PATHS.getEvent + "/" + eventId)
+      .then(response => {
+        setEventData(response.data.data)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+
   React.useEffect(() => {
+    getEventInfo();
     const handler = () => {
       if (rootDiv.current) {
         if (rootDiv.current.getBoundingClientRect().top < STICKY_HEIGHT) {
@@ -134,58 +213,58 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
         <Container>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Container>
-            <div style={{marginTop: 16}}>
-              <img
-                style={{ height: 300, width: 1200 }}
-                src="https://picsum.photos/1280/266"
-                alt="banner"
-              />
-            </div>
+              <div style={{ marginTop: 16 }}>
+                <img
+                  style={{ height: 300, width: 1200 }}
+                  src={eventData?.coverImageUrl}
+                  alt="banner"
+                />
+              </div>
             </Container>
-            <Container style={{marginTop: 56, marginBottom: 72}}>
+            <Container style={{ marginTop: 56, marginBottom: 72 }}>
               <Line>
                 <div>
                   <Line>
                     <Typography variant="h4" style={{ fontWeight: 'bold' }}>
-                      Tràng An Marathon
+                      {eventData?.name}
                     </Typography>
                   </Line>
-                  <Line style={{paddingLeft: 8}}>
+                  <Line style={{ paddingLeft: 8 }}>
                     <CalendarSvg />
                     &nbsp;
                     <Typography style={{ flex: 1, paddingLeft: 8 }} variant="subtitle2">
-                      04:00 AM - 12:00 PM
+                      {convertToDateTime(eventData?.startTime)} - {convertToDateTime(eventData?.endTime)}
                     </Typography>
                   </Line>
                   <Line style={{ minHeight: '24px' }}>
                     <IcLocation />
                     &nbsp;
                     <Typography variant="subtitle2" style={{ color: GREY }}>
-                      Cố đô Hoa Lư, Trường Yên Hoa Lư, Ninh Bình, Huyện Hoa Lư, Tỉnh Ninh Bình
+                      {eventData?.fullAddress}
                     </Typography>
                   </Line>
                 </div>
                 <div>
                   <Box component="span" m={1}>
                     <Link to={ROUTES.booking.chooseTicket}>
-                    <Button
-                      variant="contained"
-                      style={{
-                        color: WHITE,
-                        alignItems: 'center',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        backgroundColor: RED,
-                        width: '260px',
-                        height: 50,
-                        textAlign: 'center',
-                        marginTop: 10,
-                      }}
-                      
-                    >
-                      Mua vé ngay
+                      <Button
+                        variant="contained"
+                        style={{
+                          color: WHITE,
+                          alignItems: 'center',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          backgroundColor: RED,
+                          width: '260px',
+                          height: 50,
+                          textAlign: 'center',
+                          marginTop: 10,
+                        }}
+
+                      >
+                        Mua vé ngay
                     </Button>
                     </Link>
                   </Box>
@@ -205,9 +284,9 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                       color: '#000',
                     }}
                   >
-                    
+
                     <Container>
-                      
+
                       <CustomTabs
                         value={currentTabIndex === -1 ? false : currentTabIndex}
                         onChange={(e, val) => {
@@ -243,7 +322,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                       >
                         <FormattedMessage id={tabs[0].id} />
                       </Typography>
-                      <div dangerouslySetInnerHTML={{ __html: ticketData.info }} />
+                      <div dangerouslySetInnerHTML={{ __html: eventData.description }} />
                       <Typography
                         id={tabs[1].id}
                         variant="h5"
@@ -261,10 +340,10 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                         }}
                       >
                         <Box>
-                          {ticketData.tickets.map((item: some, index: number) => (
+                          {eventData.ticketClassList.map((item: some, index: number) => (
                             <Line key={index}>
                               <div>
-                                <Typography variant="body1">{item.type}</Typography>
+                                <Typography variant="body1">{item.name}</Typography>
                               </div>
                               <Typography variant='subtitle2'>{item.price}đ</Typography>
                             </Line>
@@ -313,22 +392,21 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                         <Box component="span" m={1}>
                           <Line>
                             <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
-                              Tràng An Marathon
+                              {eventData.name}
                             </Typography>
                           </Line>
                           <Line>
                             <CalendarSvg />
                             &nbsp;
                             <Typography style={{ flex: 1 }} variant="body2">
-                              04:00 AM - 12:00 PM
+                            {convertToDateTime(eventData?.startTime)} - {convertToDateTime(eventData?.endTime)}
                             </Typography>
                           </Line>
                           <Line style={{ minHeight: '24px' }}>
                             <IcLocation />
                             &nbsp;
                             <Typography variant="body2" style={{ color: GREY }}>
-                              Cố đô Hoa Lư, Trường Yên Hoa Lư, Ninh Bình, Huyện Hoa Lư, Tỉnh Ninh
-                              Bình
+                              {eventData.fullAddress}
                             </Typography>
                           </Line>
                           <Button

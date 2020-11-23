@@ -72,7 +72,7 @@ const App: React.FC<Props> = (props) => {
 
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket}/>
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail} component={TicketDetail}/>
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail + "/:id"} component={TicketDetail}/>
           
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
       

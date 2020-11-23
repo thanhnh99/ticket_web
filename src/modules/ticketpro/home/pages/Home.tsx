@@ -35,34 +35,34 @@ const tutorialSteps = [
 ];
 
 
-const convertToDateTime = (unixtimestamp:any) => {
- 
+const convertToDateTime = (unixtimestamp: any) => {
+
   // Convert timestamp to milliseconds
-  var date = new Date(unixtimestamp*1000);
- 
+  var date = new Date(unixtimestamp * 1000);
+
   // Year
   var year = date.getFullYear();
- 
+
   // Month
   var month = date.getMonth();
- 
+
   // Day
   var day = date.getDate();
- 
+
   // Hours
   var hours = date.getHours();
- 
+
   // Minutes
   var minutes = "0" + date.getMinutes();
- 
+
   // Seconds
   var seconds = "0" + date.getSeconds();
- 
+
   // Display date time in MM-dd-yyyy h:m:s format
-  var convdataTime = day+'/'+month+'/'+year+' '+hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  var convdataTime = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
   return convdataTime;
-  
- }
+
+}
 
 
 const Home: React.FunctionComponent<Props> = () => {
@@ -72,7 +72,7 @@ const Home: React.FunctionComponent<Props> = () => {
     let response = await axios.get(API_PATHS.getEvent);
     setListTicket(
       response.data.data.map(element => {
-        return(
+        return (
           {
             id: element.id,
             img: element.coverImageUrl,
