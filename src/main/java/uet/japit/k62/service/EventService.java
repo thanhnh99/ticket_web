@@ -20,6 +20,7 @@ import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqCreateEvent;
 import uet.japit.k62.models.request.ReqCreateTicketClass;
 import uet.japit.k62.models.response.data_response.ResEvent;
+import uet.japit.k62.models.response.data_response.ResHomeEvent;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -150,25 +152,27 @@ public class EventService {
     {
 
         String token = httpRequest.getHeader("Authorization");
-        List<ResEvent> eventList = new ArrayList<ResEvent>();
+        List<?> eventList = new ArrayList<>();
         if(token != null)
         {
             String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
             User userSendRequest = userDAO.findByEmail(emailSendRequest);
             if(!userSendRequest.getAccountType().getCode().equals(AccountTypeConstant.USER))
             {
-                eventList = ConvertEntityToResponse.ConvertListEventEntity(eventDAO.findAll());
+                eventList =  ConvertEntityToResponse.ConvertListEventEntity(eventDAO.findAll());
+                return  new HttpResponse(eventList);
             }
             else
             {
-                eventList = ConvertEntityToResponse.ConvertListEventEntity(eventDAO.findByIsBroadcastingAndIsActive(true, true));
+                eventList =  ConvertEntityToResponse.ConvertListHomeEventEntity(eventDAO.findByIsBroadcastingAndIsActive(true, true));
+                return  new HttpResponse(eventList);
             }
         }
         else
         {
-            eventList = ConvertEntityToResponse.ConvertListEventEntity(eventDAO.findByIsBroadcastingAndIsActive(true, true));
+            eventList = ConvertEntityToResponse.ConvertListHomeEventEntity(eventDAO.findByIsBroadcastingAndIsActive(true, true));
+            return  new HttpResponse(eventList);
         }
-        return  new HttpResponse(eventList);
     }
 
     public HttpResponse<ResTicketClass> getTicketClassesByEventId(String eventId) throws EventNotFoundException {

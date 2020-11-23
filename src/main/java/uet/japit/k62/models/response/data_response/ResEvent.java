@@ -1,6 +1,7 @@
 package uet.japit.k62.models.response.data_response;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import uet.japit.k62.models.entity.Event;
 import uet.japit.k62.models.entity.TicketClass;
@@ -10,13 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class ResEvent {
-    private String id;
-    private String name;
+public class ResEvent extends ResHomeEvent{
     private String description;
-    private String coverImageUrl;
     private String mapImageUrl;
-    private Date startTime;
     private Date endTime;
     private Date startSellingTime;
     private Date endSellingTime;
@@ -29,13 +26,10 @@ public class ResEvent {
 
     public ResEvent(Event event)
     {
-        this.id = event.getId();
-        this.name = event.getName();
+        super(event);
         this.description = event.getDescription();
-        this.coverImageUrl = event.getCoverImageUrl();
         this.mapImageUrl = event.getMapImageUrl();
         this.startSellingTime = event.getStartSellingTime();
-        this.startTime = event.getStartTime();
         this.endTime = event.getEndTime();
         this.endSellingTime = event.getEndSellingTime();
         this.isPopular = event.getIsPopular();
