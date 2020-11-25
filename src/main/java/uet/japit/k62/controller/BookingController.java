@@ -45,6 +45,7 @@ public class BookingController {
     }
     @PostMapping("/{booking_id}/payment-notification")
     public ResponseEntity notifyPayment(@RequestBody MomoIPN reqIPN){
+        System.out.println("payment notification");
         bookingService.finishPayment(reqIPN);
         ResMomoIPN resMomoIPN = new ResMomoIPN(reqIPN);
         System.out.println("success payment: "+  reqIPN);
