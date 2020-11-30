@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/login", "/register").permitAll()
                 .antMatchers(HttpMethod.GET,  "/static/images/**").permitAll()
                 .antMatchers(HttpMethod.GET,  "/event/**", "/category/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/verify/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().cacheControl();

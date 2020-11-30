@@ -22,6 +22,7 @@ public class User extends BaseEntity{
     private String displayName;
     private String provider;
     private String provider_id;
+    private Boolean isVerify = false;
 
 
 //    @ManyToMany(mappedBy = "userList")

@@ -15,6 +15,7 @@ public class MessageConstant {
     public static final String USER_NOT_FOUND = "Người dùng không tồn tại. Vui lòng thử lại sau.";
     public static final String CANT_SELF_UPDATE_PERMISSION = "Bạn không thể tự thay đổi quyền của mình";
     public static final String USER_EXISTED = "Tài khoản đã tồn tại. Vui lòng kiểm tra lại";
+    public static final String ACCOUNT_NOT_VERIFY = "Tài khoản chưa được verify. Vui lòng kiểm tra lại";
 
 
     /**

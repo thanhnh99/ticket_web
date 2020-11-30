@@ -5,18 +5,19 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     platform: mysql
     url: jdbc:mysql://localhost:3306/ticket_web
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: nguyenhue189
+    password:
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
 server:
   port: 8080
-debug: true
+#debug: true
 momo:
   base-url: https://test-payment.momo.vn/
   access-key: F8BBA842ECF85
