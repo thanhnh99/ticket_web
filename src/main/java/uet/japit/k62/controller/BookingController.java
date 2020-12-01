@@ -1,6 +1,7 @@
 package uet.japit.k62.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uet.japit.k62.constant.MessageConstant;
@@ -43,8 +44,9 @@ public class BookingController {
         ResMomoCheckout resMomoCheckout = new ResMomoCheckout(payUrl);
         return ResponseEntity.ok(new HttpResponse<ResMomoCheckout>(StatusCode.OK, MessageConstant.SUCCESS, resMomoCheckout));
     }
-    @PostMapping("/{booking_id}/payment-notification")
-    public ResponseEntity notifyPayment(@RequestBody MomoIPN reqIPN){
+    @PostMapping(path = "/{booking_id}/payment-notification",
+    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public ResponseEntity notifyPayment(MomoIPN reqIPN){
         System.out.println("payment notification");
         bookingService.finishPayment(reqIPN);
         ResMomoIPN resMomoIPN = new ResMomoIPN(reqIPN);
