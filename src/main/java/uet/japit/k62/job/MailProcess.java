@@ -15,12 +15,11 @@ public class MailProcess {
     }
 
 
-    public void sendMail(ReqSendMail requestData,
-                         JavaMailSender emailSender) throws SchedulerException {
+    public void sendMail(ReqSendMail requestData) throws SchedulerException {
         String identity = "send-mail-notify-translate-to-" + requestData.getSendTo() + "-" + System.currentTimeMillis();
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("data", requestData);
-        jobDataMap.put("emailSender", emailSender);
+//        jobDataMap.put("emailSender", emailSender);
         JobDetail job = JobBuilder.newJob(SendMailJob.class)
 //                .withIdentity(identity)
                 .withDescription("Send notification email: translated")

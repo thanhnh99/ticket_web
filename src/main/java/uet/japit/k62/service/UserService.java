@@ -60,8 +60,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     MailProcess mailProcess;
 
-    @Autowired
-    JavaMailSender emailSender;
+//    @Autowired
+//    JavaMailSender emailSender;
 
     public HttpResponse<ResLogin> authenticateUser(ReqLogin request) throws AccountWasLockedException, WrongEmailOrPasswordException, AccountNotVerifyException {
         HttpResponse httpResponse = new HttpResponse();
@@ -155,8 +155,7 @@ public class UserService implements UserDetailsService {
                                                      + InetAddress.getLoopbackAddress().getHostName()
                                                      + "/user/verify/" + newUser.getId() + "\""
                                                      +" target=\"_blank\" title=\"học lập trình online\">Kích hoạt tài khoản</a>",
-                                                "Mail kích hoạt tài khoản TicketBox"),
-                            emailSender);
+                                                "Mail kích hoạt tài khoản TicketBox"));
         messageResponse.setStatusCode(StatusCode.OK);
         messageResponse.setMessage(MessageConstant.SUCCESS);
         return messageResponse;
