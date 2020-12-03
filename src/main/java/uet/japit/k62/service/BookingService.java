@@ -14,9 +14,11 @@ import uet.japit.k62.models.request.payment.MomoIPN;
 import uet.japit.k62.models.response.data_response.ResBooking;
 import uet.japit.k62.models.response.data_response.ResBookingDetail;
 import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +42,8 @@ public class BookingService {
     private ITicketCodeDAO ticketCodeDAO;
     @Autowired
     private Environment env;
+    @Autowired
+    private IUserDAO userDAO;
     public List<ResTicketClass> getTicketInfo(String event_id){
         List<TicketClass> tickets = ticketDao.findByEventID(event_id);
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
@@ -103,7 +107,6 @@ public class BookingService {
         }
         booking.setPrice(new BigDecimal(price));
         bookingDAO.save(booking);
-//        bookingDetailDAO.saveAll(bookingDetails);
         return new ResBooking(booking, resBookingDetails);
     }
 
@@ -161,5 +164,12 @@ public class BookingService {
         } catch (BookingNotFoundException e) {
             e.printStackTrace();
         }
+    }
+    public List<ResBooking> getMyBooking(HttpServletRequest httpRequest){
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
+        return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
     }
 }

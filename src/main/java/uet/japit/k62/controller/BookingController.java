@@ -53,4 +53,8 @@ public class BookingController {
         System.out.println("success payment: "+  reqIPN);
         return ResponseEntity.ok(resMomoIPN);
     }
+    @GetMapping("/my-booking")
+    public  ResponseEntity getMyBooking(HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(bookingService.getMyBooking(httpServletRequest));
+    }
 }
