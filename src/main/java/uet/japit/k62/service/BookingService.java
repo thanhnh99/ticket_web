@@ -49,7 +49,7 @@ public class BookingService {
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
     }
 
-    public ResBooking selectTickets(ReqBookingSelectTicket reqBooking, String eventId) throws TicketNotFoundException, MaximumTicketExceeded, MinimumTicketNotReached, VoucherNotFoundException, InvalidVoucherException, EventNotFoundException {
+    public ResBooking selectTickets(HttpServletRequest httpRequest, ReqBookingSelectTicket reqBooking, String eventId) throws TicketNotFoundException, MaximumTicketExceeded, MinimumTicketNotReached, VoucherNotFoundException, InvalidVoucherException, EventNotFoundException {
         // validate amount
         List<TicketClass> dbTickets = new ArrayList<>();
         for(ReqSelectedTicket ticket : reqBooking.getTickets()){
@@ -86,6 +86,10 @@ public class BookingService {
         long price = 0;
         // create tmp booking
         Booking booking = new Booking();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        booking.setCreatedBy(userSendRequest.getId());
         booking.setStatus(BookingStatus.RESERVED);
         booking.setEmailBooking(reqBooking.getEmail());
         booking.setPhoneBooking(reqBooking.getPhone());
@@ -169,6 +173,7 @@ public class BookingService {
         String token = httpRequest.getHeader("Authorization");
         String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
         User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        bookingDAO.updateTimeout();
         List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
         return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
     }

@@ -32,9 +32,9 @@ public class BookingController {
         return ResponseEntity.ok(responseData);
     }
     @PostMapping("/{event_id}/select-ticket")
-    public ResponseEntity selectTickets(@RequestBody ReqBookingSelectTicket reqSelectedTicket, @PathVariable(value = "event_id") String event_id) throws MaximumTicketExceeded, MinimumTicketNotReached, InvalidVoucherException, EventNotFoundException, VoucherNotFoundException, TicketNotFoundException {
+    public ResponseEntity selectTickets(HttpServletRequest httpServletRequest, @RequestBody ReqBookingSelectTicket reqSelectedTicket, @PathVariable(value = "event_id") String event_id) throws MaximumTicketExceeded, MinimumTicketNotReached, InvalidVoucherException, EventNotFoundException, VoucherNotFoundException, TicketNotFoundException {
         HttpResponse<ResBooking> response = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS,
-                bookingService.selectTickets(reqSelectedTicket, event_id));
+                bookingService.selectTickets(httpServletRequest, reqSelectedTicket, event_id));
         return ResponseEntity.ok(response);
     }
     @PostMapping("/{booking_id}/checkout")
