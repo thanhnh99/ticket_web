@@ -13,4 +13,7 @@ public interface IBookingDAO extends JpaRepository<Booking, String> {
     int getNumberReservedTicket(String event_id, String ticket_id);
 
     List<Booking> findByCreatedBy(String userId);
+    @Query(value = "update booking set status = 2 where booking.status = 0"+
+            " and TIMESTAMPDIFF(MINUTE, booking.created_at, NOW()) < 15", nativeQuery = true)
+    void updateTimeout();
 }
