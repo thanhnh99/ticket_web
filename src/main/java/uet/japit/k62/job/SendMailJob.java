@@ -37,7 +37,7 @@ public class SendMailJob implements Job {
                                     .put(Emailv31.Message.TO, new JSONArray()
                                             .put(new JSONObject()
                                                     .put("Email", reqSendMail.getSendTo())
-                                                    .put("Name", reqSendMail.getSenderName())))
+                                                    .put("Name", reqSendMail.getReceiverName())))
                                     .put(Emailv31.Message.SUBJECT, reqSendMail.getSubject())
                                     .put(Emailv31.Message.HTMLPART, reqSendMail.getHtmlContent())
                             ));

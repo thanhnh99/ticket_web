@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h1>Chúc mừng bạn đã đã đăng ký thành công sự kiện</h1>
+<h2>Bên dưới là thông tin đăng ký của bạn</h2>
+<p><b>Tên: </b> <span th:text="${name}" th:remove="tag"></span></p>
+<p><b>Sự kiện: </b><span th:text="${event_name}" th:remove="tag"></span></p>
+<p><b>Ngày diễn ra: </b><span th:text="${event_time}" th:remove="tag"></span></p>
+<h2>Thông tin vé</h2>
+<table>
+    <tr>
+        <td>Loại vé</td>
+        <td>Mã code</td>
+        <td>Mã QR</td>
+    </tr>
+    <td><span th:text="${ticket_name}" th:remove="tag"></span></td>
+    <td><span th:text="${ticket_code}" th:remove="tag"></span></td>
+    <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAEIAQMAAACZOPi8AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABDElEQVRoge2UUQ7DMAhDuf+lvSrYBNq1F3DoFLXk7ecJHHHq1GchK3C9Xh+3riHBE3lPet55EezlHZWp60vwR+YQ61LqrAlydAbEY6OsiErc8fTEtSJUyxXn53+5EHODoCWLzToRlMQpavmCtm1OBEdHljRMfX6cCFKaHinMoDEkUtPIF97ujfIi2hLtKotuROQn6An0NJfOiICYmphqWBLsILRVu2lJaKMULYsBI8aSaHFbUD7hSXRJHCe0jLEjmLKMmfzGdOpDlBdIXG7SI3RNCNBPhJYobaH914qok6I0T+h3TgQNCcj37dGVyKlhwkTbOFei4mUKsyPqrD6FeRIlR0NT2sKROHXqtX6YZLr85jC2BAAAAABJRU5ErkJggg=="/></td>
+</table>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package uet.japit.k62.service;
 
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,16 +8,17 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.detail.*;
+import uet.japit.k62.job.MailProcess;
 import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqSelectedTicket;
+import uet.japit.k62.models.request.ReqSendMail;
 import uet.japit.k62.models.request.payment.MomoIPN;
-import uet.japit.k62.models.response.data_response.ResBooking;
-import uet.japit.k62.models.response.data_response.ResBookingDetail;
-import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.*;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
+import uet.japit.k62.util.ContentUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -44,6 +46,8 @@ public class BookingService {
     private Environment env;
     @Autowired
     private IUserDAO userDAO;
+    @Autowired
+    MailProcess mailProcess;
     public List<ResTicketClass> getTicketInfo(String event_id){
         List<TicketClass> tickets = ticketDao.findByEventID(event_id);
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
@@ -111,7 +115,7 @@ public class BookingService {
         }
         booking.setPrice(new BigDecimal(price));
         bookingDAO.save(booking);
-        return new ResBooking(booking, resBookingDetails);
+        return new ResUnpaidBooking(booking, resBookingDetails);
     }
 
     public String checkout(String bookingId, String paymentType, String baseUrl) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
@@ -156,6 +160,7 @@ public class BookingService {
                         System.out.println("Generate ticket code: " + code);
                         ticketCode.setBooking(detail);
                         ticketCode.setCode(code);
+                        ticketCode.setName(detail.getTicketClass().getName());
                         ticketCodeList.add(ticketCode);
                     }
                 }
@@ -176,5 +181,26 @@ public class BookingService {
         bookingDAO.updateTimeout();
         List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
         return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
+    }
+    public void sendTicketInformation(HttpServletRequest httpRequest, String bookingId) throws BookingNotFoundException {
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        Booking booking = bookingDAO.findById(bookingId).orElseThrow(BookingNotFoundException::new);
+        List<TicketCode> ticketCodes = ticketCodeDAO.getTicketCodeByBooking(bookingId);
+        ResPaidBooking paidBooking = new ResPaidBooking(booking, ticketCodes);
+        HashMap<String, String> content = paidBooking.toMap();
+        content.put("name", userSendRequest.getDisplayName());
+        String mailContent = ContentUtil.parseThymeleafTemplate(content, "templates/ticket-information.html");
+        System.out.println(mailContent);
+        try {
+            mailProcess.sendMail(new ReqSendMail(booking.getEmailBooking(),
+                                "Thông tin vé của bạn",
+                                "Tickme-noreply",
+                                userSendRequest.getDisplayName(),
+                                mailContent), "Send tickets email");
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
     }
 }

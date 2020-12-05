@@ -17,4 +17,5 @@ public class TicketCode extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "booking_id")
     private BookingDetail booking;
+    private String name;
 }

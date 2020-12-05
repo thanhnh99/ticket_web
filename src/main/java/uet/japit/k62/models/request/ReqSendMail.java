@@ -10,14 +10,14 @@ public class ReqSendMail {
     private String sendTo;
     private String subject;
     private String from;
-    private String senderName;
+    private String receiverName;
     private String htmlContent;
 
-    public ReqSendMail(String sendTo,  String subject, String from, String senderName, String htmlContent) {
+    public ReqSendMail(String sendTo,  String subject, String from, String receiverName, String htmlContent) {
         this.sendTo = sendTo;
         this.subject = subject;
         this.from = from +  domainName;
-        this.senderName = senderName;
+        this.receiverName = receiverName;
         this.htmlContent = htmlContent;
     }
     public void setFrom(String from) {

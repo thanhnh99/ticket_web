@@ -8,7 +8,6 @@ public class ResBookingDetail {
     private String name;
     private BigDecimal price;
     private int amout;
-
     public ResBookingDetail(String name, BigDecimal price, int quantity) {
         this.name = name;
         this.price = price;
