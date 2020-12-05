@@ -1,14 +1,9 @@
 import React from 'react';
 import { RoutesTabType } from '../models/permission';
 
-const TicketDetail = React.lazy(() => import('../modules/ticketpro/ticketDetail/pages/TicketDetail'));
-
-const ChooseTicket = React.lazy(() => import('../modules/ticketpro/booking/pages/chooseTicket'))
-
 const NotFoundBox = React.lazy(() => import('../modules/common/components/NotFoundBox'));
 
 const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
-const EditEventInforForm = React.lazy(() => import('../modules/ticketpro/events/components/EditEventInforForm'));
 
 export const URL_PATH = '/';
 export const BOOKING_URL = '/booking';
@@ -64,13 +59,6 @@ export const ROUTES_BOOKING: RoutesTabType[] = [
 
 
 export const ROUTES_EVENT: RoutesTabType[] = [
-  {
-    name: 'Chỉnh sửa thông tin',
-    isModule: true,
-    path: '/event/edit',
-    exact: true,
-    component: EditEventInforForm,
-  },
   {
     name: 'Thời gian',
     isModule: true,

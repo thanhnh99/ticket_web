@@ -13,3 +13,4 @@ export const defaultUserInfo: IUserInfo = {
   dob: '',
   address: '',
 };
+

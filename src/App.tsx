@@ -6,7 +6,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { ROUTES, ROUTES_TAB } from './configs/routes';
+import { ROUTES } from './configs/routes';
 import { validateAccessToken } from './modules/auth/redux/authThunks';
 import AuthProblemDialog from './modules/common/components/AuthProblemDialog';
 import LoadingIcon from './modules/common/components/LoadingIcon';
@@ -70,7 +70,7 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket}/>
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket+ "/:id"} component={ChooseTicket}/>
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail + "/:id"} component={TicketDetail}/>
           

@@ -123,8 +123,10 @@ export function login(
       if (json.statusCode == SUCCESS_CODE) {
         json.data.token && set(ACCESS_TOKEN, json.data.token);
         dispatch(validateAccessToken(json.data));
-        dispatch(setUserData(json.data));
-        dispatch(authIn(json.data));
+        const userData = {...json.data, email: data.email};
+        console.log(userData)
+        dispatch(setUserData(userData));
+        dispatch(authIn(userData));
       }
       return json;
     } finally {

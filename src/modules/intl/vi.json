@@ -222,6 +222,21 @@
   "ticket.info": "Thông tin vé",
   "ticket.organizer": "Nhà tổ chức",
 
+    "booking.chooseTicket": "Chọn vé",
+    "booking.pay": "Thanh toán",
+    "booking.done": "Hoàn tất",
+    "ticket.type": "LOẠI VÉ",
+    "ticket.price": "GIÁ VÉ",
+    "ticket.total": "SỐ LƯỢNG",
+    "currency": "đ",
+    "ticket.pleaseChoose": "Vui lòng chọn vé",
+    "next": "Tiếp tục",
+    "infoUserReceive": "THÔNG TIN NGƯỜI NHẬN VÉ",
+    "typePayment":"HÌNH THỨC THANH TOÁN",
+
+    "user.lastName": "Họ",
+    "paymentMomo": "Thanh toán bằng MOMO",
+
   "auth.forgotPassword": "Lấy lại mật khẩu",
   "auth.forgotPasswordNote": "Bạn cần nhập đầy đủ các thông tin sau để nhận mã xác thực",
   "auth.changePasswordNote": "Bạn vui lòng nhập mã xác thực đã gửi qua số điện thoại đăng ký",
