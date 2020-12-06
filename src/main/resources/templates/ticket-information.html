@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<h1>Chúc mừng bạn đã đã đăng ký thành công sự kiện</h1>
+<h2>Bên dưới là thông tin đăng ký của bạn</h2>
+<p><b>Tên: </b> <span th:text="${name}" th:remove="tag"></span></p>
+<p><b>Sự kiện: </b><span th:text="${event_name}" th:remove="tag"></span></p>
+<p><b>Ngày diễn ra: </b><span th:text="${event_time}" th:remove="tag"></span></p>
+<h2>Thông tin vé</h2>
+<table>
+    <tr>
+        <td>Loại vé</td>
+        <td>Mã code</td>
+        <td>Mã QR</td>
+    </tr>
+    <td><span th:text="${ticket_name}" th:remove="tag"></span></td>
+    <td><span th:text="${ticket_code}" th:remove="tag"></span></td>
+    <td><img th:src="'data:image/png;base64,' + ${img}"/></td>
+</table>
+</body>
+</html>

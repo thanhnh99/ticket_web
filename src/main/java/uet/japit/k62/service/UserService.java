@@ -151,13 +151,15 @@ public class UserService implements UserDetailsService {
 
         //active sendmail
         mailProcess.sendMail(new ReqSendMail(newUser.getEmail(),
+                                             "Mail kích hoạt tài khoản TicketBox",
+                                             "account-verification",
+                                             newUser.getDisplayName(),
                                              "Vui lòng click vào đường linh dưới đây để kích hoạt tài khoản của bạn: "
                                                      +"<a href=\""
                                                      + InetAddress.getLocalHost().getHostName()
                                                      + "/user/verify/" + newUser.getId() + "\""
-                                                     +" target=\"_blank\" title=\"học lập trình online\">Kích hoạt tài khoản</a>",
-                                                "Mail kích hoạt tài khoản TicketBox"),
-                emailSender);
+                                                     +" target=\"_blank\" title=\"học lập trình online\">Kích hoạt tài khoản</a>"),
+                                            "Email verification");
         messageResponse.setStatusCode(StatusCode.OK);
         messageResponse.setMessage(MessageConstant.SUCCESS);
         return messageResponse;

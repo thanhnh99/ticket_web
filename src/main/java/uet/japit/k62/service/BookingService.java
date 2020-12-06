@@ -1,5 +1,8 @@
 package uet.japit.k62.service;
 
+import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,18 +10,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.detail.*;
+import uet.japit.k62.job.MailProcess;
 import uet.japit.k62.models.entity.*;
+import uet.japit.k62.models.request.ReqAttachmentFile;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqSelectedTicket;
+import uet.japit.k62.models.request.ReqSendMail;
 import uet.japit.k62.models.request.payment.MomoIPN;
-import uet.japit.k62.models.response.data_response.ResBooking;
-import uet.japit.k62.models.response.data_response.ResBookingDetail;
-import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.*;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
+import uet.japit.k62.util.ContentUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +50,8 @@ public class BookingService {
     private Environment env;
     @Autowired
     private IUserDAO userDAO;
+    @Autowired
+    MailProcess mailProcess;
     public List<ResTicketClass> getTicketInfo(String event_id){
         List<TicketClass> tickets = ticketDao.findByEventID(event_id);
         return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
@@ -111,7 +119,7 @@ public class BookingService {
         }
         booking.setPrice(new BigDecimal(price));
         bookingDAO.save(booking);
-        return new ResBooking(booking, resBookingDetails);
+        return new ResUnpaidBooking(booking, resBookingDetails);
     }
 
     public String checkout(String bookingId, String paymentType, String baseUrl) throws PaymentTypeNotSupported, BookingNotFoundException, PaymentCreateRequestException, InvalidPaymentException {
@@ -145,6 +153,7 @@ public class BookingService {
         try {
 
             Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
+            User userSendRequest = userDAO.findByEmail(booking.getCreatedBy());
             if(req.isSuccess()){
                 booking.setStatus(BookingStatus.SUCCEED);
                 System.out.println("create ticket code");
@@ -156,10 +165,14 @@ public class BookingService {
                         System.out.println("Generate ticket code: " + code);
                         ticketCode.setBooking(detail);
                         ticketCode.setCode(code);
+                        ticketCode.setName(detail.getTicketClass().getName());
+                        ticketCode.setCreatedBy(userSendRequest.getId());
                         ticketCodeList.add(ticketCode);
                     }
                 }
                 ticketCodeDAO.saveAll(ticketCodeList);
+                ResPaidBooking paidBooking = new ResPaidBooking(booking, ticketCodeList);
+                sendTicketInformation(userSendRequest, paidBooking);
             }
             else {
                 booking.setStatus(BookingStatus.FAILED);
@@ -176,5 +189,28 @@ public class BookingService {
         bookingDAO.updateTimeout();
         List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
         return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
+    }
+    private byte[] generatePdfTicket(HashMap<String, String> content) throws IOException, WriterException, DocumentException {
+        byte[] image = ContentUtil.generateQRCode(content.get("ticket_code"), "png");
+        String image_encoded =  new String(Base64.getEncoder().encode(image ));
+        content.put("img", image_encoded);
+        String html = ContentUtil.parseThymeleafTemplate(content, "templates/ticket-information.html");
+        byte[] pdf = ContentUtil.htmlToPdf(html);
+        return  pdf;
+    }
+    public void sendTicketInformation(User userSendRequest, ResPaidBooking paidBooking) {
+        HashMap<String, String> content = paidBooking.toMap();
+        content.put("name", userSendRequest.getDisplayName());
+        try {
+            ReqAttachmentFile ticketPdf = new ReqAttachmentFile(ReqAttachmentFile.FileType.PDF, "ticket.pdf", generatePdfTicket(content));
+
+            mailProcess.sendMail(new ReqSendMail(paidBooking.getEmail(),
+                    "Thông tin vé của bạn",
+                    "Tickme-noreply",
+                    userSendRequest.getDisplayName(),
+                    "Chúc mừng bạn đã đăng ký thành công vé của sự kiện " + content.get("event_name"), ticketPdf), "Send tickets email");
+        } catch (IOException | DocumentException | SchedulerException | WriterException e) {
+            e.printStackTrace();
+        }
     }
 }
