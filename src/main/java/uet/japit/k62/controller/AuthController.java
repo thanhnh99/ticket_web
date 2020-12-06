@@ -14,6 +14,7 @@ import uet.japit.k62.service.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("")
@@ -31,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@Valid @RequestBody ReqRegister requestData) throws UserExistedException, SchedulerException {
+    public ResponseEntity register(@Valid @RequestBody ReqRegister requestData) throws UserExistedException, SchedulerException, UnknownHostException {
         MessageResponse responseData = userService.register(requestData);
         return ResponseEntity.ok(responseData);
     }
