@@ -80,7 +80,7 @@
 //            User user = new User();
 //            user.setDisplayName("Huu Thanh");
 //            user.setEmail("huuthanh99hn@gmail.com");
-//            user.setPassword(passwordEncoder.encode("12345"));
+//            user.setPassword(passwordEncoder.encode("12345678"));
 //            user.setIsActive(true);
 //            user.setIsVerify(true);
 //            user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.USER));
@@ -96,7 +96,7 @@
 //            User user = new User();
 //            user.setDisplayName("Huu Thanh");
 //            user.setEmail("thanhnh99.amc@gmail.com");
-//            user.setPassword(passwordEncoder.encode("12345"));
+//            user.setPassword(passwordEncoder.encode("12345678"));
 //            user.setAccountType(accountTypeDAO.findByCode(AccountTypeConstant.ROOT));
 //            List<Permission> permissionList = permissionDAO.findAll();
 //            user.setIsActive(true);
