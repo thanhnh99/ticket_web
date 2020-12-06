@@ -156,7 +156,7 @@ public class UserService implements UserDetailsService {
                                              newUser.getDisplayName(),
                                              "Vui lòng click vào đường linh dưới đây để kích hoạt tài khoản của bạn: "
                                                      +"<a href=\""
-                                                     + InetAddress.getLocalHost().getHostAddress()
+                                                     + "https://tickme.herokuapp.com"
                                                      + "/user/verify/" + newUser.getId() + "\""
                                                      +" target=\"_blank\" title=\"Kích hoạt tài khoản\">Kích hoạt tài khoản</a>"),
                                             "Email verification");
