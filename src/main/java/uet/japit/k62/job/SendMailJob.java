@@ -28,19 +28,24 @@ public class SendMailJob implements Job {
             ReqSendMail reqSendMail = (ReqSendMail) context.getJobDetail().getJobDataMap().get("data");
             MailjetRequest request;
             MailjetResponse response;
-            request = new MailjetRequest(Emailv31.resource)
-                    .property(Emailv31.MESSAGES, new JSONArray()
+            JSONObject message = new JSONObject();
+            message.put(Emailv31.Message.FROM, new JSONObject()
+                    .put("Email", reqSendMail.getFrom())
+                    .put("Name", "TickMe"))
+                    .put(Emailv31.Message.TO, new JSONArray()
                             .put(new JSONObject()
-                                    .put(Emailv31.Message.FROM, new JSONObject()
-                                            .put("Email", reqSendMail.getFrom())
-                                            .put("Name", "TickMe"))
-                                    .put(Emailv31.Message.TO, new JSONArray()
-                                            .put(new JSONObject()
-                                                    .put("Email", reqSendMail.getSendTo())
-                                                    .put("Name", reqSendMail.getReceiverName())))
-                                    .put(Emailv31.Message.SUBJECT, reqSendMail.getSubject())
-                                    .put(Emailv31.Message.HTMLPART, reqSendMail.getHtmlContent())
-                            ));
+                                    .put("Email", reqSendMail.getSendTo())
+                                    .put("Name", reqSendMail.getReceiverName())))
+                    .put(Emailv31.Message.SUBJECT, reqSendMail.getSubject())
+                    .put(Emailv31.Message.HTMLPART, reqSendMail.getHtmlContent());
+            if (reqSendMail.getFile() != null) {
+                message.put(Emailv31.Message.ATTACHMENTS, new JSONArray().put(new JSONObject()
+                                                                            .put("ContentType", reqSendMail.getFile().getContentType())
+                                                                            .put("Filename", reqSendMail.getFile().getFileName())
+                                                                            .put("Base64Content", reqSendMail.getFile().getEncodedContent())));
+            }
+            request = new MailjetRequest(Emailv31.resource)
+                    .property(Emailv31.MESSAGES, new JSONArray().put(message));
             response = client.post(request);
             System.out.println(response.getStatus());
             System.out.println(response.getData());

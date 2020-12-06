@@ -1,4 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
 <body>
 <h1>Chúc mừng bạn đã đã đăng ký thành công sự kiện</h1>
 <h2>Bên dưới là thông tin đăng ký của bạn</h2>
@@ -14,7 +17,7 @@
     </tr>
     <td><span th:text="${ticket_name}" th:remove="tag"></span></td>
     <td><span th:text="${ticket_code}" th:remove="tag"></span></td>
-    <td><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAEIAQMAAACZOPi8AAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABDElEQVRoge2UUQ7DMAhDuf+lvSrYBNq1F3DoFLXk7ecJHHHq1GchK3C9Xh+3riHBE3lPet55EezlHZWp60vwR+YQ61LqrAlydAbEY6OsiErc8fTEtSJUyxXn53+5EHODoCWLzToRlMQpavmCtm1OBEdHljRMfX6cCFKaHinMoDEkUtPIF97ujfIi2hLtKotuROQn6An0NJfOiICYmphqWBLsILRVu2lJaKMULYsBI8aSaHFbUD7hSXRJHCe0jLEjmLKMmfzGdOpDlBdIXG7SI3RNCNBPhJYobaH914qok6I0T+h3TgQNCcj37dGVyKlhwkTbOFei4mUKsyPqrD6FeRIlR0NT2sKROHXqtX6YZLr85jC2BAAAAABJRU5ErkJggg=="/></td>
+    <td><img th:src="'data:image/png;base64,' + ${img}"/></td>
 </table>
 </body>
 </html>

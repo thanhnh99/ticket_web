@@ -1,5 +1,8 @@
 package uet.japit.k62.models.request;
 
+
+import java.util.Base64;
+
 public class ReqAttachmentFile {
     public enum FileType {
         PDF,
@@ -8,6 +11,12 @@ public class ReqAttachmentFile {
     private FileType contentType;
     private String fileName;
     private String encodedContent;
+
+    public ReqAttachmentFile(FileType contentType, String fileName, byte[] content) {
+        this.contentType = contentType;
+        this.fileName = fileName;
+        encodedContent = Base64.getEncoder().encodeToString(content);
+    }
 
     public String getContentType() {
         switch (contentType){

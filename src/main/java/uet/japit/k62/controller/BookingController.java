@@ -57,9 +57,5 @@ public class BookingController {
     public  ResponseEntity getMyBooking(HttpServletRequest httpServletRequest){
         return ResponseEntity.ok(bookingService.getMyBooking(httpServletRequest));
     }
-    @GetMapping("test/{booking_id}")
-    public ResponseEntity testTicketEmail(HttpServletRequest httpServletRequest, @PathVariable(value = "booking_id") String booking_id) throws BookingNotFoundException {
-        bookingService.sendTicketInformation(httpServletRequest, booking_id);
-        return ResponseEntity.ok(null);
-    }
+
 }

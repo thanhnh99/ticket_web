@@ -1,5 +1,7 @@
 package uet.japit.k62.service;
 
+import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.job.MailProcess;
 import uet.japit.k62.models.entity.*;
+import uet.japit.k62.models.request.ReqAttachmentFile;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqSelectedTicket;
 import uet.japit.k62.models.request.ReqSendMail;
@@ -21,6 +24,7 @@ import uet.japit.k62.service.payment.MomoPayment;
 import uet.japit.k62.util.ContentUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -149,6 +153,7 @@ public class BookingService {
         try {
 
             Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
+            User userSendRequest = userDAO.findByEmail(booking.getCreatedBy());
             if(req.isSuccess()){
                 booking.setStatus(BookingStatus.SUCCEED);
                 System.out.println("create ticket code");
@@ -161,10 +166,13 @@ public class BookingService {
                         ticketCode.setBooking(detail);
                         ticketCode.setCode(code);
                         ticketCode.setName(detail.getTicketClass().getName());
+                        ticketCode.setCreatedBy(userSendRequest.getId());
                         ticketCodeList.add(ticketCode);
                     }
                 }
                 ticketCodeDAO.saveAll(ticketCodeList);
+                ResPaidBooking paidBooking = new ResPaidBooking(booking, ticketCodeList);
+                sendTicketInformation(userSendRequest, paidBooking);
             }
             else {
                 booking.setStatus(BookingStatus.FAILED);
@@ -182,24 +190,26 @@ public class BookingService {
         List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
         return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
     }
-    public void sendTicketInformation(HttpServletRequest httpRequest, String bookingId) throws BookingNotFoundException {
-        String token = httpRequest.getHeader("Authorization");
-        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
-        User userSendRequest = userDAO.findByEmail(emailSendRequest);
-        Booking booking = bookingDAO.findById(bookingId).orElseThrow(BookingNotFoundException::new);
-        List<TicketCode> ticketCodes = ticketCodeDAO.getTicketCodeByBooking(bookingId);
-        ResPaidBooking paidBooking = new ResPaidBooking(booking, ticketCodes);
+    private byte[] generatePdfTicket(HashMap<String, String> content) throws IOException, WriterException, DocumentException {
+        byte[] image = ContentUtil.generateQRCode(content.get("ticket_code"), "png");
+        String image_encoded =  new String(Base64.getEncoder().encode(image ));
+        content.put("img", image_encoded);
+        String html = ContentUtil.parseThymeleafTemplate(content, "templates/ticket-information.html");
+        byte[] pdf = ContentUtil.htmlToPdf(html);
+        return  pdf;
+    }
+    public void sendTicketInformation(User userSendRequest, ResPaidBooking paidBooking) {
         HashMap<String, String> content = paidBooking.toMap();
         content.put("name", userSendRequest.getDisplayName());
-        String mailContent = ContentUtil.parseThymeleafTemplate(content, "templates/ticket-information.html");
-        System.out.println(mailContent);
         try {
-            mailProcess.sendMail(new ReqSendMail(booking.getEmailBooking(),
-                                "Thông tin vé của bạn",
-                                "Tickme-noreply",
-                                userSendRequest.getDisplayName(),
-                                mailContent), "Send tickets email");
-        } catch (SchedulerException e) {
+            ReqAttachmentFile ticketPdf = new ReqAttachmentFile(ReqAttachmentFile.FileType.PDF, "ticket.pdf", generatePdfTicket(content));
+
+            mailProcess.sendMail(new ReqSendMail(paidBooking.getEmail(),
+                    "Thông tin vé của bạn",
+                    "Tickme-noreply",
+                    userSendRequest.getDisplayName(),
+                    "Chúc mừng bạn đã đăng ký thành công vé của sự kiện " + content.get("event_name"), ticketPdf), "Send tickets email");
+        } catch (IOException | DocumentException | SchedulerException | WriterException e) {
             e.printStackTrace();
         }
     }
