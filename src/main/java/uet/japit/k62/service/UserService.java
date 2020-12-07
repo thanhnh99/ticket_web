@@ -34,6 +34,7 @@ import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -131,7 +132,7 @@ public class UserService implements UserDetailsService {
         return httpResponse;
     }
 
-    public MessageResponse register(ReqRegister requestData) throws UserExistedException, SchedulerException {
+    public MessageResponse register(ReqRegister requestData) throws UserExistedException, SchedulerException, UnknownHostException {
         MessageResponse messageResponse = new MessageResponse();
 
         if(this.userExisted(requestData.getEmail()))
@@ -155,9 +156,9 @@ public class UserService implements UserDetailsService {
                                              newUser.getDisplayName(),
                                              "Vui lòng click vào đường linh dưới đây để kích hoạt tài khoản của bạn: "
                                                      +"<a href=\""
-                                                     + InetAddress.getLoopbackAddress().getHostName()
+                                                     + "https://tickme.herokuapp.com"
                                                      + "/user/verify/" + newUser.getId() + "\""
-                                                     +" target=\"_blank\" title=\"học lập trình online\">Kích hoạt tài khoản</a>"),
+                                                     +" target=\"_blank\" title=\"Kích hoạt tài khoản\">Kích hoạt tài khoản</a>"),
                                             "Email verification");
         messageResponse.setStatusCode(StatusCode.OK);
         messageResponse.setMessage(MessageConstant.SUCCESS);
