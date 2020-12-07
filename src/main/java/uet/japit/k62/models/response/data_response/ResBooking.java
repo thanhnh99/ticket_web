@@ -27,6 +27,7 @@ public class ResBooking {
         HashMap<String, String> mapper = new HashMap<>();
         mapper.put("event_name", event.getName());
         mapper.put("event_time", event.getStartTime().toString());
+        mapper.put("event_place", event.getCity());
         return mapper;
     }
 }

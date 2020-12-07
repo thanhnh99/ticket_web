@@ -2,22 +2,284 @@
 <head>
     <meta charset="utf-8"/>
 </head>
-<body>
-<h1>Chúc mừng bạn đã đã đăng ký thành công sự kiện</h1>
-<h2>Bên dưới là thông tin đăng ký của bạn</h2>
-<p><b>Tên: </b> <span th:text="${name}" th:remove="tag"></span></p>
-<p><b>Sự kiện: </b><span th:text="${event_name}" th:remove="tag"></span></p>
-<p><b>Ngày diễn ra: </b><span th:text="${event_time}" th:remove="tag"></span></p>
-<h2>Thông tin vé</h2>
-<table>
+<body
+        leftmargin="0"
+        topmargin="0"
+        marginwidth="0"
+        marginheight="0"
+        style="
+    margin: auto;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    -webkit-text-size-adjust: none;
+    background-color: #123d60;
+  "
+        bgcolor="#123d60"
+>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #ffffff;
+        margin: auto;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    a {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #8f45d6;
+        background: none;
+        text-decoration: none;
+        margin: 0;
+    }
+
+    p {
+        font-family: Arial, Helvetica, sans-serif;
+        background: none;
+        margin: 0;
+        font-size: 14px;
+        color: #333;
+        padding: 4px 0;
+        line-height: 19px;
+    }
+    h2 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 26px;
+        color: #8f45d6;
+        margin-top: 0px;
+        margin-bottom: 15px;
+        font-weight: normal;
+    }
+    h4 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px;
+        color: #8f45d6;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    p.note {
+        font-family: Arial, Helvetica, sans-serif;
+        background: none;
+        margin: 0;
+        font-size: 13px;
+        color: #333;
+        line-height: 17px;
+        font-style: italic;
+    }
+
+    a.button {
+        font-family: Arial, Helvetica, sans-serif;
+        border: 1px solid #ef5a00;
+        font-size: 15px;
+        color: #ef5a00;
+        width: 100px;
+        border-radius: 5px;
+        line-height: 20px;
+        text-transform: uppercase;
+        padding: 10px 5px;
+        display: block;
+        text-decoration: none;
+    }
+
+    a.button:hover {
+        color: #fff;
+        background-color: #ef5a00;
+    }
+
+    span.note {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        color: #d19a00;
+        line-height: 17px;
+        font-style: italic;
+    }
+</style>
+<table
+        width="100%"
+        cellspacing="0"
+        cellpadding="0"
+        border="0"
+        style="margin-top: 20px; margin-bottom: 20px"
+>
+    <tbody>
     <tr>
-        <td>Loại vé</td>
-        <td>Mã code</td>
-        <td>Mã QR</td>
+        <td>
+            <table
+                    width="650"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    align="center"
+                    style="width: 650px"
+            >
+                <tbody>
+                <tr>
+                    <td valign="middle" width="650" height="65">
+                        <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                height="70"
+                                width="100%"
+                        >
+                            <tr>
+                                <td
+                                        height="65"
+                                        style="
+                          background-color: #fff;
+                          width: 65%;
+                          padding-left: 15px;
+                        "
+                                        valign="middle"
+                                        align="left"
+                                >
+                                    <a
+                                            href="$website"
+                                            style="text-decoration: none"
+                                            target="_blank"
+                                    ><img
+                                            width="170"
+                                            height="37"
+                                            style="display: block"
+                                            src="$logo"
+                                            alt="Logo"
+                                    /></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td
+                            valign="top"
+                            bgcolor="#fff"
+                            align="center"
+                            style="background-color: #fff"
+                    >
+                        <table width="650" cellspacing="0" cellpadding="0" border="0">
+                            <tbody>
+                            <tr>
+                                <td width="40" bgcolor="#fff">&nbsp;</td>
+                                <td
+                                        width="570"
+                                        valign="top"
+                                        align="left"
+                                        bgcolor="#fff"
+                                        style="background-color: #fff"
+                                >
+                                    <table
+                                            width="100%"
+                                            align="left"
+                                            cellpadding="0"
+                                            cellspacing="0"
+                                            border="0"
+                                    >
+                                        <tbody>
+                                        <tr>
+                                            <td style="padding: 8px 0px 8px 16px; border-left: 1px solid#c0c0c0;">
+                                                <p style="line-height: 23px">
+                                                    <strong>Mã code:</strong>
+                                                    <span th:text="${ticket_code}" th:remove="tag">
+                                                </p>
+                                                <p>
+                                                <div
+                                                        style="
+                                        text-align: center;
+                                        font-family: Arial, Helvetica,
+                                          sans-serif;
+                                        border: 1px solid #8f45d6;
+                                        font-size: 15px;
+                                        color: #8f45d6;
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 5px;
+                                        line-height: 20px;
+                                        text-transform: uppercase;
+                                        padding: 10px 5px;
+                                        display: block;
+                                      "
+                                                >
+                                                <img th:src="'data:image/png;base64,' + ${img}"/></div>
+                                                </p>
+                                                <p style="margin-left: -1px">
+                                                    <strong>Tên sự kiện: </strong>
+                                                    <span th:text="${eventName}" th:remove="tag"></span>
+                                                </p>
+                                                <p style="margin-left: -1px">
+                                                    <strong>Thời gian diễn ra: </strong>
+                                                    <span th:text="${event_time}" th:remove="tag"></span>
+                                                </p>
+                                                <p>
+                                                    <strong>Địa điểm: </strong>
+                                                    <span th:text="${event_place}" th:remove="tag"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td
+                                                    valign="middle"
+                                                    align="center"
+                                                    height="30"
+                                                    width="570"
+                                            >
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <hr />
+                                            </td>
+
+                                            <td></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <p style="line-height: 23px">
+                                                    Team <span th:text="${name_app}" th:remove="tag"></span><br />
+                                                    Mang lại niềm vui cho Đối tác và Khách hàng!
+                                                </p>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td
+                                                    valign="middle"
+                                                    align="center"
+                                                    style="padding: 30px 0"
+                                            >
+                                                <p
+                                                        style="
+                                      font-size: 12px;
+                                      text-align: center;
+                                      color: #000;
+                                    "
+                                                >
+                                                    Copyright © 2020 - <span th:text="${name_app}" th:remove="tag"></span>.
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td width="40" bgcolor="#fff"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
     </tr>
-    <td><span th:text="${ticket_name}" th:remove="tag"></span></td>
-    <td><span th:text="${ticket_code}" th:remove="tag"></span></td>
-    <td><img th:src="'data:image/png;base64,' + ${img}"/></td>
+    </tbody>
 </table>
 </body>
 </html>
