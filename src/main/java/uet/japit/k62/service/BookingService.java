@@ -199,6 +199,7 @@ public class BookingService {
         return  pdf;
     }
     public void sendTicketInformation(User userSendRequest, ResPaidBooking paidBooking) {
+        System.out.println("Sending ticket");
         HashMap<String, String> content = paidBooking.toMap();
         content.put("name", userSendRequest.getDisplayName());
         try {
