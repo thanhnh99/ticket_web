@@ -6,7 +6,6 @@ import uet.japit.k62.models.entity.BookingStatus;
 import uet.japit.k62.models.entity.Event;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 @Data
 public class ResBooking {
     private String bookingId;
@@ -22,12 +21,5 @@ public class ResBooking {
         status = booking.getStatus();
         price = booking.getPrice();
         event = booking.getEvent();
-    }
-    public HashMap<String, String > toMap(){
-        HashMap<String, String> mapper = new HashMap<>();
-        mapper.put("event_name", event.getName());
-        mapper.put("event_time", event.getStartTime().toString());
-        mapper.put("event_place", event.getCity());
-        return mapper;
     }
 }

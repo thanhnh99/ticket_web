@@ -153,7 +153,7 @@ public class BookingService {
         try {
 
             Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
-            User userSendRequest = userDAO.findByEmail(booking.getCreatedBy());
+            User userSendRequest = userDAO.findById(booking.getCreatedBy()).orElseThrow(UserNotFoundException::new);
             if(req.isSuccess()){
                 booking.setStatus(BookingStatus.SUCCEED);
                 System.out.println("create ticket code");
@@ -178,7 +178,7 @@ public class BookingService {
                 booking.setStatus(BookingStatus.FAILED);
             }
             bookingDAO.save(booking);
-        } catch (BookingNotFoundException e) {
+        } catch (BookingNotFoundException | UserNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -190,17 +190,17 @@ public class BookingService {
         List<Booking> myBooking = bookingDAO.findByCreatedBy(userSendRequest.getId());
         return myBooking.stream().map(ResBooking::new).collect(Collectors.toList());
     }
-    private byte[] generatePdfTicket(HashMap<String, String> content) throws IOException, WriterException, DocumentException {
-        byte[] image = ContentUtil.generateQRCode(content.get("ticket_code"), "png");
-        String image_encoded =  new String(Base64.getEncoder().encode(image ));
-        content.put("img", image_encoded);
+    private byte[] generatePdfTicket(HashMap<String, Object> content) throws IOException, WriterException, DocumentException {
+//        byte[] image = ContentUtil.generateQRCode(content.get("ticket_code"), "png");
+//        String image_encoded =  new String(Base64.getEncoder().encode(image ));
+//        content.put("img", image_encoded);
         String html = ContentUtil.parseThymeleafTemplate(content, "templates/ticket-information.html");
         byte[] pdf = ContentUtil.htmlToPdf(html);
         return  pdf;
     }
     public void sendTicketInformation(User userSendRequest, ResPaidBooking paidBooking) {
         System.out.println("Sending ticket");
-        HashMap<String, String> content = paidBooking.toMap();
+        HashMap<String, Object> content = paidBooking.toMap();
         content.put("name", userSendRequest.getDisplayName());
         try {
             ReqAttachmentFile ticketPdf = new ReqAttachmentFile(ReqAttachmentFile.FileType.PDF, "ticket.pdf", generatePdfTicket(content));
@@ -209,7 +209,7 @@ public class BookingService {
                     "Thông tin vé của bạn",
                     "Tickme-noreply",
                     userSendRequest.getDisplayName(),
-                    "Chúc mừng bạn đã đăng ký thành công vé của sự kiện " + content.get("event_name"), ticketPdf), "Send tickets email");
+                    "Chúc mừng bạn đã đăng ký thành công vé của sự kiện " + paidBooking.getEvent().getName(), ticketPdf), "Send tickets email");
         } catch (IOException | DocumentException | SchedulerException | WriterException e) {
             e.printStackTrace();
         }

@@ -23,11 +23,11 @@ public class ResPaidBooking extends ResBooking {
         this.tickets = tickets;
     }
 
-    @Override
-    public HashMap<String, String> toMap() {
-        HashMap<String, String> mapper = super.toMap();
-        mapper.put("ticket_name", tickets.get(0).getName());
-        mapper.put("ticket_code", tickets.get(0).getCode());
+
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> mapper = new HashMap<>();
+        mapper.put("tickets", tickets);
+        mapper.put("event", getEvent());
         return mapper;
     }
 }

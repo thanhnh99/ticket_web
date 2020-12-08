@@ -1,5 +1,6 @@
 package uet.japit.k62.controller;
 
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,10 @@ import uet.japit.k62.models.response.data_response.payment.ResMomoCheckout;
 import uet.japit.k62.models.response.data_response.payment.ResMomoIPN;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.service.BookingService;
+import uet.japit.k62.util.ContentUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -57,5 +60,8 @@ public class BookingController {
     public  ResponseEntity getMyBooking(HttpServletRequest httpServletRequest){
         return ResponseEntity.ok(bookingService.getMyBooking(httpServletRequest));
     }
-
+    @GetMapping("/qrcode/{code}")
+    public  @ResponseBody byte[] getQR(@PathVariable(value = "code") String code) throws IOException, WriterException {
+        return ContentUtil.generateQRCode(code, "png");
+    }
 }
