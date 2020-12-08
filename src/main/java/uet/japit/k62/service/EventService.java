@@ -1,6 +1,7 @@
 package uet.japit.k62.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -91,7 +92,8 @@ public class EventService {
             userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT)
         )
         {
-            String currentPath = Paths.get("").toAbsolutePath().toString();
+            String currentPath = new ClassPathResource("static/images").getURI().getPath();
+
             if(coverImage != null)
             {
                 //upload CoverImage
