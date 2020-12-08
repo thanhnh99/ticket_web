@@ -1,0 +1,21 @@
+.svgFill * {
+  fill: inherit;
+  stroke: inherit;
+}
+
+.svgFillAll * {
+  fill: inherit;
+  stroke: inherit;
+}
+
+.svgFill *[fill='white'] {
+  fill: white;
+}
+
+.svgFill *[stroke='white'] {
+  stroke: white;
+}
+
+svg {
+  display: block;
+}

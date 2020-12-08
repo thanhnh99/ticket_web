@@ -1,0 +1,52 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": ["airbnb", "airbnb/hooks", "prettier", "prettier/react"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
+  "rules": {
+    "no-unused-expressions": "off", // cảnh báo một biểu thức không được sử dụng và ko liên quan đến logic
+    "no-unused-vars": 0, // các biến không được sử dụng -  recommened
+    "no-constant-condition": 0, //if(true, flase) .... - recommened
+    "no-await-in-loop": 0, // không tận dụng được lợi thế của async/await(vd await từng phần tử trong vòng for)
+    "no-return-await": 0, // lỗi khi sử dụng return await
+    "no-empty": "off", // các khối trống(vd: if(foo){}, while(foo){})- recommened
+    "no-continue": "off", // sử dụng sai cách từ khoá continue
+    "arrow-parens": "off", // sử dụng nhất quán dấu ngoặc đơn ở các arrow function - recommend
+    "arrow-body-style": "off", // Có thể thực thi hoặc không cho phép sử dụng dấu ngoặc nhọn xung quanh thân hàm arrow.- recommened
+    "object-curly-newline": "off", // thực thi ngắt dòng khi kết thúc bằng dấu dấu ngoặc, các object trong array.. - recommened
+    "no-return-assign": "off", // loại bỏ các phép gán khỏi câu lệnh trả về(vd loại bỏ: return foo = bar + 2; )
+    "linebreak-style": 0, //  thực thi cách kết thúc dòng nhất quán độc lập với hệ điều hành - recommened
+    "import/extensions": 0,
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": 0,
+    "react/state-in-constructor": "off",
+    "react/jsx-no-duplicate-props": "off",
+    "react/prop-types": [0],
+    "react/jsx-wrap-multilines": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-array-index-key": "off"
+  }
+}
