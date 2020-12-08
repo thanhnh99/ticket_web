@@ -25,7 +25,7 @@ export const ROUTES = {
     chooseTicket: '/chooseTicket'
   },
   createEvent: '/event/create',
-  editEventInfo: '/event/edit'
+  createEventInfo: "/event/create/info"
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
