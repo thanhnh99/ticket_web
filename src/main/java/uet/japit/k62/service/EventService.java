@@ -97,7 +97,7 @@ public class EventService {
                 //upload CoverImage
                 String coverName = "cover_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(coverImage.getOriginalFilename()).replaceAll("\\s","");;
                 String saveToSeverPath = currentPath + "/src/main/resources/static/images/" + coverName;
-                String savetoDBPath = "/static/images/" + coverName;
+                String savetoDBPath = String.format("%s://%s:%d/",httpRequest.getScheme(),  httpRequest.getServerName(), httpRequest.getServerPort()) + "static/images/" + coverName;
                 coverImage.transferTo(new File(saveToSeverPath));
                 //Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
                 event.setCoverImageUrl(savetoDBPath);
@@ -108,7 +108,7 @@ public class EventService {
                 //upload mapEvent Image
                 String mapImageName = "map_" + eventId + "_" +System.currentTimeMillis()+ "_" + StringConvert.convertStringToCode(mapImage.getOriginalFilename());
                 String saveMapToSeverPath = currentPath + "/src/main/resources/static/images/" + mapImageName;
-                String saveMapToDBPath = "/static/images/" + mapImageName;
+                String saveMapToDBPath = String.format("%s://%s:%d/",httpRequest.getScheme(),  httpRequest.getServerName(), httpRequest.getServerPort()) + "static/images/" + mapImageName;
                 //Files.copy(mapImage.getInputStream(), locationPath.resolve(mapImageName));
                 mapImage.transferTo(new File(saveMapToSeverPath));
                 event.setMapImageUrl(saveMapToDBPath);
