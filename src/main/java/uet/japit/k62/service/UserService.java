@@ -132,7 +132,7 @@ public class UserService implements UserDetailsService {
         return httpResponse;
     }
 
-    public MessageResponse register(ReqRegister requestData) throws UserExistedException, SchedulerException, UnknownHostException {
+    public MessageResponse register(ReqRegister requestData, HttpServletRequest httpRequest) throws UserExistedException, SchedulerException, UnknownHostException {
         MessageResponse messageResponse = new MessageResponse();
 
         if(this.userExisted(requestData.getEmail()))
@@ -156,8 +156,8 @@ public class UserService implements UserDetailsService {
                                              newUser.getDisplayName(),
                                              "Vui lòng click vào đường linh dưới đây để kích hoạt tài khoản của bạn: "
                                                      +"<a href=\""
-                                                     + "https://tickme.herokuapp.com"
-                                                     + "/user/verify/" + newUser.getId() + "\""
+                                                     + String.format("%s://%s:%d/",httpRequest.getScheme(),  httpRequest.getServerName(), httpRequest.getServerPort())
+                                                     + "user/verify/" + newUser.getId() + "\""
                                                      +" target=\"_blank\" title=\"Kích hoạt tài khoản\">Kích hoạt tài khoản</a>"),
                                             "Email verification");
         messageResponse.setStatusCode(StatusCode.OK);

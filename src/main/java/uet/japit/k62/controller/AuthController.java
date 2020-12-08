@@ -2,6 +2,7 @@ package uet.japit.k62.controller;
 
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.UnknownHostException;
@@ -32,8 +34,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@Valid @RequestBody ReqRegister requestData) throws UserExistedException, SchedulerException, UnknownHostException {
-        MessageResponse responseData = userService.register(requestData);
+    public ResponseEntity register(@Valid @RequestBody ReqRegister requestData,
+                                   HttpServletRequest httpRequest) throws UserExistedException, SchedulerException, UnknownHostException {
+        MessageResponse responseData = userService.register(requestData, httpRequest);
         return ResponseEntity.ok(responseData);
     }
 
