@@ -8,8 +8,15 @@ import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { GREY_700, GREY_100, GREY_500 } from '../../../../configs/colors';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../../../redux/reducers';
 
-interface Props {}
+interface Props {
+  ticketTypeList: any[],
+  total: number[],
+  passEmail: any,
+  passPhone: any,
+}
 
 export const Row = styled.div`
   display: flex;
@@ -36,7 +43,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
 const PaymentTicket: React.FC<Props> = (props) => {
+  const { ticketTypeList, total } = props;
+  const [totalAmount, setTotalAmount] = React.useState(0);
+  const userInfo = useSelector((state: AppState) => state.account.userData);
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [confirmEmail, setConfirmEmail] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+
+  React.useEffect(() => {
+    setTotalAmount(ticketTypeList.reduce((sum: number, currentValue, currentIndex) => {
+      console.log(total)
+      return (sum + Math.round(currentValue.price) * total[currentIndex])
+    }, 0))
+  }, [ticketTypeList, total]);
+
   const classes = useStyles();
   return (
     <>
@@ -50,15 +74,22 @@ const PaymentTicket: React.FC<Props> = (props) => {
           <form className={classes.rootForm} noValidate autoComplete="off">
             <div>
               <Line>
-                <TextField required id="LastName" label="Họ" />
-                <TextField required id="standard-input" label="Tên" />
+                <TextField required id="LastName" label="Họ" value={firstName}  onChange={(event) => {setFirstName(event.target.value)}} />
+                <TextField required id="standard-input" label="Tên" value={lastName}  onChange={(event) => {setLastName(event.target.value)}} />
               </Line>
               <Line>
-                <TextField required id="email" label="Email" />
-                <TextField required id="emailAgain" label="Nhập lại email" />
+                <TextField required id="email" label="Email" value={email}  onChange={(event) => {
+                  setEmail(event.target.value);
+                  props.passEmail(email);
+                  }} />
+                <TextField required id="emailAgain" label="Nhập lại email" value={confirmEmail}  onChange={(event) => {setConfirmEmail(event.target.value)}}  />
               </Line>
               <Line>
-                <TextField required id="phone" label="Số điện thoại" />
+                <TextField required id="phone" label="Số điện thoại" value={phoneNumber}  
+                onChange={(event) => {
+                  setPhoneNumber(event.target.value);
+                  props.passPhone(phoneNumber);
+                  }} />
               </Line>
             </div>
           </form>
@@ -87,7 +118,7 @@ const PaymentTicket: React.FC<Props> = (props) => {
                 </div>
                 <div>
                   <Typography style={{ color: GREY_500 }} variant="body2">
-                    Nguyễn Thế Anh
+                    {userInfo?.displayName}
                   </Typography>
                 </div>
               </Line>
@@ -100,7 +131,7 @@ const PaymentTicket: React.FC<Props> = (props) => {
                 </div>
                 <div>
                   <Typography style={{ color: GREY_500 }} variant="body2">
-                    Nguyentheanh17071998@gmail.com
+                    {userInfo?.email}
                   </Typography>
                 </div>
               </Line>
@@ -133,19 +164,22 @@ const PaymentTicket: React.FC<Props> = (props) => {
                   </Typography>
                 </div>
               </Line>
-              <Line style={{ paddingTop: 8 }}>
-                <div>
-                  <Typography variant="body2" style={{ color: GREY_500 }}>
-                    Vé người lớn
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="body2" style={{ color: GREY_500 }}>
-                    1000000 &nbsp;
-                    <FormattedMessage id="currency" />
-                  </Typography>
-                </div>
-              </Line>
+              {
+                ticketTypeList.map((item: any, index: number) => (
+                  <Line style={{ paddingTop: 8 }}>
+                    <div>
+                      <Typography variant="body2" style={{ color: GREY_500 }}>
+                        {item.name}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography variant="body2" style={{ color: GREY_500 }}>
+                        {total[index]} &nbsp;
+                        </Typography>
+                    </div>
+                  </Line>
+                ))
+              }
             </div>
           </div>
           <Line
@@ -164,7 +198,7 @@ const PaymentTicket: React.FC<Props> = (props) => {
             </div>
             <div>
               <Typography variant="subtitle2" style={{ color: GREY_100 }}>
-                1600000 &nbsp;
+                {totalAmount} &nbsp;
                 <FormattedMessage id="currency" />
               </Typography>
             </div>
@@ -174,7 +208,7 @@ const PaymentTicket: React.FC<Props> = (props) => {
       <Container>
         <div>
           <div style={{ marginTop: 16 }}>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" >
               <FormattedMessage id="typePayment" />
             </Typography>
           </div>

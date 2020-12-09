@@ -19,8 +19,8 @@ export interface ILoginForm {
 }
 
 export const defaultLoginForm: ILoginForm = {
-  email: 'hoangnamuet.vnu@gmail.com',
-  password: '123456',
+  email: 'thanhnh99.amc@gmail.com',
+  password: '12345678',
 };
 export interface IFirstLoginForm {
   password: string;

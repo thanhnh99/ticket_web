@@ -181,7 +181,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const getEventInfo = async () => {
-    let response = Axios.get(API_PATHS.getEvent + "/" + eventId)
+    let json = Axios.get(API_PATHS.getEvent + "/" + eventId)
       .then(response => {
         setEventData(response.data.data)
       })
@@ -246,7 +246,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                 </div>
                 <div>
                   <Box component="span" m={1}>
-                    <Link to={ROUTES.booking.chooseTicket}>
+                    <Link to={ROUTES.booking.chooseTicket + "/" + eventId}>
                       <Button
                         variant="contained"
                         style={{

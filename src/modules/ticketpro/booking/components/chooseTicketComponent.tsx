@@ -11,11 +11,11 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import { GREY_700, GREY_100, GREY_500, GREY_300 } from '../../../../configs/colors';
 import { listenerCount } from 'stream';
 import { some } from '../../../../constants';
-import { useSelector } from 'react-redux'
-import { AppState } from '../../../../redux/reducers'
-
+import { useSelector } from 'react-redux';
+import { AppState } from '../../../../redux/reducers';
 interface Props {
-  ticketTypeList: any[]
+  ticketTypeList: any[],
+  passTotal: any
 }
 
 export const ValueControl = styled.div`
@@ -50,12 +50,21 @@ const useStyles = makeStyles((theme: Theme) =>
 export function validTotalTicket(total: number) {
   return total >= 1 && total >= 0 && total <= 10;
 }
+
 const ChooseTicketComponent: React.FC<Props> = (props) => {
   const { ticketTypeList } = props;
   const classes = useStyles();
   const [useBooking, setUseBooking] = React.useState(false);
   const [total, setTotal] = React.useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const userInfo = useSelector((state: AppState) => state.account.userData);
+  const [totalAmount, setTotalAmount] = React.useState(0);
+
+  React.useEffect(() => {
+    setTotalAmount(ticketTypeList.reduce((sum: number, currentValue, currentIndex) => {
+      props.passTotal(total);
+      return (sum + Math.round(currentValue.price) * total[currentIndex])
+    }, 0))
+  }, [ticketTypeList, total]);
 
   return (
     <>
@@ -257,10 +266,9 @@ const ChooseTicketComponent: React.FC<Props> = (props) => {
             <div>
               <Typography variant="subtitle2" style={{ color: GREY_100 }}>
                 {
-                  ticketTypeList.reduce((sum, currentValue, currentIndex) => (
-                    sum + currentValue.price * total[currentIndex]
-                  ))
-                } &nbsp;
+                  totalAmount
+                }
+                &nbsp;
                 <FormattedMessage id="currency" />
               </Typography>
             </div>

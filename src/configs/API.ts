@@ -24,4 +24,5 @@ export const API_PATHS = {
   accountBrief: `${getBaseUrl(APIServices.one)}/accounts/brief`,
   getCategory: `${getBaseUrl(APIServices.one)}/category`,
   getEvent: `${getBaseUrl(APIServices.one)}/event`,
+  booking: `${getBaseUrl(APIServices.one)}/booking`,
 };
