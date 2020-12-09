@@ -1,15 +1,13 @@
 import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Box, Checkbox, FormControlLabel, Radio, RadioGroup, Typography } from '@material-ui/core';
+import { Box, Collapse, FormControlLabel, Radio, RadioGroup, Typography } from '@material-ui/core';
 import styled from 'styled-components';
-import { Field } from 'formik';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { SECONDARY } from '../../../../configs/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-
         textField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
@@ -30,6 +28,12 @@ const Line = styled.div`
 export default function DateAndTimePickers() {
     const classes = useStyles();
     const intl = useIntl();
+    const [checked, setChecked] = React.useState(false);
+    const handleChange = () => {
+        setChecked((prev) => !prev);
+    };
+
+
     return (
         <div>
             <Line style={{ marginBottom: 16 }}>
@@ -107,28 +111,28 @@ export default function DateAndTimePickers() {
                                     display: 'flex',
                                     flexDirection: 'row',
                                     flexWrap: 'nowrap',
+                                    alignItems: 'flex-start'
                                 }}
                             >
                                 <FormControlLabel
                                     value="false"
                                     style={{ marginRight: 16 }}
-                                    control={<Radio style={{ color: SECONDARY }} size="small" />}
+                                    control={<Radio checked={!checked} onChange={handleChange} style={{ color: SECONDARY }} size="small" />}
                                     label={intl.formatMessage({ id: 'Vé miễn phí' })}
-                                //   onClick={e => {
-                                //     setAmenityData(
-                                //       amenityData.map((el: some) => {
-                                //         return el.id === amenity?.id
-                                //           ? { ...el, pricePerHour: null }
-                                //           : el;
-                                //       }),
-                                //     );
-                                //   }}
                                 />
-                                <FormControlLabel
-                                    value="true"
-                                    control={<Radio style={{ color: SECONDARY }} size="small" />}
-                                    label={intl.formatMessage({ id: 'Giá tiền' })}
-                                />
+                                <div>
+                                    <FormControlLabel
+                                        value="true"
+                                        control={<Radio checked={checked} onChange={handleChange} style={{ color: SECONDARY }} size="small" />}
+                                        label={intl.formatMessage({ id: 'Mất phí' })}
+                                    />
+                                    <Collapse in={checked}>
+                                        <Line style={{ marginTop: 16, marginBottom: 16 }}>
+                                            <TextField required id="placeName" label="Số tiền" />
+                                        </Line>
+                                    </Collapse>
+                                </div>
+
                             </RadioGroup>
 
                         </div>

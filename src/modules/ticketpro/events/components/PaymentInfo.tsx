@@ -29,18 +29,17 @@ const PaymentInfo: React.FunctionComponent = () => {
                 </Typography>
             </Line>
             <Line style={{ marginBottom: 48, marginTop: 16 }}>
-                <TextField required id="eventName" label="Chủ tài khoản" />
+                <TextField required id="eventName" label="Chủ tài khoản" style={{ width: '75%' }} />
             </Line>
             <Line style={{ marginBottom: 48, marginTop: 16 }}>
-                <TextField required id="placeName" label="Số tài khoản" />
+                <TextField required id="placeName" label="Số tài khoản" style={{ width: '75%' }} />
             </Line>
             <Line style={{ marginBottom: 48, marginTop: 16 }}>
-                <TextField required id="eventName" label="Tên ngân hàng" />
+                <TextField required id="eventName" label="Tên ngân hàng" style={{ width: '75%' }} />
             </Line>
             <Line style={{ marginBottom: 48, marginTop: 16 }}>
-                <TextField required id="eventName" label="Chi nhánh" />
+                <TextField required id="eventName" label="Chi nhánh" style={{ width: '75%' }} />
             </Line>
-
         </form>
     );
 };

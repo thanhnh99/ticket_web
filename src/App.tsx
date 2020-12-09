@@ -41,6 +41,8 @@ const ChooseTicket = React.lazy(() => import('./modules/ticketpro/booking/pages/
 
 const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLayout'));
 
+const SuccessDetail = React.lazy(() => import('./modules/ticketpro/success/pages/SuccessDetail'))
+
 function mapStateToProps(state: AppState) {
   return {
     router: state.router,
