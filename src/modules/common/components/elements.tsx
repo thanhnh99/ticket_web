@@ -2,6 +2,8 @@ import {
   createStyles,
   IconButton,
   Switch,
+  Tab,
+  Tabs,
   Theme,
   Tooltip,
   Typography,
@@ -13,7 +15,7 @@ import { OptionsObject, SnackbarMessage } from 'notistack';
 import React from 'react';
 import MaskedInput from 'react-text-mask';
 import styled from 'styled-components';
-import { GREY_100, GREY_500, PRIMARY } from '../../../configs/colors';
+import { GREY, GREY_100, GREY_500, PRIMARY } from '../../../configs/colors';
 
 export const PageWrapper = styled.div`
   min-height: 100vh;
@@ -251,3 +253,23 @@ export const AntSwitchLarge = withStyles((theme: Theme) =>
     checked: {},
   }),
 )(Switch);
+
+export const CustomTabs = withStyles(theme => ({
+  root: {
+    borderBottom: `1px solid ${GREY}`,
+  },
+  indicator: {
+    backgroundColor: theme.palette.primary.main,
+    height: 4,
+  },
+}))(Tabs);
+
+export const CustomTab = withStyles(theme => ({
+  root: {
+    textTransform: 'none',
+    fontWeight: 500,
+  },
+  selected: {
+    color: theme.palette.primary.main,
+  },
+}))(Tab);

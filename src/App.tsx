@@ -43,6 +43,8 @@ const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLay
 
 const SuccessDetail = React.lazy(() => import('./modules/ticketpro/success/pages/SuccessDetail'))
 
+const Order = React.lazy(() => import('./modules/ticketpro/orders/pages/index'))
+
 function mapStateToProps(state: AppState) {
   return {
     router: state.router,
@@ -73,7 +75,7 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket} />
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={Order} />
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail} component={TicketDetail} />
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEventInfo} component={InfoEvent} />
 
