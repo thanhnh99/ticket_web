@@ -243,8 +243,8 @@
     "nameEvent": "Tên sự kiện",
 
     "newApprovalEvent": "Sự kiện mới",
-    "acceptApprovalEvent": "Sự kiện mới",
-    "denyApprovalEvent": "Sự kiện mới",
+    "acceptApprovalEvent": "Sự kiện đã phê duyệt",
+    "denyApprovalEvent": "Sự kiện đã bị hủy",
 
 
   "auth.forgotPassword": "Lấy lại mật khẩu",

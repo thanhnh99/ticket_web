@@ -24,12 +24,10 @@ const CreateEventForm: React.FunctionComponent = () => {
             <input name="lastName" ref={register} />
             <label>Thể loại sự kiện</label>
             <input
-                multiple
-
                 name="event"
-                list="email"
+                list="event"
             />
-            <datalist id="email">
+            <datalist id="event">
                 <option value="Sân khấu" />
                 <option value="Ngoài trời" />
                 <option value="Nghệ thuật" />

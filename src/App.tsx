@@ -72,18 +72,11 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
-<<<<<<< HEAD
           <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.chooseTicket }/:id`} component={ChooseTicket}/>
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
           <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.ticketDetail  }/:id`} component={TicketDetail}/>
-          
-=======
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket} />
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail} component={TicketDetail} />
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEventInfo} component={InfoEvent} />
-
->>>>>>> front/payment
+          
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
 
         </Switch>
