@@ -3,13 +3,6 @@ import { useForm } from "react-hook-form";
 import { ROUTES } from "../../../../configs/routes";
 import '../../../../scss/createEventForm.scss'
 
-interface Props {
-    params: undefined;
-    onUpdateFilter(params: undefined): void;
-    loading?: boolean;
-}
-
-
 const CreateEventForm: React.FunctionComponent = () => {
 
     const { register } = useForm();
