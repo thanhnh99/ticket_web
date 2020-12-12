@@ -7,6 +7,8 @@ const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
 
 const ApprovalManagement = React.lazy(() => import('../modules/ticketpro/admin/pages/ApprovalManagement'))
 
+const OrderManagement = React.lazy(() => import('../modules/ticketpro/orders/pages/index'))
+
 export const URL_PATH = '/';
 export const BOOKING_URL = '/booking';
 
@@ -29,7 +31,8 @@ export const ROUTES = {
   createEvent: '/event/create',
   editEventInfo: '/event/edit',
   approvalManagement: '/approvalManagement',
-  createEventInfo: "/event/create/info"
+  createEventInfo: "/event/create/info",
+  orders: "/orders",
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
@@ -53,6 +56,13 @@ export const ROUTES_TAB: RoutesTabType[] = [
     isModule: true,
     path: ROUTES.approvalManagement,
     component: ApprovalManagement,
+    exact: true,
+  },
+  {
+    name: 'ordersManagement',
+    isModule: true,
+    path: ROUTES.orders,
+    component: OrderManagement,
     exact: true,
   }
 ];

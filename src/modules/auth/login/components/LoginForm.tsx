@@ -46,7 +46,7 @@ const LoginForm: React.FunctionComponent<Props> = props => {
         enqueueSnackbar(
           json.message,
           snackbarSetting(key => closeSnackbar(key), {
-            color: json.code === SUCCESS_CODE ? 'success' : 'error',
+            color: json.statusCode === SUCCESS_CODE ? 'success' : 'error',
           }),
         );
     },

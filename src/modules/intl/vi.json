@@ -246,6 +246,16 @@
     "acceptApprovalEvent": "Sự kiện đã phê duyệt",
     "denyApprovalEvent": "Sự kiện đã bị hủy",
 
+    "ordersManagement": "Quản lý vé",
+    "ordersed": "Vé đã đặt",
+    "denyOrders": "Vé bị hủy",
+
+    "contacts": "Thông tin liên lạc",
+
+    "accountHolder": "Chủ tài khoản",
+    "accountNumber": "Số tài khoản",
+    "bankName": "Tên ngân hàng",
+    "branchBankName": "Tên chi nhánh",
 
   "auth.forgotPassword": "Lấy lại mật khẩu",
   "auth.forgotPasswordNote": "Bạn cần nhập đầy đủ các thông tin sau để nhận mã xác thực",

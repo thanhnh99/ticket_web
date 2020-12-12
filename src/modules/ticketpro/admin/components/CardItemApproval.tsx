@@ -40,7 +40,7 @@ export default function SimpleCard() {
 
     return (
         <Card className={classes.root}>
-            <CardContent>
+            <CardContent style={{flex: 1}}>
                 <Line style={{ alignItems: 'center' }}>
                     <Line>
                         <Typography style={{ fontWeight: 600, minWidth: 90 }} >
@@ -59,7 +59,7 @@ export default function SimpleCard() {
                         <Typography style={{ fontWeight: 600, minWidth: 90 }}>
                         <FormattedMessage id="timeEvent"/>&#x0003A;
                     </Typography>
-                    </Line>
+                </Line>
                 &nbsp;
                    <Line>
                         <Typography style={{ color: GREY_900 }} variant="body2">
@@ -67,9 +67,69 @@ export default function SimpleCard() {
                     </Typography>
                     </Line>
                 </Line>
+                <Line>
+                    <Typography style={{ fontWeight: 600, minWidth: 90 }}>
+                        <FormattedMessage id="contacts"/>
+                    </Typography>
+                </Line>
+                <Line style={{display: 'flex', paddingLeft: 16}}>
+                    <Line>
+                        <FormattedMessage id="phoneNumber"/>&#x0003A;
+                        &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                        0398980033
+                        </Typography>
+                    </Line>
+                    <Line style={{paddingLeft: 24}}>
+                    <FormattedMessage id="auth.email"/>&#x0003A;
+                        &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                        anhnt@vnu.edu.vn
+                        </Typography>
+                    </Line>
+                </Line>
+
+                <Line>
+                    <Typography style={{ fontWeight: 600, minWidth: 90 }}>
+                        <FormattedMessage id="auth.accountInfo"/>
+                    </Typography>
+                </Line>
+                <Line style={{display: 'flex', paddingLeft: 16}}>
+                    <Line>
+                        <FormattedMessage id="accountHolder"/>&#x0003A;
+                        &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                            Phạm Hoàng Nam
+                        </Typography>
+                    </Line>
+                    <Line style={{paddingLeft: 24}}>
+                    <FormattedMessage id="accountNumber"/>&#x0003A;
+                    &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                        21512321789
+                        </Typography>
+                    </Line>
+                </Line>
+                <Line style={{display: 'flex', paddingLeft: 16}}>
+                    <Line>
+                        <FormattedMessage id="bankName"/>&#x0003A;
+                        &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                            Ngân hàng BIDV
+                        </Typography>
+                    </Line>
+                    <Line style={{paddingLeft: 24}}>
+                    <FormattedMessage id="branchBankName"/>&#x0003A;
+                    &nbsp; 
+                        <Typography style={{ color: GREY_900 }} variant="body2">
+                            Cầu Giấy
+                        </Typography>
+                    </Line>
+                </Line>
+
                 <Line style={{ alignItems: 'center' }}>
                     <Line>
-                        <Typography style={{ fontWeight: 600, minWidth: 90, marginLeft: 4 }}>
+                        <Typography style={{ fontWeight: 600, minWidth: 90, marginLeft: 2 }}>
                         <FormattedMessage id="placeEvent"/>&#x0003A;
                         </Typography>   
                     </Line>
@@ -80,6 +140,7 @@ export default function SimpleCard() {
                         </Typography>
                     </Line>
                 </Line>
+               
             </CardContent>
             <CardActions>
                 <Button style={{

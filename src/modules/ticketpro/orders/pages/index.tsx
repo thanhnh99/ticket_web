@@ -1,6 +1,6 @@
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -8,12 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Container } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import DefaultHeader from '../../../../layout/defaultLayout/DefaultHeader';
-import DefaultFooter from '../../../../layout/defaultLayout/DefaultFooter';
 import CardItem from '../../orders/components/CardItem'
 
 interface TabPanelProps {
+    // eslint-disable-next-line react/require-default-props
     children?: React.ReactNode;
+    // eslint-disable-next-line react/require-default-props
     dir?: string;
     index: any;
     value: any;
@@ -46,15 +46,8 @@ function a11yProps(index: any) {
     };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        backgroundColor: theme.palette.background.paper,
-        width: 500,
-    },
-}));
 
 export default function FullWidthTabs() {
-    const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
@@ -68,10 +61,9 @@ export default function FullWidthTabs() {
 
     return (
         <>
-            <DefaultHeader />
-            <Container className={classes.root} style={{ marginTop: 48, width: '100%' }}>
-                <Typography variant="h4" style={{ fontWeight: 600, marginBottom: 32 }}>
-                    <FormattedMessage id='Quản lý đơn hàng' />
+            <Container style={{width: '100%' }}>
+                <Typography variant="h4" style={{ fontWeight: 600, marginBottom: 16 }}>
+                    <FormattedMessage id='ordersManagement' />
                 </Typography>
                 <AppBar position="static" color="default">
                     <Tabs
@@ -82,8 +74,8 @@ export default function FullWidthTabs() {
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Vé đã đặt" {...a11yProps(0)} />
-                        <Tab label="Vé bị hủy" {...a11yProps(1)} />
+                        <Tab label={<FormattedMessage id="ordersed"/>} {...a11yProps(0)} />
+                        <Tab label={<FormattedMessage id="denyOrders"/>} {...a11yProps(1)} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
@@ -101,9 +93,6 @@ export default function FullWidthTabs() {
                 </SwipeableViews>
 
             </Container>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'fixed', bottom: 0 }}>
-                <DefaultFooter />
-            </div>
         </>
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -8,8 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Container } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import DefaultHeader from '../../../../layout/defaultLayout/DefaultHeader';
-import DefaultFooter from '../../../../layout/defaultLayout/DefaultFooter';
 import CardItem from '../../admin/components/CardItemApproval'
 
 interface TabPanelProps {
@@ -48,10 +46,6 @@ function a11yProps(index: any) {
     };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-   
-}));
-
 export default function ApprovalManagement() {
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -68,7 +62,7 @@ export default function ApprovalManagement() {
         <>
            
             <Container style={{width: '100%' }}>
-                <Typography variant="h4" style={{ fontWeight: 600, marginBottom: 32 }}>
+                <Typography variant="h4" style={{ fontWeight: 600, marginBottom: 16 }}>
                     <FormattedMessage id='approvalManagement' />
                 </Typography>
                 <AppBar position="static" color="default">
