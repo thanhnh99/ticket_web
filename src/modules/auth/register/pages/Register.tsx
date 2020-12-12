@@ -12,7 +12,7 @@ import { fetchThunk } from '../../../common/redux/thunk';
 import { API_PATHS } from '../../../../configs/API';
 import { SUCCESS_CODE } from '../../../../constants';
 import { snackbarSetting } from '../../../common/components/elements';
-import axios from 'axios';
+
 const mapStateToProps = (state: AppState) => ({ validatingToken: state.auth.validatingToken });
 
 interface Props {}

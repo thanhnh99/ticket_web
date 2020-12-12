@@ -5,16 +5,12 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { connect } from 'react-redux';
 import { PURPLE_300 } from '../../configs/colors';
 import { ROUTES_TAB } from '../../configs/routes';
-import { RoutesTabType } from '../../models/permission';
 import { AppState } from '../../redux/reducers';
 import { ReactComponent as IconMenu } from '../../svg/ic_menu.svg';
 import { ReactComponent as BackMenuArrowIcon } from '../../svg/ic_menu_back_arrow.svg';
 import { ASIDE_ITEM_HEIGHT, ASIDE_MIN_WIDTH, ASIDE_WIDTH, HEADER_HEIGHT } from '../constants';
-import { getListRoutesContain } from '../utils';
 import DefaultAsideItems from './DefaultAsideItems';
-import axios from 'axios';
-import { some } from '../../constants';
-import { API_PATHS } from '../../configs/API';
+import { getListRoutesContain } from '../utils';
 
 export const ButtonRow = withStyles(() => ({
   root: {
@@ -42,34 +38,10 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
   const { router, open, onClose, userData } = props;
   const { pathname } = router.location;
   const [hoverOpen, setOpen] = React.useState(false);
-  const [route, setRoute] = React.useState<some[]>([]);
 
-  React.useEffect(() => {
-    getCategory();
-  }, []);
-
-  const getCategory = async () => {
-    await axios.get(API_PATHS.getCategory)
-      .then((response) => {
-
-        let a = response.data.data.map(element => {
-            return {
-              name: element.name,
-              isModule: true,
-              path: '/' + element.code,
-              exact: true,
-            }
-        })
-        let routeResult = [...ROUTES_TAB];
-        console.log(routeResult)
-        routeResult.push(...a);
-        setRoute(routeResult);
-        return;
-      })
-      .catch(e => {
-        return [];
-      })
-  }
+  const getListRouterActive = React.useMemo(() => {
+    return getListRoutesContain(ROUTES_TAB, router.location.pathname);
+  }, [router.location.pathname]);
 
   return (
     <>
@@ -119,14 +91,14 @@ const DefaultAside: React.FunctionComponent<Props> = (props) => {
               marginBottom: 148,
             }}
           >
-            {route.map((v: any, index: number) => (
+            {ROUTES_TAB.map((v: any, index: number) => (
               <DefaultAsideItems
                 key={index}
                 userData={userData}
                 open={open || hoverOpen}
                 data={v}
                 pathname={pathname}
-                listRouterActive={route}
+                listRouterActive={getListRouterActive}
               />
             ))}
           </div>

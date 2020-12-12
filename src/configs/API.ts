@@ -1,14 +1,9 @@
-import { DEV } from '../constants';
-
 enum APIServices {
   account,
   one,
 }
 
 function getBaseUrl(service: APIServices) {
-  // if (service === APIServices.one) {
-  //   return DEV ? '/api/one/' : '';
-  // }
   return 'https://tickme.herokuapp.com';
 }
 

@@ -5,16 +5,16 @@ import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/s
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import { deepOrange, green } from '@material-ui/core/colors';
+import { deepOrange } from '@material-ui/core/colors';
 import { Dispatch } from 'redux';
 import { Link } from 'react-router-dom';
+import Axios from 'axios';
 import { ReactComponent as IcLocation } from '../../../../svg/ic_pin.svg';
 import { ReactComponent as CalendarSvg } from '../../../../svg/calendar.svg';
 import { GREY, PRIMARY, RED, WHITE } from '../../../../configs/colors';
 import DefaultHeader from '../../../../layout/defaultLayout/DefaultHeader';
 import { some } from '../../../../constants';
 import { ROUTES } from '../../../../configs/routes';
-import Axios from 'axios';
 import { API_PATHS } from '../../../../configs/API';
 
 interface Props {
@@ -128,37 +128,37 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const convertToDateTime = (unixtimestamp: any) => {
 
-  // Convert timestamp to milliseconds
-  var date = new Date(unixtimestamp * 1000);
+  const date = new Date(unixtimestamp * 1000);
 
   // Year
-  var year = date.getFullYear();
+  const year = date.getFullYear();
 
   // Month
-  var month = date.getMonth();
+  const month = date.getMonth();
 
   // Day
-  var day = date.getDate();
+  const day = date.getDate();
 
   // Hours
-  var hours = date.getHours();
+  const hours = date.getHours();
 
   // Minutes
-  var minutes = "0" + date.getMinutes();
+  const minutes = `0${  date.getMinutes()}`;
 
   // Seconds
-  var seconds = "0" + date.getSeconds();
+  const seconds = `0${  date.getSeconds()}`;
 
   // Display date time in MM-dd-yyyy h:m:s format
-  var convdataTime = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  const convdataTime = `${day  }/${  month  }/${  year  } ${  hours  }:${  minutes.substr(-2)  }:${  seconds.substr(-2)}`;
   return convdataTime;
 
 }
 
 const TicketDetail: React.FunctionComponent<Props> = (props) => {
+  // eslint-disable-next-line react/destructuring-assignment
   const eventId = props.match.params.id;
   const [currentTabIndex, setIndex] = React.useState(0);
-  const [showSticky, setShowSticky] = React.useState(false);
+  const [, setShowSticky] = React.useState(false);
   const [eventData, setEventData] = React.useState<Data>(
     {
       id: "",
@@ -181,11 +181,12 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const getEventInfo = async () => {
-    let json = Axios.get(API_PATHS.getEvent + "/" + eventId)
+    const json = Axios.get(`${API_PATHS.getEvent  }/${  eventId}`)
       .then(response => {
         setEventData(response.data.data)
       })
       .catch(e => {
+        // eslint-disable-next-line no-console
         console.log(e)
       })
   }
@@ -204,6 +205,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
     window.addEventListener('scroll', handler);
     handler();
     return () => window.removeEventListener('scroll', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -246,7 +248,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                 </div>
                 <div>
                   <Box component="span" m={1}>
-                    <Link to={ROUTES.booking.chooseTicket + "/" + eventId}>
+                    <Link to={`${ROUTES.booking.chooseTicket  }/${  eventId}`}>
                       <Button
                         variant="contained"
                         style={{

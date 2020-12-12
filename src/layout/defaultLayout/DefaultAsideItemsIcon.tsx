@@ -4,6 +4,7 @@ import { WHITE } from '../../configs/colors';
 import { ServiceType } from '../../models/permission';
 import '../../scss/svg.scss';
 import { ReactComponent as HomeIcon } from '../../svg/ic_home.svg';
+import { ReactComponent as TransactionsIcon } from '../../svg/ic_transactions.svg';
 
 interface Item {
   name: ServiceType | string;
@@ -13,6 +14,8 @@ export const getMenuIcon = (name: ServiceType | string) => {
   switch (name) {
     case 'home':
       return <HomeIcon style={{ width: 32, height: 32 }} />;
+    case 'approvalManagement':
+      return  <TransactionsIcon style={{ width: 32, height: 32 }} />;
     default:
       return <RemoveIcon style={{ color: WHITE, width: 12, marginLeft: 20 }} />;
   }

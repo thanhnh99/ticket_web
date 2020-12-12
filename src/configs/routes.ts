@@ -5,6 +5,8 @@ const NotFoundBox = React.lazy(() => import('../modules/common/components/NotFou
 
 const Home = React.lazy(() => import('../modules/ticketpro/home/pages/Home'));
 
+const ApprovalManagement = React.lazy(() => import('../modules/ticketpro/admin/pages/ApprovalManagement'))
+
 export const URL_PATH = '/';
 export const BOOKING_URL = '/booking';
 
@@ -25,7 +27,8 @@ export const ROUTES = {
     chooseTicket: '/chooseTicket'
   },
   createEvent: '/event/create',
-  editEventInfo: '/event/edit'
+  editEventInfo: '/event/edit',
+  approvalManagement: '/approvalManagement',
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [
@@ -43,6 +46,13 @@ export const ROUTES_TAB: RoutesTabType[] = [
     component: NotFoundBox,
     disableBreadcrumb: true,
     hidden: true,
+  },
+  {
+    name: 'approvalManagement',
+    isModule: true,
+    path: ROUTES.approvalManagement,
+    component: ApprovalManagement,
+    exact: true,
   }
 ];
 

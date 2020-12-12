@@ -7,14 +7,14 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { FormattedMessage } from 'react-intl';
+import Axios from 'axios';
+import { get } from 'js-cookie';
 import DefaultHeader from '../../../../layout/defaultLayout/DefaultHeader';
 import ChooseTicketComponent from '../components/chooseTicketComponent';
 import PaymentTicket from '../components/paymentTicket'
 import { WHITE, RED } from '../../../../configs/colors';
 import Footer from '../../../auth/commons/Footer';
-import Axios from 'axios';
 import { API_PATHS } from '../../../../configs/API';
-import { get, remove, set } from 'js-cookie';
 import { ACCESS_TOKEN } from '../../../auth/constants';
 
 interface Props {
@@ -85,33 +85,34 @@ function getStepContent(
 const convertToDateTime = (unixtimestamp: any) => {
 
     // Convert timestamp to milliseconds
-    var date = new Date(unixtimestamp * 1000);
+    const date = new Date(unixtimestamp * 1000);
 
     // Year
-    var year = date.getFullYear();
+    const year = date.getFullYear();
 
     // Month
-    var month = date.getMonth();
+    const month = date.getMonth();
 
     // Day
-    var day = date.getDate();
+    const day = date.getDate();
 
     // Hours
-    var hours = date.getHours();
+    const hours = date.getHours();
 
     // Minutes
-    var minutes = "0" + date.getMinutes();
+    const minutes = `0${  date.getMinutes()}`;
 
     // Seconds
-    var seconds = "0" + date.getSeconds();
+    const seconds = `0${  date.getSeconds()}`;
 
     // Display date time in MM-dd-yyyy h:m:s format
-    var convdataTime = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    const convdataTime = `${day  }/${  month  }/${  year  } ${  hours  }:${  minutes.substr(-2)  }:${  seconds.substr(-2)}`;
     return convdataTime;
 
 }
 
 const ChooseTicket: React.FC<Props> = (props) => {
+    // eslint-disable-next-line react/destructuring-assignment
     const eventId = props.match.params.id;
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(1);
@@ -135,10 +136,7 @@ const ChooseTicket: React.FC<Props> = (props) => {
         }
     );
     const [total, setTotal] = React.useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const [firstName, setFirstName] = React.useState("");
-    const [lastName, setLastName] = React.useState("");
     const [email, setEmail] = React.useState("");
-    const [confirmEmail, setConfirmEmail] = React.useState("");
     const [phoneNumber, setPhoneNumber] = React.useState("");
     const [paymentUrl, setpaymentUrl] = React.useState("");
 
@@ -147,18 +145,20 @@ const ChooseTicket: React.FC<Props> = (props) => {
     }
 
     const getEventInfo = async () => {
-        let response = Axios.get(API_PATHS.getEvent + "/" + eventId)
-            .then(response => {
+        const response = Axios.get(`${API_PATHS.getEvent}/${eventId}`)
+            // eslint-disable-next-line no-shadow
+            .then((response) => {
                 setEventData(response.data.data)
-                console.log(response.data.data);
             })
             .catch(e => {
+                // eslint-disable-next-line no-console
                 console.log(e)
             })
     }
 
     React.useEffect(() => {
         getEventInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleNext = () => {
@@ -166,10 +166,9 @@ const ChooseTicket: React.FC<Props> = (props) => {
     };
 
     const payment = () => {
-        console.log("Payment Momo");
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         let bookingId = "";
-        let json = Axios.post(API_PATHS.booking + "/" + eventId + "/select-ticket",
+        const json = Axios.post(`${API_PATHS.booking  }/${  eventId  }/select-ticket`,
             {
                 tickets: eventData.ticketClassList.map((element, index) => (
                     {
@@ -177,33 +176,29 @@ const ChooseTicket: React.FC<Props> = (props) => {
                         amount: total[index]
                     }
                 )),
-                email: email,
+                email,
                 phone: phoneNumber,
             },
             {
                 headers: {
-                    'Authorization': 'Bearer ' + get(ACCESS_TOKEN)
+                    'Authorization': `Bearer ${  get(ACCESS_TOKEN)}`
                 }
             })
             .then(response => {
-                console.log(response.data.data)
-                if (response.data.statusCode == 200) {
+                if (response.data.statusCode === 200) {
                     bookingId = response.data.data.bookingId;
-                    console.log(bookingId)
-                    Axios.post(API_PATHS.booking + "/" + bookingId + "/checkout",
+                    Axios.post(`${API_PATHS.booking  }/${  bookingId  }/checkout`,
                         {
                             type: "momo"
                         },
                         {
                             headers: {
-                                'Authorization': 'Bearer ' + get(ACCESS_TOKEN)
+                                'Authorization': `Bearer ${  get(ACCESS_TOKEN)}`
                             }
                         })
+                        // eslint-disable-next-line no-shadow
                         .then(response => {
                             setpaymentUrl(response.data.data.payUrl);
-                            console.log(response)
-                            console.log(response.data.data.payUrl)
-                            console.log(paymentUrl)
                         })
                 }
             })
@@ -266,14 +261,14 @@ const ChooseTicket: React.FC<Props> = (props) => {
                         }
                     </Typography>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        {activeStep === 1 ? (<Button variant="contained" fullWidth
+                        {activeStep ===  1 ? 
+                        (<Button variant="contained" fullWidth
                             color="secondary"
                             style={{ height: '40px', marginTop: '20px', width: 300 }} onClick={handleNext}>
                             <Typography variant='button'>
                                 <FormattedMessage id='next' />
                             </Typography>
-                        </Button>)
-                            : (
+                        </Button>) : (
                                 activeStep === 2 ? (
                                     <Button variant="contained" fullWidth
                                         color="secondary"

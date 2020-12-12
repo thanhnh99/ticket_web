@@ -237,6 +237,16 @@
     "user.lastName": "Họ",
     "paymentMomo": "Thanh toán bằng MOMO",
 
+    "approvalManagement": "Quản lý phê duyệt",
+    "placeEvent": "Địa điểm",
+    "timeEvent": "Thời gian diễn ra sự kiện",
+    "nameEvent": "Tên sự kiện",
+
+    "newApprovalEvent": "Sự kiện mới",
+    "acceptApprovalEvent": "Sự kiện mới",
+    "denyApprovalEvent": "Sự kiện mới",
+
+
   "auth.forgotPassword": "Lấy lại mật khẩu",
   "auth.forgotPasswordNote": "Bạn cần nhập đầy đủ các thông tin sau để nhận mã xác thực",
   "auth.changePasswordNote": "Bạn vui lòng nhập mã xác thực đã gửi qua số điện thoại đăng ký",

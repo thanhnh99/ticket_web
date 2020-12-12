@@ -27,8 +27,8 @@ const MediaCard: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   return (
     <>
-      {listTicket.map((item: some, index: some) => (
-        <Link to={ROUTES.booking.ticketDetail + "/" + item.id} style={{textDecoration: 'none'}}>
+      {listTicket.map((item: some, index: number) => (
+        <Link key={index} to={`${ROUTES.booking.ticketDetail}/${item.id}`} style={{textDecoration: 'none'}}>
          <Card
           className={classes.root}
           style={{ marginBottom: '10px', marginLeft: '8px', borderRadius: '7px' }}

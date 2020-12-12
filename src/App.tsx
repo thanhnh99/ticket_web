@@ -41,6 +41,8 @@ const ChooseTicket = React.lazy(() => import('./modules/ticketpro/booking/pages/
 
 const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLayout'));
 
+
+
 function mapStateToProps(state: AppState) {
   return {
     router: state.router,
@@ -70,9 +72,9 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket+ "/:id"} component={ChooseTicket}/>
+          <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.chooseTicket }/:id`} component={ChooseTicket}/>
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
-          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail + "/:id"} component={TicketDetail}/>
+          <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.ticketDetail  }/:id`} component={TicketDetail}/>
           
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
       

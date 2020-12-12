@@ -50,7 +50,7 @@ const typography = {
   h1: { fontSize: 96, lineHeight: '128px', fontWeight: 'lighter' },
   h2: { fontSize: 60, lineHeight: '80px', fontWeight: 'lighter' },
   h3: { fontSize: 48, lineHeight: '68px', fontWeight: 'lighter' },
-  h4: { fontSize: 34, lineHeight: '48px', fontWeight: 500 },
+  h4: { fontSize: 30, lineHeight: '48px', fontWeight: 500 },
   h5: { fontSize: 24, lineHeight: '34px', fontWeight: 500 },
   h6: { fontSize: 20, lineHeight: '32px', fontWeight: 500 },
   subtitle0: { fontSize: 18, lineHeight: '28px', fontWeight: 500 },

@@ -1,4 +1,3 @@
-import { push } from 'connected-react-router';
 import { get, remove, set } from 'js-cookie';
 import { batch } from 'react-redux';
 import { Action } from 'redux';
@@ -10,8 +9,7 @@ import { AppState, clearStoreAfterLogout } from '../../../redux/reducers';
 import { setUserData } from '../../account/redux/accountReducer';
 import { fetchThunk } from '../../common/redux/thunk';
 import { inAction, out, setValidatingToken, setAuthenticating } from './authReducer';
-import { ROUTES } from '../../../configs/routes';
-import { goToAction, goBackAction } from '../../common/redux/reducer';
+import { goBackAction } from '../../common/redux/reducer';
 
 export interface ILoginForm {
   email: string;
@@ -91,7 +89,7 @@ export function validateAccessToken(
   periodic = false,
 ): ThunkAction<void, AppState, null, Action<string>> {
   return async (dispatch, getState) => {
-    let prevAccessToken = get(ACCESS_TOKEN);
+    const prevAccessToken = get(ACCESS_TOKEN);
     let first = true;
     const fn = async (force = false) => {
       const accessToken = get(ACCESS_TOKEN);
@@ -120,11 +118,10 @@ export function login(
     dispatch(setAuthenticating(true));
     try {
       const json = await dispatch(fetchThunk(API_PATHS.login, 'post', JSON.stringify(data), false));
-      if (json.statusCode == SUCCESS_CODE) {
+      if (json.statusCode === SUCCESS_CODE) {
         json.data.token && set(ACCESS_TOKEN, json.data.token);
         dispatch(validateAccessToken(json.data));
         const userData = {...json.data, email: data.email};
-        console.log(userData)
         dispatch(setUserData(userData));
         dispatch(authIn(userData));
       }

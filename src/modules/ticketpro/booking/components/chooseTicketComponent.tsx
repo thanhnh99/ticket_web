@@ -8,11 +8,11 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { GREY_700, GREY_100, GREY_500, GREY_300 } from '../../../../configs/colors';
-import { listenerCount } from 'stream';
-import { some } from '../../../../constants';
 import { useSelector } from 'react-redux';
+import { GREY_700, GREY_100, GREY_500, GREY_300 } from '../../../../configs/colors';
+import { some } from '../../../../constants';
 import { AppState } from '../../../../redux/reducers';
+
 interface Props {
   ticketTypeList: any[],
   passTotal: any
@@ -64,7 +64,7 @@ const ChooseTicketComponent: React.FC<Props> = (props) => {
       props.passTotal(total);
       return (sum + Math.round(currentValue.price) * total[currentIndex])
     }, 0))
-  }, [ticketTypeList, total]);
+  }, [props, ticketTypeList, total]);
 
   return (
     <>
@@ -114,7 +114,7 @@ const ChooseTicketComponent: React.FC<Props> = (props) => {
                             if (total[index] <= 1) {
                               setUseBooking(false);
                             }
-                            let tempTotal = [...total];
+                            const tempTotal = [...total];
                             tempTotal[index] = total[index] - 1;
                             setTotal(tempTotal);
                           }}
@@ -133,7 +133,7 @@ const ChooseTicketComponent: React.FC<Props> = (props) => {
                           disabled={!validTotalTicket(total[index] + 1)}
                           onClick={() => {
                             setUseBooking(true);
-                            let tempTotal = [...total];
+                            const tempTotal = [...total];
                             tempTotal[index] = total[index] + 1;
                             setTotal(tempTotal);
                           }}
