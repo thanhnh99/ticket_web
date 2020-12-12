@@ -29,6 +29,7 @@ export const ROUTES = {
   createEvent: '/event/create',
   editEventInfo: '/event/edit',
   approvalManagement: '/approvalManagement',
+  createEventInfo: "/event/create/info"
 };
 
 export const ROUTES_TAB: RoutesTabType[] = [

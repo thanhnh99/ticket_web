@@ -26,7 +26,7 @@ const FirstLogin = React.lazy(() => import('./modules/auth/firstLogin/pages/Firs
 const ForgotPassword = React.lazy(
   () => import('./modules/auth/forgotPassword/pages/ForgotPassword'),
 );
-
+const InfoEvent = React.lazy(() => import('./modules/ticketpro/events/pages/InfoEvent'))
 const ChangePassword = React.lazy(
   () => import('./modules/auth/changePassword/pages/ChangePassword'),
 );
@@ -37,7 +37,7 @@ const CreateEvent = React.lazy(
 
 const TicketDetail = React.lazy(() => import('./modules/ticketpro/ticketDetail/pages/TicketDetail'))
 
-const ChooseTicket = React.lazy(() => import('./modules/ticketpro/booking/pages/chooseTicket')) 
+const ChooseTicket = React.lazy(() => import('./modules/ticketpro/booking/pages/chooseTicket'))
 
 const DefaultLayout = React.lazy(() => import('./layout/defaultLayout/DefaultLayout'));
 
@@ -50,7 +50,7 @@ function mapStateToProps(state: AppState) {
   };
 }
 
-interface Props extends ReturnType<typeof mapStateToProps> {}
+interface Props extends ReturnType<typeof mapStateToProps> { }
 
 const App: React.FC<Props> = (props) => {
   const { auth } = props;
@@ -72,12 +72,20 @@ const App: React.FC<Props> = (props) => {
           <RedirectRoute auth={auth.auth} path={ROUTES.changePassword} component={ChangePassword} />
           <RedirectRoute auth={auth.auth} path={ROUTES.login} component={Login} />
 
+<<<<<<< HEAD
           <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.chooseTicket }/:id`} component={ChooseTicket}/>
           <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
           <ProtectedRoute exact auth={auth.auth} path={`${ROUTES.booking.ticketDetail  }/:id`} component={TicketDetail}/>
           
+=======
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.chooseTicket} component={ChooseTicket} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEvent} component={CreateEvent} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.booking.ticketDetail} component={TicketDetail} />
+          <ProtectedRoute exact auth={auth.auth} path={ROUTES.createEventInfo} component={InfoEvent} />
+
+>>>>>>> front/payment
           <ProtectedRoute auth={auth.auth} path="/" component={DefaultLayout} />
-      
+
         </Switch>
       </React.Suspense>
     </>
