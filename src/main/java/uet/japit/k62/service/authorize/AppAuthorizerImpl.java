@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.exception.exception_define.detail.AccountNotVerifyException;
 import uet.japit.k62.exception.exception_define.detail.AccountWasLockedException;
 import uet.japit.k62.models.auth.CustomUserDetail;
+import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.User;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
             }
             CustomUserDetail customUserDetail = (CustomUserDetail) user.getPrincipal();
             String email = customUserDetail.getEmail();
+            if(customUserDetail.getAccountType().equals(AccountTypeConstant.ROOT)) return true;
             if (email==null || "".equals(email.trim())) {
                 return false;
             }
