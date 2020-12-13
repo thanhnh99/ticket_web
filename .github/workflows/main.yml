@@ -1,0 +1,47 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ back-end ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@master
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: maven build, clean
+      run: |
+        mvn clean package -DskipTests
+
+    # Maven plugin can cosume this authentication method automatically
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+    # Maven deploy, make sure you have correct configurations in your pom.xml
+    - name: deploy to Azure Spring Cloud using Maven
+      run: |
+        mvn azure-spring-cloud:deploy
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+    - name: Run a multi-line script
+      run: |
+          echo Building application
+          mvn package azure-webapp:deploy -X
+          echo done
