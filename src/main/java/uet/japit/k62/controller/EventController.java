@@ -55,8 +55,9 @@ public class EventController {
     }
 
     @GetMapping("search")
-    public ResponseEntity<HttpResponse> search(@SearchSpec Specification<Event> specs) {
-        HttpResponse response = eventService.search(specs);
+    public ResponseEntity<HttpResponse> search(@SearchSpec Specification<Event> specs,
+                                               HttpServletRequest httpRequest) {
+        HttpResponse response = eventService.search(httpRequest, specs);
         return ResponseEntity.ok(response);
     }
 
@@ -100,6 +101,30 @@ public class EventController {
     public ResponseEntity deleteEvent(HttpServletRequest httpServletRequest,
                                     @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
         MessageResponse response = eventService.deleteEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/approve")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).APPROVE_EVENT})")
+    public ResponseEntity approveEvent(HttpServletRequest httpServletRequest,
+                                      @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.approveEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/cancel")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).APPROVE_EVENT})")
+    public ResponseEntity cancelEvent(HttpServletRequest httpServletRequest,
+                                       @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.cancelEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/makepopular")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).MAKE_EVENT_POPULAR})")
+    public ResponseEntity makeEventPopular(HttpServletRequest httpServletRequest,
+                                      @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.makeEventIsPopular(httpServletRequest, eventId);
         return ResponseEntity.ok(response);
     }
 }

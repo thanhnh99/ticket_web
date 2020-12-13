@@ -1,5 +1,8 @@
 package uet.japit.k62.service;
 
+import com.sipios.springsearch.SearchCriteria;
+import com.sipios.springsearch.SearchOperation;
+import com.sipios.springsearch.SpecificationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +20,7 @@ import uet.japit.k62.dao.*;
 import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.CategoryNotFoundException;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
+import uet.japit.k62.filters.EventFilter;
 import uet.japit.k62.models.entity.*;
 import uet.japit.k62.models.request.ReqCreateEvent;
 import uet.japit.k62.models.request.ReqCreateTicketClass;
@@ -197,8 +201,22 @@ public class EventService {
         return new HttpResponse(resData);
     }
 
-    public HttpResponse search(Specification<Event> specs) {
+    public HttpResponse search(HttpServletRequest httpRequest,
+                               Specification<Event> specs) {
         HttpResponse response = new HttpResponse();
+        String token = httpRequest.getHeader("Authorization");
+        User userSendRequest = new User();
+        if(token != null)
+        {
+            String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+            userSendRequest = userDAO.findByEmail(emailSendRequest);
+        }
+        if(token == null ||
+                userSendRequest.getAccountType().equals(AccountTypeConstant.USER))
+        {
+//            specs = specs.and(EventFilter.isActive(true));
+            specs = specs.and(EventFilter.isActive(true)).and(EventFilter.isBroadcasting(true));
+        }
         List<Event> eventsEntity = eventDAO.findAll(Specification.where(specs));
         List<ResEvent> eventsResponse = ConvertEntityToResponse.ConvertListEventEntity(eventsEntity);
         response.setData(eventsResponse);;
@@ -246,4 +264,63 @@ public class EventService {
         }
         else throw new UnAuthorException();
     }
+
+    public MessageResponse approveEvent(HttpServletRequest httpRequest,
+                                        String eventId) throws UnAuthorException {
+        MessageResponse response = new MessageResponse();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        if(userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT) ||
+                (userSendRequest.hasPerMission(PermissionConstant.APPROVE_EVENT)))
+        {
+            Event event = eventDAO.findById(eventId).get();
+            event.setIsActive(true);
+            event.setIsBroadcasting(true);
+            eventDAO.save(event);
+            return response;
+        } else {
+            throw new UnAuthorException();
+        }
+    }
+
+    public MessageResponse cancelEvent(HttpServletRequest httpRequest,
+                                        String eventId) throws UnAuthorException {
+        MessageResponse response = new MessageResponse();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        if(userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT) ||
+                (userSendRequest.hasPerMission(PermissionConstant.CANCEL_EVENT)))
+        {
+            Event event = eventDAO.findById(eventId).get();
+            event.setIsActive(false);
+            event.setIsBroadcasting(false);
+            eventDAO.save(event);
+            return response;
+        } else {
+            throw new UnAuthorException();
+        }
+    }
+
+    public MessageResponse makeEventIsPopular(HttpServletRequest httpRequest,
+                                       String eventId) throws UnAuthorException {
+        MessageResponse response = new MessageResponse();
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User userSendRequest = userDAO.findByEmail(emailSendRequest);
+        if(userSendRequest.getAccountType().equals(AccountTypeConstant.ROOT) ||
+                (userSendRequest.hasPerMission(PermissionConstant.MAKE_EVENT_POPULAR)))
+        {
+            Event event = eventDAO.findById(eventId).get();
+            event.setIsActive(true);
+            event.setIsBroadcasting(true);
+            event.setIsPopular(true);
+            eventDAO.save(event);
+            return response;
+        } else {
+            throw new UnAuthorException();
+        }
+    }
+
 }

@@ -91,4 +91,12 @@ public class User extends BaseEntity{
         return false;
     }
 
+    public Boolean hasPerMission(String permissionCheck)
+    {
+        for(Permission permission : this.permissionList)
+        {
+            if(permission.getCode().equals(permissionCheck)) return true;
+        }
+        return false;
+    }
 }
