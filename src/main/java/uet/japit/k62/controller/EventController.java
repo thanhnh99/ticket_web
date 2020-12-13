@@ -1,13 +1,13 @@
 package uet.japit.k62.controller;
 
 
+import com.sipios.springsearch.anotation.SearchSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.sipios.springsearch.anotation.SearchSpec;
 import uet.japit.k62.dao.IEventDAO;
 import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
@@ -17,6 +17,7 @@ import uet.japit.k62.models.request.ReqCreateTicketClass;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.EventService;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -25,7 +26,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/event")
 public class EventController {
-
     @Autowired
     EventService eventService;
 
