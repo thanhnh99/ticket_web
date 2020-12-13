@@ -29,4 +29,4 @@ jobs:
         app-name: 'tickme101'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_8c1989612e0f418792cf1acf7d0bd276 }}
-        package: '${{ github.workspace }}/target/*.war'
+        package: '${{ github.workspace }}/target/*.jar'
