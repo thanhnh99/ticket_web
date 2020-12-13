@@ -4,7 +4,7 @@ enum APIServices {
 }
 
 function getBaseUrl(service: APIServices) {
-  return 'https://tickme.herokuapp.com';
+  return 'https://ticket101.azurewebsites.net';
 }
 
 export const API_PATHS = {
