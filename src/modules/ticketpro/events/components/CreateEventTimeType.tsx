@@ -33,7 +33,6 @@ export default function DateAndTimePickers() {
         setChecked((prev) => !prev);
     };
 
-
     return (
         <div>
             <Line style={{ marginBottom: 16 }}>
@@ -68,7 +67,6 @@ export default function DateAndTimePickers() {
                         />
                     </Line>
                 </div>
-
                 <Line style={{ marginBottom: 16 }}>
                     <Typography style={{ fontWeight: 'bold', fontSize: 16, color: "#000000", paddingLeft: 12 }}>
                         Loại vé
@@ -132,9 +130,7 @@ export default function DateAndTimePickers() {
                                         </Line>
                                     </Collapse>
                                 </div>
-
                             </RadioGroup>
-
                         </div>
                     </div>
                     <Line style={{ marginBottom: 48, marginTop: 32 }}>
@@ -149,6 +145,5 @@ export default function DateAndTimePickers() {
                 </Box>
             </form>
         </div>
-
     );
 }

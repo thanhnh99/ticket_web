@@ -16,6 +16,13 @@ import { WHITE, RED } from '../../../../configs/colors';
 import Footer from '../../../auth/commons/Footer';
 import { API_PATHS } from '../../../../configs/API';
 import { ACCESS_TOKEN } from '../../../auth/constants';
+import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { AppState } from '../../../../redux/reducers';
+import { Action } from 'redux';
+import { snackbarSetting } from '../../../common/components/elements';
+import { CircularProgress } from '@material-ui/core'
 
 interface Props {
     match: any,
@@ -100,13 +107,13 @@ const convertToDateTime = (unixtimestamp: any) => {
     const hours = date.getHours();
 
     // Minutes
-    const minutes = `0${  date.getMinutes()}`;
+    const minutes = `0${date.getMinutes()}`;
 
     // Seconds
-    const seconds = `0${  date.getSeconds()}`;
+    const seconds = `0${date.getSeconds()}`;
 
     // Display date time in MM-dd-yyyy h:m:s format
-    const convdataTime = `${day  }/${  month  }/${  year  } ${  hours  }:${  minutes.substr(-2)  }:${  seconds.substr(-2)}`;
+    const convdataTime = `${day}/${month}/${year} ${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
     return convdataTime;
 
 }
@@ -139,6 +146,10 @@ const ChooseTicket: React.FC<Props> = (props) => {
     const [email, setEmail] = React.useState("");
     const [phoneNumber, setPhoneNumber] = React.useState("");
     const [paymentUrl, setpaymentUrl] = React.useState("");
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const dispatch = useDispatch<ThunkDispatch<AppState, null, Action<string>>>();
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState(false)
 
     const passTotalOutSideComponent = (insideTotal: number[]) => {
         setTotal(insideTotal);
@@ -158,7 +169,7 @@ const ChooseTicket: React.FC<Props> = (props) => {
 
     React.useEffect(() => {
         getEventInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleNext = () => {
@@ -168,7 +179,7 @@ const ChooseTicket: React.FC<Props> = (props) => {
     const payment = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         let bookingId = "";
-        const json = Axios.post(`${API_PATHS.booking  }/${  eventId  }/select-ticket`,
+        const json = Axios.post(`${API_PATHS.booking}/${eventId}/select-ticket`,
             {
                 tickets: eventData.ticketClassList.map((element, index) => (
                     {
@@ -181,25 +192,45 @@ const ChooseTicket: React.FC<Props> = (props) => {
             },
             {
                 headers: {
-                    'Authorization': `Bearer ${  get(ACCESS_TOKEN)}`
+                    'Authorization': `Bearer ${get(ACCESS_TOKEN)}`
                 }
             })
             .then(response => {
+                console.log(response.data)
                 if (response.data.statusCode === 200) {
                     bookingId = response.data.data.bookingId;
-                    Axios.post(`${API_PATHS.booking  }/${  bookingId  }/checkout`,
+                    Axios.post(`${API_PATHS.booking}/${bookingId}/checkout`,
                         {
                             type: "momo"
                         },
                         {
                             headers: {
-                                'Authorization': `Bearer ${  get(ACCESS_TOKEN)}`
+                                'Authorization': `Bearer ${get(ACCESS_TOKEN)}`
                             }
                         })
                         // eslint-disable-next-line no-shadow
-                        .then(response => {
-                            setpaymentUrl(response.data.data.payUrl);
+                        .then(checkoutResponse => {
+                            console.log("DSADA");
+                            console.log(checkoutResponse)
+                            setpaymentUrl(checkoutResponse.data.data.payUrl);
+                            setError(false);
+                            setLoading(false);
                         })
+                        .catch(e => {
+                            setError(true);
+                            setLoading(false);
+                        })
+                }
+                else {
+                    console.log(response.data)
+                    setError(true);
+                    setLoading(false);
+                    enqueueSnackbar(
+                        response.data.message,
+                        snackbarSetting(key => closeSnackbar(key), {
+                            color: 'error',
+                        }),
+                    );
                 }
             })
             .catch(() => {
@@ -227,7 +258,7 @@ const ChooseTicket: React.FC<Props> = (props) => {
                                 <Typography style={{ paddingBottom: 4 }} variant="body2">
                                     {eventData?.fullAddress}
                                 </Typography>
-                                <Typography variant="body2">{convertToDateTime(eventData.startTime)}</Typography>
+                                <Typography variant="body2">{convertToDateTime(eventData?.startTime)}</Typography>
                             </div>
                         </div>
                         <div>Thời gian đặt vé</div>
@@ -261,14 +292,14 @@ const ChooseTicket: React.FC<Props> = (props) => {
                         }
                     </Typography>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        {activeStep ===  1 ? 
-                        (<Button variant="contained" fullWidth
-                            color="secondary"
-                            style={{ height: '40px', marginTop: '20px', width: 300 }} onClick={handleNext}>
-                            <Typography variant='button'>
-                                <FormattedMessage id='next' />
-                            </Typography>
-                        </Button>) : (
+                        {activeStep === 1 ?
+                            (<Button variant="contained" fullWidth
+                                color="secondary"
+                                style={{ height: '40px', marginTop: '20px', width: 300 }} onClick={handleNext}>
+                                <Typography variant='button'>
+                                    <FormattedMessage id='next' />
+                                </Typography>
+                            </Button>) : (
                                 activeStep === 2 ? (
                                     <Button variant="contained" fullWidth
                                         color="secondary"
@@ -278,15 +309,33 @@ const ChooseTicket: React.FC<Props> = (props) => {
                                         </Typography>
                                     </Button>
                                 ) : (
-                                        <a href={paymentUrl}>
+                                        loading ? (
                                             <Button variant="contained" fullWidth
                                                 color="secondary"
-                                                style={{ height: '40px', marginTop: '20px', width: 300, backgroundColor: RED }} onClick={payment}>
-                                                <Typography variant='button'>
-                                                    <FormattedMessage id='paymentMomo' />
-                                                </Typography>
+                                                style={{ height: '40px', marginTop: '20px', width: 300, backgroundColor: RED }}>
+                                                {
+                                                    <CircularProgress />
+                                                }
                                             </Button>
-                                        </a>
+                                        ) : (
+                                                <a href={paymentUrl} style={{ textDecoration: "none" }}>
+                                                    <Button variant="contained" fullWidth
+                                                        color="secondary"
+                                                        style={{ height: '40px', marginTop: '20px', width: 300, backgroundColor: RED }}>
+                                                        {
+                                                            loading ? (
+                                                                <CircularProgress />
+                                                            ) : (
+                                                                    <Typography variant='button'>
+                                                                        {
+                                                                            error ? (<FormattedMessage id='Quay trở lại' />) : (<FormattedMessage id='paymentMomo' />)
+                                                                        }
+                                                                    </Typography>
+                                                                )
+                                                        }
+                                                    </Button>
+                                                </a>
+                                            )
                                     )
                             )
                         }

@@ -8,6 +8,15 @@ import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { GREY_900 } from '../../../../configs/colors';
+import { some, SUCCESS_CODE } from '../../../../constants';
+import Axios from 'axios';
+import { API_PATHS } from '../../../../configs/API'
+import { get } from 'js-cookie';
+import { ACCESS_TOKEN } from '../../../auth/constants';
+import { CircularProgress } from '@material-ui/core';
+import { Action } from 'redux';
+import { snackbarSetting } from '../../../common/components/elements';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles({
     root: {
@@ -35,135 +44,184 @@ const Line = styled.div`
   align-items: center;
 `;
 
-export default function SimpleCard() {
+const convertToDateTime = (unixtimestamp: any) => {
+
+    // Convert timestamp to milliseconds
+    var date = new Date(unixtimestamp * 1000);
+    // Year
+    var year = date.getFullYear();
+    // Month
+    var month = date.getMonth();
+    // Day
+    var day = date.getDate();
+    // Hours
+    var hours = date.getHours();
+    // Minutes
+    var minutes = "0" + date.getMinutes();
+    // Seconds
+    var seconds = "0" + date.getSeconds();
+    // Display date time in MM-dd-yyyy h:m:s format
+    var convdataTime = day + '/' + month + '/' + year + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return convdataTime;
+}
+
+export default function SimpleCard(props) {
+    const { listEvent } = props;
     const classes = useStyles();
+    const { loading } = props;
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     return (
-        <Card className={classes.root}>
-            <CardContent style={{flex: 1}}>
-                <Line style={{ alignItems: 'center' }}>
-                    <Line>
-                        <Typography style={{ fontWeight: 600, minWidth: 90 }} >
-                            <FormattedMessage id="nameEvent"/>&#x0003A;
-                    </Typography>
-                    </Line>
-                &nbsp;
-                   <Line>
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            Nhã nhạc cung đình Huế
-                    </Typography>
-                    </Line>
-                </Line>
-                <Line style={{ alignItems: 'center' }}>
-                    <Line>
-                        <Typography style={{ fontWeight: 600, minWidth: 90 }}>
-                        <FormattedMessage id="timeEvent"/>&#x0003A;
-                    </Typography>
-                </Line>
-                &nbsp;
-                   <Line>
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            08/12/2020 22:25:31
-                    </Typography>
-                    </Line>
-                </Line>
-                <Line>
-                    <Typography style={{ fontWeight: 600, minWidth: 90 }}>
-                        <FormattedMessage id="contacts"/>
-                    </Typography>
-                </Line>
-                <Line style={{display: 'flex', paddingLeft: 16}}>
-                    <Line>
-                        <FormattedMessage id="phoneNumber"/>&#x0003A;
-                        &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                        0398980033
-                        </Typography>
-                    </Line>
-                    <Line style={{paddingLeft: 24}}>
-                    <FormattedMessage id="auth.email"/>&#x0003A;
-                        &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                        anhnt@vnu.edu.vn
-                        </Typography>
-                    </Line>
-                </Line>
+        <>
+            {
+                loading ? (
+                    <CircularProgress />
+                ) : (
+                        listEvent.map(element => (
+                            <Card className={classes.root}>
+                                <CardContent style={{ flex: 1 }}>
+                                    <Line style={{ alignItems: 'center' }}>
+                                        <Line>
+                                            <Typography style={{ fontWeight: 600, minWidth: 90 }} >
+                                                <FormattedMessage id="nameEvent" />&#x0003A;
+                            </Typography>
+                                        </Line>
+                            &nbsp;
+                           <Line>
+                                            <Typography style={{ color: GREY_900 }} variant="body2">
+                                                {element?.name}
+                                            </Typography>
+                                        </Line>
+                                    </Line>
+                                    <Line style={{ alignItems: 'center' }}>
+                                        <Line>
+                                            <Typography style={{ fontWeight: 600, minWidth: 90 }}>
+                                                <FormattedMessage id="timeEvent" />&#x0003A;
+                                    </Typography>
+                                        </Line>
+                                    &nbsp;
+                                <Line>
+                                            <Typography style={{ color: GREY_900 }} variant="body2">
+                                                {element?.startTime}
+                                            </Typography>
+                                        </Line>
+                                    </Line>
+                                    <Line>
+                                        <Typography style={{ fontWeight: 600, minWidth: 90 }}>
+                                            <FormattedMessage id="contacts" />
+                                        </Typography>
+                                    </Line>
+                                    <Line style={{ display: 'flex', paddingLeft: 16 }}>
+                                        <Line>
+                                            <FormattedMessage id="phoneNumber" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                0398980033
+                                </Typography>
+                                        </Line>
+                                        <Line style={{ paddingLeft: 24 }}>
+                                            <FormattedMessage id="auth.email" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                anhnt@vnu.edu.vn
+                                </Typography>
+                                        </Line>
+                                    </Line>
 
-                <Line>
-                    <Typography style={{ fontWeight: 600, minWidth: 90 }}>
-                        <FormattedMessage id="auth.accountInfo"/>
-                    </Typography>
-                </Line>
-                <Line style={{display: 'flex', paddingLeft: 16}}>
-                    <Line>
-                        <FormattedMessage id="accountHolder"/>&#x0003A;
-                        &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            Phạm Hoàng Nam
-                        </Typography>
-                    </Line>
-                    <Line style={{paddingLeft: 24}}>
-                    <FormattedMessage id="accountNumber"/>&#x0003A;
-                    &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                        21512321789
-                        </Typography>
-                    </Line>
-                </Line>
-                <Line style={{display: 'flex', paddingLeft: 16}}>
-                    <Line>
-                        <FormattedMessage id="bankName"/>&#x0003A;
-                        &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            Ngân hàng BIDV
-                        </Typography>
-                    </Line>
-                    <Line style={{paddingLeft: 24}}>
-                    <FormattedMessage id="branchBankName"/>&#x0003A;
-                    &nbsp; 
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            Cầu Giấy
-                        </Typography>
-                    </Line>
-                </Line>
+                                    <Line>
+                                        <Typography style={{ fontWeight: 600, minWidth: 90 }}>
+                                            <FormattedMessage id="auth.accountInfo" />
+                                        </Typography>
+                                    </Line>
+                                    <Line style={{ display: 'flex', paddingLeft: 16 }}>
+                                        <Line>
+                                            <FormattedMessage id="accountHolder" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                Phạm Hoàng Nam
+                                </Typography>
+                                        </Line>
+                                        <Line style={{ paddingLeft: 24 }}>
+                                            <FormattedMessage id="accountNumber" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                21512321789
+                                </Typography>
+                                        </Line>
+                                    </Line>
+                                    <Line style={{ display: 'flex', paddingLeft: 16 }}>
+                                        <Line>
+                                            <FormattedMessage id="bankName" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                Ngân hàng BIDV
+                                </Typography>
+                                        </Line>
+                                        <Line style={{ paddingLeft: 24 }}>
+                                            <FormattedMessage id="branchBankName" />&#x0003A;
+                                &nbsp;
+                                <Typography style={{ color: GREY_900 }} variant="body2">
+                                                Cầu Giấy
+                                </Typography>
+                                        </Line>
+                                    </Line>
 
-                <Line style={{ alignItems: 'center' }}>
-                    <Line>
-                        <Typography style={{ fontWeight: 600, minWidth: 90, marginLeft: 2 }}>
-                        <FormattedMessage id="placeEvent"/>&#x0003A;
-                        </Typography>   
-                    </Line>
-                &nbsp;
-                   <Line>
-                        <Typography style={{ color: GREY_900 }} variant="body2">
-                            36 My Khe 4, My Khe Ward, Son Tra District
-                        </Typography>
-                    </Line>
-                </Line>
-               
-            </CardContent>
-            <CardActions>
-                <Button style={{
-                    padding: '8px 16px',
-                    width: '140px',
-                    height: '30px',
-                    boxShadow: 'none',
-                }}
-                    color="secondary"
-                    variant="contained" >
-                        <FormattedMessage id="approve"/>
-                    </Button>
-                <Button style={{
-                    padding: '8px 16px',
-                    width: '140px',
-                    height: '30px',
-                    boxShadow: 'none',
-                }}
-                    color="primary"
-                    variant="contained">
-                        <FormattedMessage id="cancel"/>
-                    </Button>
-            </CardActions>
-        </Card>
+                                    <Line style={{ alignItems: 'center' }}>
+                                        <Line>
+                                            <Typography style={{ fontWeight: 600, minWidth: 90, marginLeft: 2 }}>
+                                                <FormattedMessage id="placeEvent" />&#x0003A;
+                                </Typography>
+                                        </Line>
+                                &nbsp;
+                                <Line>
+                                            <Typography style={{ color: GREY_900 }} variant="body2">
+                                                {element?.fullAddress}
+                                            </Typography>
+                                        </Line>
+                                    </Line>
+                                </CardContent>
+                                <CardActions>
+                                    {element?.isBroadcasting ? (
+                                        <Button style={{
+                                            padding: '8px 16px',
+                                            width: '140px',
+                                            height: '30px',
+                                            boxShadow: 'none',
+                                        }}
+                                            color="default"
+                                            variant="contained" >
+                                            <FormattedMessage id="approve" />
+                                        </Button>
+                                    ) : (
+                                            <>
+                                                <Button style={{
+                                                    padding: '8px 16px',
+                                                    width: '140px',
+                                                    height: '30px',
+                                                    boxShadow: 'none',
+                                                }}
+                                                    color="secondary"
+                                                    variant="contained" >
+                                                    <FormattedMessage id="approve" />
+                                                </Button>
+                                                <Button style={{
+                                                    padding: '8px 16px',
+                                                    width: '140px',
+                                                    height: '30px',
+                                                    boxShadow: 'none',
+                                                }}
+                                                    color="primary"
+                                                    variant="contained">
+                                                    <FormattedMessage id="cancel" />
+                                                </Button>
+                                            </>
+                                        )
+                                    }
+                                </CardActions>
+                            </Card>
+                        ))
+                    )
+            }
+        </>
     );
 }

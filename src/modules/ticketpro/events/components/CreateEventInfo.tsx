@@ -7,6 +7,11 @@ import {
 import 'antd/dist/antd.css';
 import { Container, TextField, Typography } from '@material-ui/core';
 import styled from 'styled-components';
+import Axios from 'axios';
+import { API_PATHS } from '../../../../configs/API'
+import {SUCCESS_CODE} from '../../../../constants'
+import * as Meterial from '@material-ui/core'
+
 
 const { Option } = Select;
 
@@ -19,13 +24,51 @@ const Line = styled.div`
 
 
 interface Props {
-    params: undefined;
-    onUpdateFilter(params: undefined): void;
-    loading?: boolean;
+    loading?: boolean,
+    eventName: string,
+    location: string,
+    address: string,
+    type: string
 }
 
 
-const CreateEventInfo: React.FunctionComponent = () => {
+const CreateEventInfo: React.FunctionComponent<Props> = (props) => {
+
+    const { eventName, location, address, type } = props;
+    const [eventNameinput, setEventNameInput] = React.useState(eventName);
+    const [locationInput, setLocationInput] = React.useState(location);
+    const [addressInput, setAddressInput] = React.useState(address);
+    const [selectedCategory, setSelectedCategory] = React.useState(type)
+    const [eventCategory, setEventCategory] = React.useState<any[]>();
+    const [open, setOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        Axios.get(API_PATHS.getCategory)
+            .then(response => {
+                console.log(response.data)
+                if (response.data.statusCode = SUCCESS_CODE) {
+                    setEventCategory(response.data.data)
+                    console.log(eventCategory)
+                }
+            })
+            .catch(e => {
+
+            })
+    }, [])
+
+
+    const handleChange = (event) => {
+        setSelectedCategory(event.target.value);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
 
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -40,13 +83,12 @@ const CreateEventInfo: React.FunctionComponent = () => {
             <form>
                 <Line style={{ marginTop: 32 }}>
                     <Line style={{ marginBottom: 16, flex: 1 }}>
-                        <TextField required id="eventName" label="Tên sự kiện" />
+                        <TextField required id="eventName" label="Tên sự kiện" value={eventNameinput} onChange={e => setEventNameInput(e.target.value)} />
                     </Line>
                     <Line style={{ marginBottom: 16, flex: 1 }}>
-                        <TextField required id="placeName" label="Tên địa điểm" />
+                        <TextField required id="placeName" label="Tên địa điểm" value={locationInput} onChange={e => setLocationInput(e.target.value)} />
                     </Line>
                 </Line>
-
                 <Line style={{ marginTop: 48, marginBottom: 32 }}>
                     <div style={{ flex: 1 }}>
                         <Line>
@@ -54,18 +96,25 @@ const CreateEventInfo: React.FunctionComponent = () => {
                                 Chọn loại sự kiện
                 </Typography>
                         </Line>
-                        <input
-                            multiple
-                            name="event"
-                            list="email"
-                            style={{ height: 40 }}
-                        />
-                        <datalist id="email">
-                            <option value="Sân khấu" />
-                            <option value="Ngoài trời" />
-                            <option value="Nghệ thuật" />
-                            <option value="Nhạc sống" />
-                        </datalist>
+                        <Meterial.Select
+                            labelId="demo-controlled-open-select-label"
+                            id="demo-controlled-open-select"
+                            open={open}
+                            onClose={handleClose}
+                            onOpen={handleOpen}
+                            value={selectedCategory}
+                            onChange={handleChange}
+                            style={{ minWidth: 195, backgroundColor: "white", minHeight: 38 }}
+
+                        >
+                            {
+                                eventCategory?.map(element => (
+                                    <Meterial.MenuItem value={element.id}>
+                                        <em>{element.name}</em>
+                                    </Meterial.MenuItem>
+                                ))
+                            }
+                        </Meterial.Select>
                     </div>
                     <Line style={{ marginBottom: 32, marginTop: 32, flex: 1 }}>
                         <TextField required id="placeName" label="Thông tin sự kiện" />

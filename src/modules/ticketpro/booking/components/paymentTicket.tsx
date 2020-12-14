@@ -81,6 +81,8 @@ const PaymentTicket: React.FC<Props> = (props) => {
                 <TextField required id="email" label="Email" value={email}  onChange={(event) => {
                   setEmail(event.target.value);
                   props.passEmail(email);
+                  console.log(event.target.value)
+                  console.log(email)
                   }} />
                 <TextField required id="emailAgain" label="Nhập lại email" value={confirmEmail}  onChange={(event) => {setConfirmEmail(event.target.value)}}  />
               </Line>
@@ -88,6 +90,7 @@ const PaymentTicket: React.FC<Props> = (props) => {
                 <TextField required id="phone" label="Số điện thoại" value={phoneNumber}  
                 onChange={(event) => {
                   setPhoneNumber(event.target.value);
+                  console.log(phoneNumber)
                   props.passPhone(phoneNumber);
                   }} />
               </Line>
