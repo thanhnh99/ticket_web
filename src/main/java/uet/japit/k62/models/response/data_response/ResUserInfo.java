@@ -1,7 +1,8 @@
 package uet.japit.k62.models.response.data_response;
 
+import lombok.Data;
 import uet.japit.k62.models.entity.User;
-
+@Data
 public class ResUserInfo {
     private String phone;
     private String displayName;

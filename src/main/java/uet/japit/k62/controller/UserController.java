@@ -68,7 +68,7 @@ public class UserController {
 //        return ResponseEntity.ok(responseData);
 //    }
 
-    @GetMapping("/{email}")
+    @GetMapping("/{email}/info")
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).GET_USER_INFO})")
     public ResponseEntity<HttpResponse> getUserInfo(@PathVariable(name = "email") String email) throws UserNotFoundException {
         HttpResponse responseData = userService.getUserInfo(email);
