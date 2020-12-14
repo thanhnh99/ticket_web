@@ -29,6 +29,11 @@ public class Event extends BaseEntity{
     private Boolean isBroadcasting = false;
     private String city;
     private String fullAddress;
+    private String contactPhone;
+    private String contactEmail;
+    private String organizerName;
+    @Column(columnDefinition = "TEXT")
+    private String organizerInfo;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -54,6 +59,10 @@ public class Event extends BaseEntity{
         this.endTime = reqCreateEvent.getEndTime();
         this.city = reqCreateEvent.getCity();
         this.fullAddress = reqCreateEvent.getFullAddress();
+        this.contactEmail = reqCreateEvent.getContactEmail();
+        this.contactPhone = reqCreateEvent.getContactPhone();
+        this.organizerInfo = reqCreateEvent.getOrganizerInfo();
+        this.organizerName = reqCreateEvent.getOrganizerName();
     }
 
     public Event(String id) {

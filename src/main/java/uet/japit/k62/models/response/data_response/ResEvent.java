@@ -19,9 +19,15 @@ public class ResEvent extends ResHomeEvent{
     private Date endSellingTime;
     private Boolean isPopular;
     private Boolean isBroadcasting;
+    private Boolean isActive;
     private String categoryId;
     private String city;
     private String fullAddress;
+    private String contactPhone;
+    private String contactEmail;
+    private String organizerName;
+    private String organizerInfo;
+
     private List<ResTicketClass> ticketClassList;
 
     public ResEvent(Event event)
@@ -36,7 +42,12 @@ public class ResEvent extends ResHomeEvent{
         this.isBroadcasting = event.getIsBroadcasting();
         this.categoryId = event.getCategory().getId();
         this.city = event.getCity();
+        this.isActive = event.getIsActive();
         this.fullAddress = event.getFullAddress();
+        this.contactPhone = event.getContactPhone();
+        this.contactEmail = event.getContactEmail();
+        this.organizerName = event.getOrganizerName();
+        this.organizerInfo = event.getOrganizerInfo();
         List<ResTicketClass> ticketClasses= new ArrayList<>();
         for(TicketClass ticketClass: event.getTicketClasses())
         {

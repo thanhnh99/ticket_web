@@ -46,4 +46,24 @@ public class ReqCreateEvent {
     @NotNull(message = "fullAddress may not be null")
     @NotEmpty(message = "fullAddress may not be empty")
     private String fullAddress;
+
+    @NotBlank(message = "contactPhone may not be blank")
+    @NotNull(message = "contactPhone may not be null")
+    @NotEmpty(message = "contactPhone may not be empty")
+    private String contactPhone;
+
+    @NotBlank(message = "contactEmail may not be blank")
+    @NotNull(message = "contactEmail may not be null")
+    @NotEmpty(message = "contactEmail may not be empty")
+    private String contactEmail;
+
+    @NotBlank(message = "organizerName may not be blank")
+    @NotNull(message = "organizerName may not be null")
+    @NotEmpty(message = "organizerName may not be empty")
+    private String organizerName;
+
+    @NotBlank(message = "organizerInfo may not be blank")
+    @NotNull(message = "organizerInfo may not be null")
+    @NotEmpty(message = "organizerInfo may not be empty")
+    private String organizerInfo;
 }

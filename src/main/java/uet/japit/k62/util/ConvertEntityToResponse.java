@@ -3,10 +3,7 @@ package uet.japit.k62.util;
 import uet.japit.k62.models.entity.Category;
 import uet.japit.k62.models.entity.Event;
 import uet.japit.k62.models.entity.TicketClass;
-import uet.japit.k62.models.response.data_response.ResCategory;
-import uet.japit.k62.models.response.data_response.ResEvent;
-import uet.japit.k62.models.response.data_response.ResHomeEvent;
-import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.*;
 
 import java.util.ArrayList;
 import java.util.List;

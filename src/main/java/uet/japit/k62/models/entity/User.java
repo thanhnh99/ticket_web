@@ -23,7 +23,10 @@ public class User extends BaseEntity{
     private String provider;
     private String provider_id;
     private Boolean isVerify = false;
-
+    private String phone;
+    private String bankAccountNumber;
+    private String bankBranch;
+    private String bankAccountHolder;
 
 //    @ManyToMany(mappedBy = "userList")
 //    private Collection<Role> roleList = new ArrayList<Role>();
