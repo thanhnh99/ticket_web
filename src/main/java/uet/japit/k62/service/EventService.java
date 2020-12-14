@@ -101,7 +101,7 @@ public class EventService {
 
 //                coverImage.transferTo(new File(coverName));
                 blobManager.createContainer(containerName);
-                String savetoDBPath = blobManager.upload(coverImage).getPath();
+                String savetoDBPath = blobManager.upload(coverImage, coverName).getPath();
                 //Files.copy(coverImage.getInputStream(), locationPath.resolve(coverName));
                 event.setCoverImageUrl(storageUrl + savetoDBPath);
             }
@@ -115,7 +115,7 @@ public class EventService {
                 //Files.copy(mapImage.getInputStream(), locationPath.resolve(mapImageName));
 //                mapImage.transferTo(new File(mapImageName));
                 blobManager.createContainer(containerName);
-                String saveMapToDBPath = blobManager.upload(mapImage).getPath();
+                String saveMapToDBPath = blobManager.upload(mapImage, mapImageName).getPath();
 //
                 event.setMapImageUrl(storageUrl + saveMapToDBPath);
             }

@@ -35,12 +35,12 @@ public class BlobManager {
         }
         return containerCreated;
     }
-    public URI upload(MultipartFile multipartFile){
+    public URI upload(MultipartFile multipartFile, String fileName){
         URI uri = null;
         CloudBlockBlob blob = null;
         try {
 
-            blob = cloudBlobContainer.getBlockBlobReference(multipartFile.getOriginalFilename());
+            blob = cloudBlobContainer.getBlockBlobReference(fileName);
             blob.upload(multipartFile.getInputStream(), -1);
             uri = blob.getUri();
         } catch (URISyntaxException | StorageException | IOException e) {
