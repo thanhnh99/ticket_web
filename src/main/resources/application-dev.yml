@@ -5,14 +5,14 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     platform: mysql
-    url: jdbc:mysql://localhost:3306/ticket_web
+    url: jdbc:mysql://ticket101.mysql.database.azure.com:3306/ticket_web?useSSL=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password:
+    username: huent@ticket101
+    password: Ticket101
   jooq:
     sql-dialect: org.hibernate.dialect.MySQLDialect
 server:

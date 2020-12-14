@@ -52,12 +52,24 @@ public class BookingService {
     private IUserDAO userDAO;
     @Autowired
     MailProcess mailProcess;
-    public List<ResTicketClass> getTicketInfo(String event_id){
-        List<TicketClass> tickets = ticketDao.findByEventID(event_id);
-        return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
+    public List<ResTicketClass> getTicketInfo(String event_id) throws EventNotFoundException, NotInBookingTimeException {
+        Event event = eventDAO.findById(event_id).orElseThrow(EventNotFoundException::new);
+        Date now = new Date();
+        if(event.getStartSellingTime().compareTo(now) < 0 && event.getEndSellingTime().compareTo(now) > 0){
+            List<TicketClass> tickets = ticketDao.findByEventID(event_id);
+            return tickets.stream().map(ResTicketClass::new).collect(Collectors.toList());
+        }
+        else throw new NotInBookingTimeException();
+
     }
 
-    public ResBooking selectTickets(HttpServletRequest httpRequest, ReqBookingSelectTicket reqBooking, String eventId) throws TicketNotFoundException, MaximumTicketExceeded, MinimumTicketNotReached, VoucherNotFoundException, InvalidVoucherException, EventNotFoundException {
+    public ResBooking selectTickets(HttpServletRequest httpRequest, ReqBookingSelectTicket reqBooking, String eventId) throws TicketNotFoundException, MaximumTicketExceeded, MinimumTicketNotReached, VoucherNotFoundException, InvalidVoucherException, EventNotFoundException, NotInBookingTimeException {
+        // validate selling time
+        Event event = eventDAO.findById(eventId).orElseThrow(EventNotFoundException::new);
+        Date now = new Date();
+        if(event.getStartSellingTime().compareTo(now) >= 0 && event.getEndSellingTime().compareTo(now) <= 0){
+            throw new NotInBookingTimeException();
+        }
         // validate amount
         List<TicketClass> dbTickets = new ArrayList<>();
         for(ReqSelectedTicket ticket : reqBooking.getTickets()){
@@ -79,7 +91,6 @@ public class BookingService {
         long maxDiscount = 0;
         if (reqBooking.getVoucher() != null && !reqBooking.getVoucher().isEmpty()){
             Voucher voucher = voucherDAO.findByCode(reqBooking.getVoucher()).orElseThrow(VoucherNotFoundException::new);
-            Event event = eventDAO.findById(eventId).orElseThrow(EventNotFoundException::new);
             // check voucher valid for this booking
             if((voucher.getType() == VoucherType.EVENT  && !eventId.equals(voucher.getConditionValue())) ||
                     (voucher.getType() == VoucherType.CATEGORY && !event.getCategory().getId().equals(voucher.getConditionValue()))||
@@ -119,6 +130,7 @@ public class BookingService {
         }
         booking.setPrice(new BigDecimal(price));
         bookingDAO.save(booking);
+        booking.setEvent(event);
         return new ResUnpaidBooking(booking, resBookingDetails);
     }
 

@@ -29,13 +29,13 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
     @GetMapping("/{event_id}/select-ticket")
-    public ResponseEntity getByEvent(@PathVariable(value = "event_id") String event_id) {
+    public ResponseEntity getByEvent(@PathVariable(value = "event_id") String event_id) throws EventNotFoundException, NotInBookingTimeException {
         HttpResponse<List<ResTicketClass>> responseData = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS,
                 bookingService.getTicketInfo(event_id));
         return ResponseEntity.ok(responseData);
     }
     @PostMapping("/{event_id}/select-ticket")
-    public ResponseEntity selectTickets(HttpServletRequest httpServletRequest, @RequestBody ReqBookingSelectTicket reqSelectedTicket, @PathVariable(value = "event_id") String event_id) throws MaximumTicketExceeded, MinimumTicketNotReached, InvalidVoucherException, EventNotFoundException, VoucherNotFoundException, TicketNotFoundException {
+    public ResponseEntity selectTickets(HttpServletRequest httpServletRequest, @RequestBody ReqBookingSelectTicket reqSelectedTicket, @PathVariable(value = "event_id") String event_id) throws MaximumTicketExceeded, MinimumTicketNotReached, InvalidVoucherException, EventNotFoundException, VoucherNotFoundException, TicketNotFoundException, NotInBookingTimeException {
         HttpResponse<ResBooking> response = new HttpResponse<>(StatusCode.OK, MessageConstant.SUCCESS,
                 bookingService.selectTickets(httpServletRequest, reqSelectedTicket, event_id));
         return ResponseEntity.ok(response);

@@ -157,6 +157,8 @@
 //    @Bean
 //    public void addEvent()
 //    {
+//        Date now = new Date();
+//        long DAY = 24 * 60 * 60;
 //        List<Category> categoryList = categoryDAO.findAll();
 //        for (Category category : categoryList)
 //        {
@@ -170,10 +172,10 @@
 //                        "Khoa học tiến bộ đến mức có thể dùng máy móc xóa đi ký ức của con người. Chính vì vậy mà Lan (Lê Khánh) tìm đến viện khoa học để nhờ xóa đi hình ảnh người chồng phản bội, cùng với tất cả những gì liên quan tới anh ta. Và cô bắt đầu tìm thấy hạnh phúc bên người chồng mới. Nhưng rồi anh này lại phản bội, Lan lại đi xóa ký ức, và lại đi tìm hạnh phúc khác... Liệu cô có tiếp tục xóa ký ức đến n lần hay không?\n" +
 //                        "\n" +
 //                        "Hóa ra Lan đi mãi thì cũng trở về vạch xuất phát. Bí mật nằm ở đây, tác giả đã giữ mối cho tới phút cuối. Vậy Lan có nên bao dung, tha thứ cho sai lầm của người khác, để mình cũng được sống an vui? Ai mà không có lúc sơ sẩy, và người ta đã biết ăn năn, chỉ có mình ôm mối hận không chịu buông bỏ mà thôi. Câu chuyện dường như tồn tại trong rất nhiều gia đình, khán giả hẳn cũng thấy bóng dáng bản thân trong đó.");
-//                newEvent.setStartSellingTime(faker.date().between(new Date(1604949695), new Date(1605813695)));
-//                newEvent.setStartTime(faker.date().between(new Date(1606677695), new Date(1606850495)));
-//                newEvent.setEndSellingTime(faker.date().between(new Date(1605900095), new Date(1606245695)));
-//                newEvent.setEndTime(faker.date().between(new Date(1607109695), new Date(1607196095)));
+//                newEvent.setStartSellingTime(faker.date().between(new Date(now.getTime() - DAY), new Date(now.getTime() + DAY * 3)));
+//                newEvent.setStartTime(faker.date().between(new Date(now.getTime() + DAY * 8), new Date(now.getTime() + DAY * 9)));
+//                newEvent.setEndSellingTime(faker.date().between(new Date(now.getTime() + DAY * 5), new Date(now.getTime() + DAY * 7)));
+//                newEvent.setEndTime(faker.date().between(new Date(now.getTime() + DAY * 9), new Date(now.getTime() + DAY * 10)));
 //                newEvent.setCity(faker.address().city());
 //                newEvent.setFullAddress(faker.address().fullAddress());
 //                newEvent.setCategory(category);
