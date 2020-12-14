@@ -58,7 +58,7 @@ public class BookingController {
     }
     @GetMapping("/my-booking")
     public  ResponseEntity getMyBooking(HttpServletRequest httpServletRequest){
-        return ResponseEntity.ok(bookingService.getMyBooking(httpServletRequest));
+        return ResponseEntity.ok(new HttpResponse<List<ResBooking>>(StatusCode.OK, MessageConstant.SUCCESS, bookingService.getMyBooking(httpServletRequest)));
     }
     @GetMapping("/qrcode/{code}")
     public  @ResponseBody byte[] getQR(@PathVariable(value = "code") String code) throws IOException, WriterException {
