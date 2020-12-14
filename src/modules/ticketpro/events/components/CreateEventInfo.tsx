@@ -125,10 +125,10 @@ const CreateEventInfo: React.FunctionComponent = () => {
                         <input
                             multiple
                             name="event"
-                            list="email"
+                            list="event"
                             style={{ height: 40 }}
                         />
-                        <datalist id="email">
+                        <datalist id="event">
                             <option value="Sân khấu" />
                             <option value="Ngoài trời" />
                             <option value="Nghệ thuật" />

@@ -11,13 +11,13 @@ import Typography from '@material-ui/core/Typography';
 import { Container } from '@material-ui/core';
 import CreateEventInfo from '../components/CreateEventInfo';
 import CreateEventTimeType from '../components/CreateEventTimeType';
-import Setting from '../components/Setting';
 import PaymentInfo from '../components/PaymentInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
+            paddingLeft: '15%'
         },
         button: {
             marginTop: theme.spacing(1),
