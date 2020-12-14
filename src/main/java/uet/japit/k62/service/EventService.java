@@ -275,8 +275,14 @@ public class EventService {
                 (userSendRequest.hasPerMission(PermissionConstant.APPROVE_EVENT)))
         {
             Event event = eventDAO.findById(eventId).get();
-            event.setIsActive(true);
-            event.setIsBroadcasting(true);
+            if(event.getIsBroadcasting())
+            {
+                event.setIsActive(true);
+                event.setIsBroadcasting(false);
+            } else {
+                event.setIsActive(true);
+                event.setIsBroadcasting(true);
+            }
             eventDAO.save(event);
             return response;
         } else {
@@ -294,8 +300,14 @@ public class EventService {
                 (userSendRequest.hasPerMission(PermissionConstant.CANCEL_EVENT)))
         {
             Event event = eventDAO.findById(eventId).get();
-            event.setIsActive(false);
-            event.setIsBroadcasting(false);
+            if(event.getIsActive())
+            {
+                event.setIsActive(false);
+                event.setIsBroadcasting(false);
+            } else {
+                event.setIsActive(true);
+            }
+
             eventDAO.save(event);
             return response;
         } else {
@@ -313,9 +325,18 @@ public class EventService {
                 (userSendRequest.hasPerMission(PermissionConstant.MAKE_EVENT_POPULAR)))
         {
             Event event = eventDAO.findById(eventId).get();
-            event.setIsActive(true);
-            event.setIsBroadcasting(true);
-            event.setIsPopular(true);
+            if(event.getIsPopular())
+            {
+                event.setIsActive(true);
+                event.setIsBroadcasting(true);
+                event.setIsPopular(false);
+            }
+            else
+            {
+                event.setIsActive(true);
+                event.setIsBroadcasting(true);
+                event.setIsPopular(true);
+            }
             eventDAO.save(event);
             return response;
         } else {

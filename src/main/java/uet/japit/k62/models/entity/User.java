@@ -27,6 +27,7 @@ public class User extends BaseEntity{
     private String bankAccountNumber;
     private String bankBranch;
     private String bankAccountHolder;
+    private String bankName;
 
 //    @ManyToMany(mappedBy = "userList")
 //    private Collection<Role> roleList = new ArrayList<Role>();

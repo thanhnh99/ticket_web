@@ -28,6 +28,7 @@ import uet.japit.k62.models.entity.Permission;
 import uet.japit.k62.models.entity.User;
 import uet.japit.k62.models.request.*;
 import uet.japit.k62.models.response.data_response.ResLogin;
+import uet.japit.k62.models.response.data_response.ResUserInfo;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
@@ -261,5 +262,16 @@ public class UserService implements UserDetailsService {
         user.setIsVerify(true);
         userDAO.save(user);
         return new MessageResponse();
+    }
+
+    public HttpResponse<ResUserInfo> getUserInfo(String email) throws UserNotFoundException {
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        else {
+            ResUserInfo responseData = new ResUserInfo(user);
+            return new HttpResponse<>(responseData);
+        }
     }
 }
