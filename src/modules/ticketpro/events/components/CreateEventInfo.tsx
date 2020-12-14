@@ -5,7 +5,7 @@ import {
     Select
 } from 'antd';
 import 'antd/dist/antd.css';
-import { Container, TextField, Typography } from '@material-ui/core';
+import { Container, createStyles, makeStyles, TextField, Theme, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 const { Option } = Select;
@@ -17,6 +17,15 @@ const Line = styled.div`
   justify-content: space-between;
 `;
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        textField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            width: 350,
+        },
+    }),
+);
 
 interface Props {
     params: undefined;
@@ -26,7 +35,7 @@ interface Props {
 
 
 const CreateEventInfo: React.FunctionComponent = () => {
-
+    const classes = useStyles();
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select style={{ width: 70 }}>
@@ -46,7 +55,66 @@ const CreateEventInfo: React.FunctionComponent = () => {
                         <TextField required id="placeName" label="Tên địa điểm" />
                     </Line>
                 </Line>
-
+                <Line style={{ marginBottom: 16 }}>
+                <Typography style={{ fontWeight: 'bold', fontSize: 14, color: "#000000", paddingLeft: 12, marginTop: 16 }}>
+                    Ngày sự kiện
+                </Typography>
+            </Line>
+                <div style={{ display: 'flex' }}>
+                    <Line style={{ marginBottom: 48, marginTop: 8}}>
+                        <TextField
+                            id="datetime-start"
+                            label="Thời gian bắt đầu "
+                            type="datetime-local"
+                            defaultValue="2019-05-24T10:30"
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Line>
+                    <Line style={{ marginBottom: 48, marginTop: 8, marginLeft: 20  }}>
+                        <TextField
+                            id="datetime-finish"
+                            label="Thời gian kết thúc"
+                            type="datetime-local"
+                            defaultValue="2019-05-25T10:30"
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Line>
+                </div>
+                <Typography style={{ fontWeight: 'bold', fontSize: 14, color: "#000000", paddingLeft: 12, marginTop: 16 }}>
+                    Thời gian bán vé
+                </Typography>
+                <div style={{ display: 'flex' }}>
+                    <Line style={{ marginBottom: 48, marginTop: 24 }}>
+                        <TextField
+                            id="datetime-start"
+                            label="Thời gian bắt đầu bán"
+                            type="datetime-local"
+                            defaultValue="2019-05-24T10:30"
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Line>
+                    <Line style={{ marginBottom: 48, marginTop: 24, marginLeft: 20 }}>
+                        <TextField
+                            id="datetime-finish"
+                            label="Thời gian ngưng bán"
+                            type="datetime-local"
+                            defaultValue="2019-05-25T10:30"
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Line>
+                </div>
                 <Line style={{ marginTop: 48, marginBottom: 32 }}>
                     <div style={{ flex: 1 }}>
                         <Line>
@@ -98,7 +166,7 @@ const CreateEventInfo: React.FunctionComponent = () => {
                             <Input addonBefore={prefixSelector} style={{ width: '60%' }} />
                         </Form.Item>
                     </div>
-                    <div style={{ flex: 1 }}></div>
+                    <div style={{ flex: 1 }} />
                     <div style={{ flex: 7 }}>
                         <Form.Item
                             name="email"

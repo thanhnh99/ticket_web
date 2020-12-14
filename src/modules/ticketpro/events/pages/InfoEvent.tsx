@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function getSteps() {
-    return ['Thông tin sự kiện', 'Thời gian và loại vé', 'Cài đặt', 'Thông tin thanht toán'];
+    return ['Thông tin sự kiện', 'Thời gian và loại vé', 'Thông tin thanht toán'];
 }
 
 function getStepContent(step: number) {
@@ -53,13 +53,7 @@ function getStepContent(step: number) {
         case 2:
             return (
                 <>
-                    <Setting />
-                </>
-            )
-        case 3:
-            return (
-                <>
-                    <PaymentInfo />
+                   <PaymentInfo />
                 </>
             )
         default:
