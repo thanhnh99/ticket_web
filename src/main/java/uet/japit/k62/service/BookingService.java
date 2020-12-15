@@ -9,6 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import uet.japit.k62.dao.*;
+import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.job.MailProcess;
 import uet.japit.k62.models.entity.*;
@@ -21,6 +22,7 @@ import uet.japit.k62.models.response.data_response.*;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
+import uet.japit.k62.service.payment.VnPayPayment;
 import uet.japit.k62.util.ContentUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,8 @@ public class BookingService {
     private ITicketClassDAO ticketDao;
     @Autowired
     private IBookingDAO bookingDAO;
+    @Autowired
+    private IBookingDetailDAO bookingDetailDAO;
     @Autowired
     private IEventDAO eventDAO;
     @Autowired
@@ -139,6 +143,9 @@ public class BookingService {
         if (paymentType.equals("momo")){
             payment = new MomoPayment(restTemplateBuilder, env, baseUrl);
         }
+        else if (paymentType.equals("vnpay")){
+            payment = new VnPayPayment(restTemplateBuilder, env, baseUrl);
+        }
         else {
             throw new PaymentTypeNotSupported();
         }
@@ -224,6 +231,29 @@ public class BookingService {
                     "Chúc mừng bạn đã đăng ký thành công vé của sự kiện " + paidBooking.getEvent().getName(), ticketPdf), "Send tickets email");
         } catch (IOException | DocumentException | SchedulerException | WriterException e) {
             e.printStackTrace();
+        }
+    }
+    public ResBooking getBookingDetail(HttpServletRequest httpRequest, String bookingId) throws BookingNotFoundException, UnAuthorException {
+        String token = httpRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        User user = userDAO.findByEmail(emailSendRequest);
+        Booking booking = bookingDAO.findById(bookingId).orElseThrow(BookingNotFoundException::new);
+        if (booking.getCreatedBy().equals(user.getId())){
+            if (booking.getStatus() == BookingStatus.SUCCEED){
+                List<TicketCode> ticketCodes = ticketCodeDAO.getTicketCodeByBooking(bookingId);
+                return new ResPaidBooking(booking, ticketCodes);
+            }
+            else if(booking.getStatus() == BookingStatus.RESERVED){
+                List<BookingDetail> bookingDetails = bookingDetailDAO.findByBooking(booking);
+                List<ResBookingDetail> resBookingDetails = bookingDetails.stream().map(b-> new ResBookingDetail(b.getTicketClass().getName(), b.getTicketClass().getPrice(), b.getQuantity())).collect(Collectors.toList());
+                return new ResUnpaidBooking(booking, resBookingDetails);
+            }
+            else {
+                return new ResBooking(booking);
+            }
+        }
+        else{
+            throw new UnAuthorException();
         }
     }
 }

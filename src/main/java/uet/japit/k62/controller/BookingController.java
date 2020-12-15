@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uet.japit.k62.constant.MessageConstant;
 import uet.japit.k62.constant.StatusCode;
+import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqCheckout;
@@ -59,6 +60,10 @@ public class BookingController {
     @GetMapping("/my-booking")
     public  ResponseEntity getMyBooking(HttpServletRequest httpServletRequest){
         return ResponseEntity.ok(new HttpResponse<List<ResBooking>>(StatusCode.OK, MessageConstant.SUCCESS, bookingService.getMyBooking(httpServletRequest)));
+    }
+    @GetMapping("/{booking_id}/detail")
+    public  ResponseEntity getBookingDetail(HttpServletRequest httpServletRequest, @PathVariable(value = "booking_id") String booking_id) throws UnAuthorException, BookingNotFoundException {
+        return ResponseEntity.ok(new HttpResponse<ResBooking>(StatusCode.OK, MessageConstant.SUCCESS, bookingService.getBookingDetail(httpServletRequest, booking_id)));
     }
     @GetMapping("/qrcode/{code}")
     public  @ResponseBody byte[] getQR(@PathVariable(value = "code") String code) throws IOException, WriterException {
