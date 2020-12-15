@@ -27,9 +27,9 @@ public class VnPayPayment implements IPayment {
         restTemplate = restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(500))
                 .setReadTimeout(Duration.ofSeconds(500))
                 .build();;
-        this.BASE_URL = env.getProperty("vnpay.base-url");
-        this.secretKey = env.getProperty("vnpay.secret-key");
-        this.merchantId = env.getProperty("vnpay.merchantid");
+        this.BASE_URL = "http://sandbox.vnpayment.vn/paymentv2/";
+        this.secretKey = "DSATEEHIRQKVVGFENKUGSLHSEIWPUWDR";
+        this.merchantId = "TPQ926K9";
 //        this.publicKey = env.getProperty("momo.public-key");
 //        this.privateKey = env.getProperty("momo.private-key");
         returnUrl = baseUrl + returnUrl;
