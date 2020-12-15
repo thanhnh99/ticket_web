@@ -248,7 +248,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                 </div>
                 <div>
                   <Box component="span" m={1}>
-                    <Link to={`${ROUTES.booking.chooseTicket  }/${  eventId}`}>
+                    <Link  style={{textDecoration: 'none'}}  to={`${ROUTES.booking.chooseTicket  }/${  eventId}`}>
                       <Button
                         variant="contained"
                         style={{
@@ -411,6 +411,7 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                               {eventData.fullAddress}
                             </Typography>
                           </Line>
+                          <Link style={{textDecoration: 'none'}} to={`${ROUTES.booking.chooseTicket  }/${  eventId}`}>
                           <Button
                             variant="contained"
                             style={{
@@ -428,6 +429,8 @@ const TicketDetail: React.FunctionComponent<Props> = (props) => {
                           >
                             Mua vé ngay
                           </Button>
+                          </Link>
+                         
                         </Box>
                       </div>
                     </div>

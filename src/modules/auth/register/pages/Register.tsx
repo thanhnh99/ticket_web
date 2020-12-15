@@ -27,11 +27,8 @@ const Register = (props: Props) => {
   const onRegister = React.useCallback(
     async (values: IRegisterData) => {
       setLoading(true);
-      console.log(JSON.stringify(values))
       const json = await dispatch(fetchThunk(API_PATHS.register, 'post', JSON.stringify(values)));
-      console.log(json)
       if (json?.statusCode === SUCCESS_CODE) {
-        console.log(json);
         setDialogContent(json.message);
       } else {
         enqueueSnackbar(

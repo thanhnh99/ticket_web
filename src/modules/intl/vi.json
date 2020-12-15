@@ -185,6 +185,9 @@
   "reset": "Làm mới",
   "apply": "Áp dụng",
 
+  "timeFinishEvent": "Thời gian kết thúc sự kiện",
+  "timeStartEvent": "Thời gian bắt đầu sự kiện",
+
   "auth.companyName": "Tên công ty",
   "auth.enterCompanyName": "Nhập tên công ty",
   "auth.shortName": "Tên viết tắt",

@@ -5,12 +5,14 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'typesafe-actions';
+import { Link } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GREY_300 } from '../../configs/colors';
 import Badge from '../../modules/account/component/Badge';
 import { Row } from '../../modules/common/components/elements';
 import { AppState } from '../../redux/reducers';
 import { HEADER_HEIGHT } from '../constants';
+import Logo from '../../svg/logo.png'
 
 const mapStateToProps = (state: AppState) => {
   return { router: state.router };
@@ -42,9 +44,9 @@ const DefaultHeader: React.FunctionComponent<Props> = (props) => {
             justifyContent: 'center',
           }}
         >
-          <Typography style={{ color: '#000', fontSize: '24px', fontWeight: 600 }}>
-            <FormattedMessage id="ticketPro" />
-          </Typography>
+          <Link to='/'>
+            <img src={Logo} alt="Logo" style={{height: 65}}/>
+          </Link>
           <Input
             placeholder={intl.formatMessage({ id: 'search' })}
             style={{ marginLeft: '10px', paddingLeft: '5px' }}

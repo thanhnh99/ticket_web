@@ -37,7 +37,7 @@ export function fetchThunk(
           headers = {
             'Content-Type': 'application/json',
             'Accept-Language': getState().intl.locale.substring(0, 2),
-            login_token: `${get(ACCESS_TOKEN)}`,
+            'Authorization': `Bearer ${get(ACCESS_TOKEN)}`,
             deviceInfo: 'Tripi_One',
             deviceId,
           };
@@ -46,7 +46,7 @@ export function fetchThunk(
             'Content-Type': 'application/json',
             'Accept-Language': getState().intl.locale.substring(0, 2),
             // 'login-token': '35025438-8f61-4ea9-8cec-c0367d2b46cf' || `${get(TOKEN)}`,
-            'login-token': `${get(ACCESS_TOKEN)}`,
+            'Authorization': `Bearer ${get(ACCESS_TOKEN)}`,
             'user-agent': '',
             appHash: AppHash,
             appId: APP_ID,
@@ -58,7 +58,7 @@ export function fetchThunk(
         }
 
         if (!auth || !get(ACCESS_TOKEN)) {
-          delete headers['login-token'];
+          delete headers['Authorization'];
         }
         res = await fetch(url, {
           method,
@@ -84,7 +84,7 @@ export function fetchThunk(
 
       let hasInternet = true;
       try {
-        await fetch('https://tripi.vn', { mode: 'no-cors' });
+        await fetch('https://tickme.herokuapp.com', { mode: 'no-cors' });
       } catch (_) {
         hasInternet = false;
       }
