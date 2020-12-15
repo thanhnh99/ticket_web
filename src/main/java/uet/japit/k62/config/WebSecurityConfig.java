@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,  "/event/**", "/category/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/verify/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/booking/**/payment-notification").permitAll()
+                .antMatchers(HttpMethod.GET, "/booking/vnpay/payment-notification").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().cacheControl();

@@ -17,8 +17,9 @@ import uet.japit.k62.models.request.ReqAttachmentFile;
 import uet.japit.k62.models.request.ReqBookingSelectTicket;
 import uet.japit.k62.models.request.ReqSelectedTicket;
 import uet.japit.k62.models.request.ReqSendMail;
-import uet.japit.k62.models.request.payment.MomoIPN;
+import uet.japit.k62.models.request.payment.IPN;
 import uet.japit.k62.models.response.data_response.*;
+import uet.japit.k62.models.response.data_response.payment.VnPayIPN;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 import uet.japit.k62.service.payment.IPayment;
 import uet.japit.k62.service.payment.MomoPayment;
@@ -168,10 +169,10 @@ public class BookingService {
             throw new InvalidPaymentException();
         }
     }
-    public void finishPayment(MomoIPN req){
+    public void finishPayment(IPN req){
         try {
 
-            Booking booking = bookingDAO.findById(req.getRequestId()).orElseThrow(BookingNotFoundException::new);
+            Booking booking = bookingDAO.findById(req.getBookingId()).orElseThrow(BookingNotFoundException::new);
             User userSendRequest = userDAO.findById(booking.getCreatedBy()).orElseThrow(UserNotFoundException::new);
             if(req.isSuccess()){
                 booking.setStatus(BookingStatus.SUCCEED);
@@ -255,5 +256,8 @@ public class BookingService {
         else{
             throw new UnAuthorException();
         }
+    }
+    public void vnPayIpn(HttpServletRequest request){
+        finishPayment(new VnPayIPN(request.getParameter("vnp_ResponseCode"), request.getParameter("vnp_TxnRef")));
     }
 }

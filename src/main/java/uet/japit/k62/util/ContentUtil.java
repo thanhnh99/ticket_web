@@ -6,7 +6,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.BaseFont;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.thymeleaf.TemplateEngine;
@@ -55,7 +54,7 @@ public class ContentUtil {
 
         ITextRenderer renderer = new ITextRenderer();
         System.out.println(new ClassPathResource("templates/ticket-information.html").getURI().getPath());
-        renderer.getFontResolver().addFont("arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+//        renderer.getFontResolver().addFont("arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 //        renderer.getFontResolver().getFontFamily("Arial");
         renderer.setDocumentFromString(html);
         renderer.layout();

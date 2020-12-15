@@ -38,7 +38,7 @@ public class VnPayPayment implements IPayment {
 
     @Override
     public String createPaymentRequest(String requestId, long amount, String userEmail) throws PaymentCreateRequestException {
-        String notifyUrl = String.format(this.notifyUrl, requestId);
+        String notifyUrl = this.notifyUrl;
         String returnUrl = String.format(this.returnUrl, requestId);
         String vnp_Version = "2.0.0";
         String vnp_Command = "pay";

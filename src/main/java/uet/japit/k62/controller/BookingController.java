@@ -69,4 +69,8 @@ public class BookingController {
     public  @ResponseBody byte[] getQR(@PathVariable(value = "code") String code) throws IOException, WriterException {
         return ContentUtil.generateQRCode(code, "png");
     }
+    @GetMapping("/vnpay/payment-notification")
+    public void notifyVNPay(HttpServletRequest request){
+        bookingService.vnPayIpn(request);
+    }
 }
