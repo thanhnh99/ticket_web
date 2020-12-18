@@ -16,13 +16,13 @@ import uet.japit.k62.models.response.http_response.MessageResponse;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class UserApiExceptionHandle{
     @ExceptionHandler(WrongEmailOrPasswordException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.OK)
     public MessageResponse WrongEmailOrPasswordExceptionHandle() {
         return new MessageResponse(StatusCode.NOT_FOUND, MessageConstant.WRONG_EMAIL_OR_PASSWORD);
     }
 
     @ExceptionHandler(NotUpdateSelfPermissionException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.OK)
     public MessageResponse NotUpdateSelfPermissionExceptionHandle() {
         return new MessageResponse(StatusCode.BAD_REQUEST, MessageConstant.CANT_SELF_UPDATE_PERMISSION);
     }

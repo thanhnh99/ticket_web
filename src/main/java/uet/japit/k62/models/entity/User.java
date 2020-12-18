@@ -22,7 +22,12 @@ public class User extends BaseEntity{
     private String displayName;
     private String provider;
     private String provider_id;
-
+    private Boolean isVerify = false;
+    private String phone;
+    private String bankAccountNumber;
+    private String bankBranch;
+    private String bankAccountHolder;
+    private String bankName;
 
 //    @ManyToMany(mappedBy = "userList")
 //    private Collection<Role> roleList = new ArrayList<Role>();
@@ -79,5 +84,23 @@ public class User extends BaseEntity{
     public void addPermission(Permission permission)
     {
         this.permissionList.add(permission);
+    }
+
+    public Boolean hasPerMission(Permission permissionCheck)
+    {
+        for(Permission permission : this.permissionList)
+        {
+            if(permission.getCode().equals(permissionCheck.getCode())) return true;
+        }
+        return false;
+    }
+
+    public Boolean hasPerMission(String permissionCheck)
+    {
+        for(Permission permission : this.permissionList)
+        {
+            if(permission.getCode().equals(permissionCheck)) return true;
+        }
+        return false;
     }
 }

@@ -19,5 +19,5 @@ public class AccountType extends BaseEntity{
     @OneToMany(mappedBy = "accountType")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<User> ticketClasses = new ArrayList<User>();
+    private Collection<User> users = new ArrayList<User>();
 }

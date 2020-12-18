@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import uet.japit.k62.constant.AccountTypeConstant;
 import uet.japit.k62.dao.IUserDAO;
+import uet.japit.k62.exception.exception_define.detail.AccountNotVerifyException;
+import uet.japit.k62.exception.exception_define.detail.AccountWasLockedException;
 import uet.japit.k62.models.auth.CustomUserDetail;
+import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.User;
 
 import java.util.List;
@@ -20,7 +24,7 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
     private final Logger logger = LoggerFactory.getLogger(AppAuthorizerImpl.class);
 
     @Override
-    public boolean authorize(Authentication authentication, List<String> permissions) {
+    public boolean authorize(Authentication authentication, List<String> permissions) throws AccountWasLockedException, AccountNotVerifyException {
         for (String permission : permissions)
         {
             System.out.print(permission + " - ");
@@ -34,6 +38,7 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
             }
             CustomUserDetail customUserDetail = (CustomUserDetail) user.getPrincipal();
             String email = customUserDetail.getEmail();
+            if(customUserDetail.getAccountType().equals(AccountTypeConstant.ROOT)) return true;
             if (email==null || "".equals(email.trim())) {
                 return false;
             }
@@ -42,19 +47,33 @@ public class AppAuthorizerImpl implements IAppAuthorizer {
             User userEntity = userDAO.findByEmail(email);
             if(userEntity != null && userEntity.getIsActive())
             {
-                for(String permission : userEntity.getPermissionStringList())
+                if(!userEntity.getIsVerify())
                 {
-                    for (String permissionInput : permissions)
+                    throw new AccountNotVerifyException();
+                }
+                else
+                {
+                    if (!userEntity.getIsActive())
                     {
-                        if(permission.equals(permissionInput))
-                        {
-                            isAllow = true;
-                            break;
-                        }
+                        throw new AccountWasLockedException();
                     }
-                    if (isAllow == true)
+                    else
                     {
-                        break;
+                        for(String permission : userEntity.getPermissionStringList())
+                        {
+                            for (String permissionInput : permissions)
+                            {
+                                if(permission.equals(permissionInput))
+                                {
+                                    isAllow = true;
+                                    break;
+                                }
+                            }
+                            if (isAllow == true)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }

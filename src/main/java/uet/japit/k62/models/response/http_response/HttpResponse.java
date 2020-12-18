@@ -11,6 +11,7 @@ import uet.japit.k62.constant.StatusCode;
 public class HttpResponse<T> extends MessageResponse {
     private T data;
 
+
     public HttpResponse(Integer statusCode, String message, T data)
     {
         super(statusCode,message);

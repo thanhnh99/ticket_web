@@ -1,7 +1,9 @@
 package uet.japit.k62.service;
 
 
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,20 +21,21 @@ import uet.japit.k62.dao.IPermissionDAO;
 import uet.japit.k62.dao.IUserDAO;
 import uet.japit.k62.exception.exception_define.detail.*;
 import uet.japit.k62.filters.JwtTokenProvider;
+import uet.japit.k62.job.MailProcess;
 import uet.japit.k62.models.auth.CustomUserDetail;
 import uet.japit.k62.models.entity.AccountType;
 import uet.japit.k62.models.entity.Permission;
 import uet.japit.k62.models.entity.User;
-import uet.japit.k62.models.request.ReqChangeAccountType;
-import uet.japit.k62.models.request.ReqChangePermission;
-import uet.japit.k62.models.request.ReqLogin;
-import uet.japit.k62.models.request.ReqRegister;
+import uet.japit.k62.models.request.*;
 import uet.japit.k62.models.response.data_response.ResLogin;
+import uet.japit.k62.models.response.data_response.ResUserInfo;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.models.response.http_response.MessageResponse;
 import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +59,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     IPermissionDAO permissionDAO;
 
-    public HttpResponse<ResLogin> authenticateUser(ReqLogin request) throws AccountWasLockedException, WrongEmailOrPasswordException {
+    @Autowired
+    MailProcess mailProcess;
+
+    @Autowired
+    JavaMailSender emailSender;
+
+    public HttpResponse<ResLogin> authenticateUser(ReqLogin request) throws AccountWasLockedException, WrongEmailOrPasswordException, AccountNotVerifyException {
         HttpResponse httpResponse = new HttpResponse();
         ResLogin response = new ResLogin();
         CustomUserDetail customUserDetail = loadUserByEmail(request.getEmail());
@@ -67,6 +76,10 @@ public class UserService implements UserDetailsService {
         }
         else
         {
+            if(!customUserDetail.getUser().getIsVerify())
+            {
+                throw new AccountNotVerifyException();
+            }
             if(customUserDetail.getUser().getIsActive())
             {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -78,6 +91,7 @@ public class UserService implements UserDetailsService {
                 response.setToken(token);
                 response.setPermissionList((List<GrantedAuthority>) customUserDetail.getAuthorities());
                 response.setAccountType(customUserDetail.getAccountType());
+                response.setDisplayName(customUserDetail.getDisplayName());
 
                 httpResponse.setMessage(MessageConstant.SUCCESS);
                 httpResponse.setStatusCode(StatusCode.OK);
@@ -86,7 +100,6 @@ public class UserService implements UserDetailsService {
             else
             {
                 throw new AccountWasLockedException();
-
             }
         }
         return httpResponse;
@@ -120,7 +133,7 @@ public class UserService implements UserDetailsService {
         return httpResponse;
     }
 
-    public MessageResponse register(ReqRegister requestData) throws UserExistedException {
+    public MessageResponse register(ReqRegister requestData, HttpServletRequest httpRequest) throws UserExistedException, SchedulerException, UnknownHostException {
         MessageResponse messageResponse = new MessageResponse();
 
         if(this.userExisted(requestData.getEmail()))
@@ -133,7 +146,21 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(passwordEncoder.encode(requestData.getPassword()));
         newUser.setEmail(requestData.getEmail());
         newUser.setDisplayName(requestData.getDisplayName());
+        newUser.setIsVerify(false);
+        newUser.setIsActive(true);
         userDAO.save(newUser);
+
+        //active sendmail
+        mailProcess.sendMail(new ReqSendMail(newUser.getEmail(),
+                                             "Mail kích hoạt tài khoản TicketBox",
+                                             "account-verification",
+                                             newUser.getDisplayName(),
+                                             "Vui lòng click vào đường linh dưới đây để kích hoạt tài khoản của bạn: "
+                                                     +"<a href=\""
+                                                     + String.format("%s://%s:%d/",httpRequest.getScheme(),  httpRequest.getServerName(), httpRequest.getServerPort())
+                                                     + "user/verify/" + newUser.getId() + "\""
+                                                     +" target=\"_blank\" title=\"Kích hoạt tài khoản\">Kích hoạt tài khoản</a>"),
+                                            "Email verification");
         messageResponse.setStatusCode(StatusCode.OK);
         messageResponse.setMessage(MessageConstant.SUCCESS);
         return messageResponse;
@@ -226,5 +253,25 @@ public class UserService implements UserDetailsService {
             throw new NotUpdateSelfPermissionException();
         }
         return response;
+    }
+
+    public MessageResponse verifyAccount(String userId) throws UserNotFoundException {
+        User user = userDAO.findById(userId).get();
+        if (user == null)
+            throw new UserNotFoundException();
+        user.setIsVerify(true);
+        userDAO.save(user);
+        return new MessageResponse();
+    }
+
+    public HttpResponse<ResUserInfo> getUserInfo(String email) throws UserNotFoundException {
+        User user = userDAO.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        else {
+            ResUserInfo responseData = new ResUserInfo(user);
+            return new HttpResponse<>(responseData);
+        }
     }
 }

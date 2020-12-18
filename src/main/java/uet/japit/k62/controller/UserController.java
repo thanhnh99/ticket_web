@@ -11,6 +11,7 @@ import uet.japit.k62.models.request.ReqChangeAccountType;
 import uet.japit.k62.models.request.ReqChangePermission;
 import uet.japit.k62.models.response.http_response.HttpResponse;
 import uet.japit.k62.service.UserService;
+import uet.japit.k62.service.authorize.AttributeTokenService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,4 +49,29 @@ public class UserController {
         return ResponseEntity.ok(responseData);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<HttpResponse> getUserInfo(HttpServletRequest httpServletRequest) throws UserNotFoundException {
+        HttpResponse response = new HttpResponse();
+        String token = httpServletRequest.getHeader("Authorization");
+        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+        HttpResponse responseData = userService.getUserInfo(emailSendRequest);
+        return ResponseEntity.ok(responseData);
+    }
+
+//    @PutMapping("/me")
+//    public ResponseEntity<HttpResponse> updateUserInfo(HttpServletRequest httpServletRequest,
+//                                                       @RequestBody Req) throws UserNotFoundException {
+//        HttpResponse response = new HttpResponse();
+//        String token = httpServletRequest.getHeader("Authorization");
+//        String emailSendRequest = AttributeTokenService.getEmailFromToken(token);
+//        HttpResponse responseData = userService.getUserInfo(emailSendRequest);
+//        return ResponseEntity.ok(responseData);
+//    }
+
+    @GetMapping("/{email}/info")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).GET_USER_INFO})")
+    public ResponseEntity<HttpResponse> getUserInfo(@PathVariable(name = "email") String email) throws UserNotFoundException {
+        HttpResponse responseData = userService.getUserInfo(email);
+        return ResponseEntity.ok(responseData);
+    }
 }

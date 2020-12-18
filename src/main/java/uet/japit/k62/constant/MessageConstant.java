@@ -15,6 +15,7 @@ public class MessageConstant {
     public static final String USER_NOT_FOUND = "Người dùng không tồn tại. Vui lòng thử lại sau.";
     public static final String CANT_SELF_UPDATE_PERMISSION = "Bạn không thể tự thay đổi quyền của mình";
     public static final String USER_EXISTED = "Tài khoản đã tồn tại. Vui lòng kiểm tra lại";
+    public static final String ACCOUNT_NOT_VERIFY = "Tài khoản chưa được verify. Vui lòng kiểm tra lại";
 
 
     /**
@@ -26,7 +27,7 @@ public class MessageConstant {
     /**
      *Event api Error
      */
-    public static final String EVENT_NOT_FOUND = "Event không tồn tại, vui lòng kiểm tra lại.";
+    public static final String EVENT_NOT_FOUND = "Sự kiện không tồn tại hoặc đã bị xóa trước đó, vui lòng kiểm tra lại.";
     /**
      * Voucher api Error
      */

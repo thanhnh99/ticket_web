@@ -3,9 +3,7 @@ package uet.japit.k62.util;
 import uet.japit.k62.models.entity.Category;
 import uet.japit.k62.models.entity.Event;
 import uet.japit.k62.models.entity.TicketClass;
-import uet.japit.k62.models.response.data_response.ResCategory;
-import uet.japit.k62.models.response.data_response.ResEvent;
-import uet.japit.k62.models.response.data_response.ResTicketClass;
+import uet.japit.k62.models.response.data_response.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,17 @@ public class ConvertEntityToResponse {
         for(Event eventEntity : eventEntityList)
         {
             ResEvent resEvent = new ResEvent(eventEntity);
+            resEventList.add(resEvent);
+        }
+        return resEventList;
+    }
+
+    public static List<ResHomeEvent> ConvertListHomeEventEntity(List<Event> eventEntityList)
+    {
+        List<ResHomeEvent> resEventList = new ArrayList<ResHomeEvent>();
+        for(Event eventEntity : eventEntityList)
+        {
+            ResHomeEvent resEvent = new ResHomeEvent(eventEntity);
             resEventList.add(resEvent);
         }
         return resEventList;

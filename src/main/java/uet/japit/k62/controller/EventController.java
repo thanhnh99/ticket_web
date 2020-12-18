@@ -1,13 +1,17 @@
 package uet.japit.k62.controller;
 
 
+import com.sipios.springsearch.anotation.SearchSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import uet.japit.k62.dao.IEventDAO;
 import uet.japit.k62.exception.exception_define.common.UnAuthorException;
 import uet.japit.k62.exception.exception_define.detail.EventNotFoundException;
+import uet.japit.k62.models.entity.Event;
 import uet.japit.k62.models.request.ReqCreateEvent;
 import uet.japit.k62.models.request.ReqCreateTicketClass;
 import uet.japit.k62.models.response.http_response.HttpResponse;
@@ -17,21 +21,22 @@ import uet.japit.k62.service.EventService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/event")
 public class EventController {
-
     @Autowired
     EventService eventService;
 
+    @Autowired
+    IEventDAO eventDAO;
+
     @PostMapping
     @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).ADD_EVENT})")
-    public ResponseEntity<MessageResponse> addEvent(HttpServletRequest httpServletRequest,
+    public ResponseEntity<HttpResponse> addEvent(HttpServletRequest httpServletRequest,
                                                     @Valid @RequestBody ReqCreateEvent reqCreateEvent) throws Exception {
-        MessageResponse response = eventService.addEvent(httpServletRequest, reqCreateEvent);
+        HttpResponse response = eventService.addEvent(httpServletRequest, reqCreateEvent);
         return ResponseEntity.ok(response);
     }
 
@@ -49,14 +54,10 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-
-    @GetMapping("/search")
-    public ResponseEntity searchEvent(@RequestParam(name = "category_id", required = false) String categoryId,
-                                      @RequestParam(name = "end_time", required = false) Integer time,
-                                      @RequestParam(name = "location", required = false) String location,
-                                      @RequestParam(name = "price", required = false) Boolean price)
-    {
-        HttpResponse response = eventService.search(categoryId, time, location, price);
+    @GetMapping("search")
+    public ResponseEntity<HttpResponse> search(@SearchSpec Specification<Event> specs,
+                                               HttpServletRequest httpRequest) {
+        HttpResponse response = eventService.search(httpRequest, specs);
         return ResponseEntity.ok(response);
     }
 
@@ -85,4 +86,45 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+
+    @PutMapping("{eventId}")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).EDIT_EVENT})")
+    public ResponseEntity editEvent(HttpServletRequest httpServletRequest,
+                                    @RequestBody ReqCreateEvent requestData,
+                                    @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        HttpResponse response = eventService.editEvent(httpServletRequest, requestData, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("{eventId}")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).DELETE_EVENT})")
+    public ResponseEntity deleteEvent(HttpServletRequest httpServletRequest,
+                                    @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.deleteEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/approve")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).APPROVE_EVENT})")
+    public ResponseEntity approveEvent(HttpServletRequest httpServletRequest,
+                                      @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.approveEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/cancel")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).APPROVE_EVENT})")
+    public ResponseEntity cancelEvent(HttpServletRequest httpServletRequest,
+                                       @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.cancelEvent(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("{eventId}/makepopular")
+    @PreAuthorize("@appAuthorizer.authorize(authentication, {T(uet.japit.k62.constant.PermissionConstant).MAKE_EVENT_POPULAR})")
+    public ResponseEntity makeEventPopular(HttpServletRequest httpServletRequest,
+                                      @PathVariable(name = "eventId") String eventId) throws UnAuthorException {
+        MessageResponse response = eventService.makeEventIsPopular(httpServletRequest, eventId);
+        return ResponseEntity.ok(response);
+    }
 }

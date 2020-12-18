@@ -14,7 +14,7 @@ public class ReqCreateVoucher {
     @NotNull
     private String code;
     @PositiveOrZero
-    private String minOrder;
+    private long minOrder;
     @Min(0)
     @Max(100)
     private Integer discountPercentage;
